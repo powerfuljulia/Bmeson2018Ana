@@ -1,0 +1,17 @@
+rm ROOTfiles/*root
+#rm plotBsBpRatio/canvasRAAPbPb_0_100*
+rm plotChecksPrompt/*
+rm plotChecksPrompt/*/*
+rm plotClosure/*
+rm plotCompMC/*
+rm plotCrossSection/*/*
+rm plotEff/*/*
+rm plotFONLL/*
+rm plotFits/*/*
+rm plotFitsComp/*
+rm plotPDFSyst/*
+rm plotPtShapeSyst/*
+rm plotPtShapeSyst/*/*
+rm plotRAA/*
+rm plotReweight/*
+rm plotSth/*

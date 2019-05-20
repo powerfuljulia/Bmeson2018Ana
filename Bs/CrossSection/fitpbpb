@@ -1,0 +1,655 @@
+
+Processing roofitB.C++(1,1,"ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root","ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root","Bpt","(HLT_HIL1DoubleMu0_v1||HLT_HIL1DoubleMu0_part1_v1||HLT_HIL1DoubleMu0_part2_v1||HLT_HIL1DoubleMu0_part3_v1)","TMath::Abs(By)<2.4&&TMath::Abs(Bmumumass-3.096916)<0.15&&((abs(Bmu1eta)<1.2&&Bmu1pt>3.5)||(abs(Bmu1eta)>1.2&&abs(Bmu1eta)<2.1&&Bmu1pt>(5.77-1.8*abs(Bmu1eta)))||(abs(Bmu1eta)>2.1&&abs(Bmu1eta)<2.4&&Bmu1pt>1.8))&&((abs(Bmu2eta)<1.2&&Bmu2pt>3.5)||(abs(Bmu2eta)>1.2&&abs(Bmu2eta)<2.1&&Bmu2pt>(5.77-1.8*abs(Bmu2eta)))||(abs(Bmu2eta)>2.1&&abs(Bmu2eta)<2.4&&Bmu2pt>1.8))&&Bmu1TMOneStationTight&&Bmu2TMOneStationTight&&Bmu1InPixelLayer>0&&(Bmu1InPixelLayer+Bmu1InStripLayer)>5&&Bmu2InPixelLayer>0&&(Bmu2InPixelLayer+Bmu2InStripLayer)>5&&Bmu1dxyPV<0.3&&Bmu2dxyPV<0.3&&Bmu1dzPV<20&&Bmu2dzPV<20&&Bmu1isGlobalMuon&&Bmu2isGlobalMuon&&Bmu1TrgMatchFilterE>0&&Bmu2TrgMatchFilterE>0&&Btrk1highPurity&&Btrk2highPurity&&abs(Btrk1Eta)<2.4&&abs(Btrk2Eta)<2.4&&Btrk1Pt>0.&&Btrk2Pt>0.&&abs(Btktkmass-1.019455)<0.015&&((Bpt>7&&Bpt<15&&BDTStage1_pt7to15>0.213755)||(Bpt>15&&Bpt<50&&BDTStage1_pt15to50>0.254413))&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter&&phfCoincFilter3","TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0",0,1,1,"PbPb","ROOTfiles/hPtSpectrumBplusPbPb_roofit.root","plotFits/plotFitsOnSaved_roofit","1",0,0,100)...
+total data: 35
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+[#1] INFO:Minization -- RooMinuit::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (sig1MC1,sig2MC1)
+ **********
+ **   13 **MIGRAD        2500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ MINUIT WARNING IN MIGrad    
+ ============== VARIABLE2 IS AT ITS LOWER ALLOWED LIMIT.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ FCN=-47877.8 FROM MIGRAD    STATUS=INITIATE       43 CALLS          44 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  meanMC1      5.36682e+00   1.00000e-01   0.00000e+00   1.16142e+04
+   2  nsigMC1      9.53674e+01   5.00000e-01   0.00000e+00  -6.61569e+06
+   3  sig1fracMC1   5.00000e-01   1.00000e-01   0.00000e+00   2.53496e+02
+   4  sigma1MC1    2.00000e-02   5.00000e-03   0.00000e+00  -7.04374e+02
+   5  sigma2MC1    1.00022e-02   9.00000e-03  -1.67230e+00   1.71281e+01
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-69376.4 FROM MIGRAD    STATUS=CONVERGED     262 CALLS         263 TOTAL
+                     EDM=9.82885e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  meanMC1      5.36618e+00   1.70798e-04   6.44527e-05   1.43397e+01
+   2  nsigMC1      6.55621e+03   8.09710e+01   1.81891e-05   2.54385e+01
+   3  sig1fracMC1   7.13520e-02   1.16111e-02   3.90629e-03  -2.44704e-01
+   4  sigma1MC1    4.13675e-02   2.58673e-03   6.32358e-03  -2.20264e-01
+   5  sigma2MC1    1.25339e-02   2.31156e-04   1.72733e-03  -1.65707e-01
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  2.917e-08  3.978e-14 -1.749e-08  5.911e-09  1.579e-10 
+  3.978e-14  6.556e+03 -5.352e-10  1.007e-10  1.346e-11 
+ -1.749e-08 -5.352e-10  1.349e-04 -2.449e-05 -2.125e-06 
+  5.911e-09  1.007e-10 -2.449e-05  6.699e-06  3.998e-07 
+  1.579e-10  1.346e-11 -2.125e-06  3.998e-07  5.344e-08 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.01493   1.000  0.000 -0.009  0.013  0.004
+        2  0.00000   0.000  1.000 -0.000  0.000  0.000
+        3  0.87958  -0.009 -0.000  1.000 -0.815 -0.791
+        4  0.81550   0.013  0.000 -0.815  1.000  0.668
+        5  0.79233   0.004  0.000 -0.791  0.668  1.000
+ **********
+ **   18 **HESSE        2500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-69376.4 FROM HESSE     STATUS=OK             31 CALLS         294 TOTAL
+                     EDM=9.83025e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  meanMC1      5.36618e+00   1.70798e-04   1.28905e-05  -2.70935e-01
+   2  nsigMC1      6.55621e+03   8.09710e+01   3.63782e-06  -1.55460e+00
+   3  sig1fracMC1   7.13520e-02   1.16488e-02   7.81257e-04  -1.02999e+00
+   4  sigma1MC1    4.13675e-02   2.59096e-03   2.52943e-04  -3.07781e-01
+   5  sigma2MC1    1.25339e-02   2.31972e-04   6.90933e-05  -1.23361e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  2.917e-08  1.694e-10 -1.679e-08  5.786e-09  1.180e-10 
+  1.694e-10  6.556e+03 -7.363e-08  2.010e-08  1.204e-09 
+ -1.679e-08 -7.363e-08  1.358e-04 -2.463e-05 -2.143e-06 
+  5.786e-09  2.010e-08 -2.463e-05  6.721e-06  4.029e-07 
+  1.180e-10  1.204e-09 -2.143e-06  4.029e-07  5.382e-08 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.01523   1.000  0.000 -0.008  0.013  0.003
+        2  0.00000   0.000  1.000 -0.000  0.000  0.000
+        3  0.88041  -0.008 -0.000  1.000 -0.815 -0.793
+        4  0.81615   0.013  0.000 -0.815  1.000  0.670
+        5  0.79398   0.003  0.000 -0.793  0.670  1.000
+[#1] INFO:Minization -- RooMinuit::optimizeConst: deactivating const optimization
+[#0] ERROR:Plotting -- RooAbsPdf::plotOn(modelMC1) ERROR: component selection set (bkgMC1) does not match any components of p.d.f.
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC1) directly selected PDF components: (sigMC1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC1) indirectly selected PDF components: (sig1MC1,sig2MC1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC1) directly selected PDF components: (sigMC1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC1) indirectly selected PDF components: (sig1MC1,sig2MC1)
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+[#1] INFO:Minization -- RooMinuit::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (bkg1,sig11,sig21)
+ **********
+ **   13 **MIGRAD        2500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ MINUIT WARNING IN MIGrad    
+ ============== VARIABLE5 IS AT ITS LOWER ALLOWED LIMIT.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (8.96014) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=1000, a11=-270.8, mean1=5.36618, nbkg1=1, nsig1=95.3674
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-2481.027451), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f value is less than zero (-3720.491595), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f value is less than zero (-1993.862173), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f value is less than zero (-2144.170393), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f value is less than zero (-3353.813751), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f value is less than zero (-1840.750121), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 1000,a11 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 1000,a11 = -270.8)
+    ... (remaining 60 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (8.96014) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=1000, a11=-180.212, mean1=5.36618, nbkg1=1, nsig1=95.3674
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-472.537374), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-284.329854), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-401.799379), forcing value to zero @ x=Bmass=5.92617, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-259.847278), forcing value to zero @ x=Bmass=5.79863, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-420.860423), forcing value to zero @ x=Bmass=5.94291, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-454.619121), forcing value to zero @ x=Bmass=5.97233, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-344.420347), forcing value to zero @ x=Bmass=5.87525, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-21.578607), forcing value to zero @ x=Bmass=5.5715, coefList=(a01 = 1000,a11 = -180.212)
+     p.d.f value is less than zero (-356.583884), forcing value to zero @ x=Bmass=5.88611, coefList=(a01 = 1000,a11 = -180.212)
+
+ FCN=8.49316 FROM MIGRAD    STATUS=INITIATE       42 CALLS          43 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a01          1.00000e+03   5.00000e+02   0.00000e+00   4.25842e+00
+   2  a11         -1.12213e+02   2.00000e+03  -1.13215e-02   1.20055e+01
+   3  mean1        5.36618e+00   1.00000e-01   0.00000e+00  -1.26312e+02
+   4  nbkg1        1.00000e+00   5.00000e-01   0.00000e+00  -6.12970e+03
+   5  nsig1        9.53674e+01   5.00000e-01   0.00000e+00   8.26893e+04
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 1 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== Negative diagonal element 2 in Error Matrix
+ MINUIT WARNING IN HESSE   
+ ============== 2.48202 added to diagonal of error matrix
+ EIGENVALUES OF SECOND-DERIVATIVE MATRIX:
+        -4.2675e-01  8.5966e-01  1.0023e+00  1.1385e+00  2.4263e+00
+ MINUIT WARNING IN HESSE   
+ ============== MATRIX FORCED POS-DEF BY ADDING 0.429174 TO DIAGONAL.
+ FCN=-98.5948 FROM HESSE     STATUS=NOT POSDEF     31 CALLS         234 TOTAL
+                     EDM=25.223    STRATEGY= 1      ERR MATRIX NOT POS-DEF
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a01          5.54341e+04   6.59491e+05   5.46408e-03   2.03928e-01
+   2  a11         -1.25139e+03   1.55140e+04   7.81723e-03   3.91665e-01
+   3  mean1        5.37056e+00   5.66647e-03   9.63297e-05  -4.05496e-03
+   4  nbkg1        2.58133e+01   4.53632e+00   2.25516e-05  -1.49996e+00
+   5  nsig1        9.17988e+00   3.02607e+00   7.68491e-07** at limit **
+                               ERR DEF= 0.5
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (8.96014) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=33176.9, a11=-7322.95, mean1=5.37057, nbkg1=25.8634, nsig1=9.13463
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-34035.094634), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f value is less than zero (-63899.896077), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f value is less than zero (-22477.442010), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f value is less than zero (-26029.901089), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f value is less than zero (-55007.761148), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f value is less than zero (-18872.468543), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 33176.9,a11 = -7322.95)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 33176.9,a11 = -7322.95)
+    ... (remaining 60 messages suppressed)
+
+ MINUIT WARNING IN MIGRAD  
+ ============== Negative diagonal element 1 in Error Matrix
+ MINUIT WARNING IN MIGRAD  
+ ============== 2.51214 added to diagonal of error matrix
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (5.41146e+07) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=9568.98, a11=-7172.7, mean1=5.37049, nbkg1=25.9749, nsig1=8.91626
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-156970.567516), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f value is less than zero (-199873.087582), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f value is less than zero (-139610.023183), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f value is less than zero (-145003.603972), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f value is less than zero (-187338.332267), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f value is less than zero (-134077.906034), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 9568.98,a11 = -7172.7)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 9568.98,a11 = -7172.7)
+    ... (remaining 60 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (5.41146e+07) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=142.779, a11=-8720.96, mean1=5.3705, nbkg1=25.9512, nsig1=8.96837
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-252822.176411), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f value is less than zero (-311827.403137), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f value is less than zero (-228686.848682), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f value is less than zero (-236204.013650), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f value is less than zero (-294669.732506), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f value is less than zero (-220957.587054), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 142.779,a11 = -8720.96)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 142.779,a11 = -8720.96)
+    ... (remaining 60 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (5.41146e+07) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=9024.8, a11=-7219.19, mean1=5.37049, nbkg1=25.9743, nsig1=8.9176
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-161257.043844), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f value is less than zero (-204798.595679), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f value is less than zero (-143624.262134), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f value is less than zero (-149103.413039), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f value is less than zero (-192081.449838), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f value is less than zero (-138003.373884), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 9024.8,a11 = -7219.19)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 9024.8,a11 = -7219.19)
+    ... (remaining 60 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (5.41146e+07) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=21945.8, a11=-6288.89, mean1=5.37048, nbkg1=25.9858, nsig1=8.89228
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-64529.427275), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f value is less than zero (-94074.614054), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f value is less than zero (-52879.235691), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f value is less than zero (-56476.554649), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f value is less than zero (-85345.972851), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f value is less than zero (-49211.948773), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 21945.8,a11 = -6288.89)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 21945.8,a11 = -6288.89)
+    ... (remaining 60 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (5.41146e+07) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a01=3548.02, a11=-9275.51, mean1=5.37052, nbkg1=25.9407, nsig1=8.98688
+RooPolynomial::bkg1[ x=Bmass coefList=(a01,a11) ]
+     p.d.f value is less than zero (-250585.064190), forcing value to zero @ x=Bmass=5.39246, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.39246, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f value is less than zero (-311320.295459), forcing value to zero @ x=Bmass=5.98784, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.98784, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f value is less than zero (-225809.717369), forcing value to zero @ x=Bmass=5.12901, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.12901, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f value is less than zero (-233521.365093), forcing value to zero @ x=Bmass=5.21249, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.21249, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f value is less than zero (-293638.202966), forcing value to zero @ x=Bmass=5.82101, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.82101, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f value is less than zero (-217885.388053), forcing value to zero @ x=Bmass=5.04173, coefList=(a01 = 3548.02,a11 = -9275.51)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.04173, coefList=(a01 = 3548.02,a11 = -9275.51)
+    ... (remaining 60 messages suppressed)
+
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-99.0582 FROM MIGRAD    STATUS=CONVERGED     421 CALLS         422 TOTAL
+                     EDM=5.32224e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a01          3.75980e+04   1.49672e+05   3.13765e-04   1.34742e-02
+   2  a11         -5.17382e+03   1.71562e+04   9.60476e-04  -4.40408e-03
+   3  mean1        5.37064e+00   6.92876e-03   9.89679e-05   1.88296e-03
+   4  nbkg1        2.60398e+01   5.36183e+00   2.26337e-05   6.42618e-02
+   5  nsig1        8.96212e+00   3.41652e+00   7.76337e-07** at limit **
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  2.481e+10  3.409e+09  1.777e+00  4.920e+03 -4.918e+03 
+  3.409e+09  4.697e+08  3.381e-01  9.120e+02 -9.116e+02 
+  1.777e+00  3.381e-01  4.801e-05 -3.962e-04  3.959e-04 
+  4.920e+03  9.120e+02 -3.962e-04  2.875e+01 -2.707e+00 
+ -4.918e+03 -9.116e+02  3.959e-04 -2.707e+00  1.167e+01 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.99846   1.000  0.998  0.002  0.006 -0.009
+        2  0.99846   0.998  1.000  0.002  0.008 -0.012
+        3  0.02251   0.002  0.002  1.000 -0.011  0.017
+        4  0.15074   0.006  0.008 -0.011  1.000 -0.148
+        5  0.15763  -0.009 -0.012  0.017 -0.148  1.000
+ **********
+ **   18 **HESSE        2500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-99.0582 FROM HESSE     STATUS=OK             31 CALLS         453 TOTAL
+                     EDM=5.32303e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  a01          3.75980e+04   9.42750e+05   1.25506e-05  -1.18052e+00
+   2  a11         -5.17382e+03   1.64578e+04   3.84191e-05  -2.59780e+00
+   3  mean1        5.37064e+00   6.92885e-03   3.95872e-06  -2.61696e-01
+   4  nbkg1        2.60398e+01   5.36181e+00   4.52673e-06  -1.53852e+00
+   5  nsig1        8.96212e+00   3.41642e+00   3.74364e-07  -1.57020e+00
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  3.192e+11  4.391e+10  4.523e-01  1.204e+03 -1.185e+03 
+  4.391e+10  6.042e+09  1.543e-01  4.007e+02 -3.980e+02 
+  4.523e-01  1.543e-01  4.801e-05 -4.137e-04  4.136e-04 
+  1.204e+03  4.007e+02 -4.137e-04  2.875e+01 -2.708e+00 
+ -1.185e+03 -3.980e+02  4.136e-04 -2.708e+00  1.167e+01 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.99988   1.000  1.000  0.000  0.000 -0.001
+        2  0.99988   1.000  1.000  0.000  0.001 -0.001
+        3  0.02304   0.000  0.000  1.000 -0.011  0.017
+        4  0.15072   0.000  0.001 -0.011  1.000 -0.148
+        5  0.15747  -0.001 -0.001  0.017 -0.148  1.000
+[#1] INFO:Minization -- RooMinuit::optimizeConst: deactivating const optimization
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) directly selected PDF components: (bkg1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) directly selected PDF components: (sig1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) indirectly selected PDF components: (sig11,sig21)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) directly selected PDF components: (sig1)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model1) indirectly selected PDF components: (sig11,sig21)
+[#1] INFO:Eval -- RooRealVar::setRange(Bmass) new range named 'signal' created with bounds [5,6]
+nsig: 8.96212
+nsig error: 3.41642
+sig integral: 1
+sig integral error: 0
+nbkg: 26.0398
+nbkg error: 5.36181
+bkg integral: 1
+bkg integral error: 0
+frame->chiSquare: 0.380285
+chi2 Standard: 14.280848
+chi2 Neyman: 7.351146
+chi2 Peason: 30.744271
+chi2 Baker & Cousins: 38.543249
+bkg integral: 0.105832
+bkg integral error: 0.00468912
+Significance = 2.6
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooAddPdf::model1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooPolynomial::bkg1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::Bmass
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::a01
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::a11
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::nbkg1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooAddPdf::sig1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooGaussian::sig11
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::mean1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::sigma11
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::sig1frac1
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooGaussian::sig21
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::sigma21
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::nsig1
+yield: 8.962124, yieldErr: 3.416424
+total data: 26
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+[#1] INFO:Minization -- RooMinuit::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (sig1MC2,sig2MC2)
+ **********
+ **   13 **MIGRAD        2500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ MINUIT WARNING IN MIGrad    
+ ============== VARIABLE2 IS AT ITS LOWER ALLOWED LIMIT.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+ FCN=-494536 FROM MIGRAD    STATUS=INITIATE       42 CALLS          43 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  meanMC2      5.36682e+00   1.00000e-01   0.00000e+00   6.61784e+04
+   2  nsigMC2      9.53674e+01   5.00000e-01   0.00000e+00  -6.83660e+07
+   3  sig1fracMC2   5.00000e-01   1.00000e-01   0.00000e+00   3.84255e+03
+   4  sigma1MC2    2.00000e-02   5.00000e-03   0.00000e+00   3.92867e+03
+   5  sigma2MC2    1.00345e-02   9.00000e-03  -1.64295e+00   9.55081e+02
+                               ERR DEF= 0.5
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-866914 FROM MIGRAD    STATUS=CONVERGED     352 CALLS         353 TOTAL
+                     EDM=8.72274e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  meanMC2      5.36642e+00   4.91186e-05   6.55446e-05  -9.28787e+00
+   2  nsigMC2      6.68585e+04   2.58570e+02   6.43141e-05  -1.93353e+01
+   3  sig1fracMC2   7.54254e-01   4.71556e-03   4.92719e-03  -1.15935e-01
+   4  sigma1MC2    1.00000e-02   3.22177e-05   2.27410e-02** at limit **
+   5  sigma2MC2    2.39977e-02   2.00729e-04   2.86489e-03  -5.15924e-02
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  2.413e-09 -3.577e-12  4.745e-11 -2.459e-14 -4.781e-11 
+ -3.577e-12  6.686e+04 -7.035e-14  3.645e-17  7.088e-14 
+  4.745e-11 -7.035e-14  2.224e-05 -1.996e-10  6.524e-07 
+ -2.459e-14  3.645e-17 -1.996e-10  1.700e-14 -5.316e-12 
+ -4.781e-11  7.088e-14  6.524e-07 -5.316e-12  4.029e-08 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.00786   1.000 -0.000  0.000 -0.004 -0.005
+        2  0.00000  -0.000  1.000 -0.000  0.000  0.000
+        3  0.71456   0.000 -0.000  1.000 -0.325  0.689
+        4  0.32593  -0.004  0.000 -0.325  1.000 -0.203
+        5  0.68959  -0.005  0.000  0.689 -0.203  1.000
+ **********
+ **   18 **HESSE        2500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-866914 FROM HESSE     STATUS=OK             41 CALLS         394 TOTAL
+                     EDM=6.89626e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  meanMC2      5.36642e+00   4.91206e-05   1.31089e-05  -2.70437e-01
+   2  nsigMC2      6.68585e+04   2.58570e+02   2.57257e-06  -1.51908e+00
+   3  sig1fracMC2   7.54254e-01   5.37873e-03   1.97087e-04  -9.95823e+00
+   4  sigma1MC2    1.00000e-02   1.74699e-06   3.15859e-01  -1.57087e+00
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+   5  sigma2MC2    2.39977e-02   2.06378e-04   1.14596e-04  -2.38157e+00
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  2.413e-09 -1.581e-14  1.018e-09 -1.470e-14 -2.819e-11 
+ -1.581e-14  6.686e+04 -9.858e-11  9.912e-16 -2.093e-12 
+  1.018e-09 -9.858e-11  2.893e-05 -9.164e-11  7.799e-07 
+ -1.470e-14  9.912e-16 -9.164e-11  9.215e-16 -1.946e-12 
+ -2.819e-11 -2.093e-12  7.799e-07 -1.946e-12  4.259e-08 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.01196   1.000 -0.000  0.004 -0.010 -0.003
+        2  0.00000  -0.000  1.000 -0.000  0.000 -0.000
+        3  0.78984   0.004 -0.000  1.000 -0.561  0.703
+        4  0.57350  -0.010  0.000 -0.561  1.000 -0.311
+        5  0.70982  -0.003 -0.000  0.703 -0.311  1.000
+[#1] INFO:Minization -- RooMinuit::optimizeConst: deactivating const optimization
+[#0] ERROR:Plotting -- RooAbsPdf::plotOn(modelMC2) ERROR: component selection set (bkgMC2) does not match any components of p.d.f.
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC2) directly selected PDF components: (sigMC2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC2) indirectly selected PDF components: (sig1MC2,sig2MC2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC2) directly selected PDF components: (sigMC2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(modelMC2) indirectly selected PDF components: (sig1MC2,sig2MC2)
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+[#1] INFO:Minization -- RooMinuit::optimizeConst: activating const optimization
+[#1] INFO:Minization --  The following expressions will be evaluated in cache-and-track mode: (bkg2,sig12,sig22)
+ **********
+ **   13 **MIGRAD        2500           1
+ **********
+ FIRST CALL TO USER FUNCTION AT NEW START POINT, WITH IFLAG=4.
+ MINUIT WARNING IN MIGrad    
+ ============== VARIABLE5 IS AT ITS LOWER ALLOWED LIMIT.
+ START MIGRAD MINIMIZATION.  STRATEGY  1.  CONVERGENCE WHEN EDM .LT. 1.00e-03
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=1000, a12=-270.8, mean2=5.36642, nbkg2=1, nsig2=95.3674
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-2707.536499), forcing value to zero @ x=Bmass=5.5085, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.5085, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f value is less than zero (-2440.434863), forcing value to zero @ x=Bmass=5.37126, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37126, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f value is less than zero (-2443.986037), forcing value to zero @ x=Bmass=5.37312, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37312, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f value is less than zero (-2233.380699), forcing value to zero @ x=Bmass=5.26108, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.26108, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f value is less than zero (-2334.791207), forcing value to zero @ x=Bmass=5.31548, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.31548, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f value is less than zero (-2441.490003), forcing value to zero @ x=Bmass=5.37181, coefList=(a02 = 1000,a12 = -270.8)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37181, coefList=(a02 = 1000,a12 = -270.8)
+    ... (remaining 42 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=1000, a12=-180.212, mean2=5.36642, nbkg2=1, nsig2=95.3674
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-364.637751), forcing value to zero @ x=Bmass=5.89329, coefList=(a02 = 1000,a12 = -180.212)
+     p.d.f value is less than zero (-285.915641), forcing value to zero @ x=Bmass=5.82245, coefList=(a02 = 1000,a12 = -180.212)
+     p.d.f value is less than zero (-32.747639), forcing value to zero @ x=Bmass=5.58255, coefList=(a02 = 1000,a12 = -180.212)
+     p.d.f value is less than zero (-137.424953), forcing value to zero @ x=Bmass=5.68414, coefList=(a02 = 1000,a12 = -180.212)
+     p.d.f value is less than zero (-303.576342), forcing value to zero @ x=Bmass=5.83848, coefList=(a02 = 1000,a12 = -180.212)
+     p.d.f value is less than zero (-185.225978), forcing value to zero @ x=Bmass=5.72937, coefList=(a02 = 1000,a12 = -180.212)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=1000, a12=-180.112, mean2=5.36642, nbkg2=1, nsig2=95.3674
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-361.141655), forcing value to zero @ x=Bmass=5.89329, coefList=(a02 = 1000,a12 = -180.112)
+     p.d.f value is less than zero (-282.503086), forcing value to zero @ x=Bmass=5.82245, coefList=(a02 = 1000,a12 = -180.112)
+     p.d.f value is less than zero (-29.610498), forcing value to zero @ x=Bmass=5.58255, coefList=(a02 = 1000,a12 = -180.112)
+     p.d.f value is less than zero (-134.172596), forcing value to zero @ x=Bmass=5.68414, coefList=(a02 = 1000,a12 = -180.112)
+     p.d.f value is less than zero (-300.144965), forcing value to zero @ x=Bmass=5.83848, coefList=(a02 = 1000,a12 = -180.112)
+     p.d.f value is less than zero (-181.921657), forcing value to zero @ x=Bmass=5.72937, coefList=(a02 = 1000,a12 = -180.112)
+
+ FCN=4.42673 FROM MIGRAD    STATUS=INITIATE       46 CALLS          47 TOTAL
+                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX       
+  EXT PARAMETER               CURRENT GUESS       STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a02          1.00000e+03   5.00000e+02   0.00000e+00   3.99794e+00
+   2  a12         -1.34913e+02   2.00000e+03  -1.35917e-02   9.37590e+00
+   3  mean2        5.36642e+00   1.00000e-01   0.00000e+00   4.70337e+00
+   4  nbkg2        1.00000e+00   5.00000e-01   0.00000e+00  -3.81576e+03
+   5  nsig2        9.53674e+01   5.00000e-01   0.00000e+00   8.44123e+04
+                               ERR DEF= 0.5
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=875.83, a12=-150.918, mean2=5.36766, nbkg2=5.12082, nsig2=10.5663
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-79.005389), forcing value to zero @ x=Bmass=5.89329, coefList=(a02 = 875.83,a12 = -150.918)
+     p.d.f value is less than zero (-15.798599), forcing value to zero @ x=Bmass=5.82245, coefList=(a02 = 875.83,a12 = -150.918)
+     p.d.f value is less than zero (-29.973087), forcing value to zero @ x=Bmass=5.83848, coefList=(a02 = 875.83,a12 = -150.918)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=1359.84, a12=-380.498, mean2=5.37048, nbkg2=15.9385, nsig2=6.25201
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-4053.984217), forcing value to zero @ x=Bmass=5.5085, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.5085, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f value is less than zero (-3672.472659), forcing value to zero @ x=Bmass=5.37126, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37126, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f value is less than zero (-3677.546523), forcing value to zero @ x=Bmass=5.37312, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37312, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f value is less than zero (-3376.557592), forcing value to zero @ x=Bmass=5.26108, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.26108, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f value is less than zero (-3521.509972), forcing value to zero @ x=Bmass=5.31548, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.31548, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f value is less than zero (-3673.980232), forcing value to zero @ x=Bmass=5.37181, coefList=(a02 = 1359.84,a12 = -380.498)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37181, coefList=(a02 = 1359.84,a12 = -380.498)
+    ... (remaining 42 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=1495.97, a12=-272.802, mean2=5.36978, nbkg2=15.7385, nsig2=7.60423
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-36.253473), forcing value to zero @ x=Bmass=5.5085, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.5085, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37126, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37312, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.26108, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.31548, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37181, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.36255, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.0491, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.02929, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.35866, coefList=(a02 = 1495.97,a12 = -272.802)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.20571, coefList=(a02 = 1495.97,a12 = -272.802)
+    ... (remaining 23 messages suppressed)
+
+[#0] WARNING:Minization -- RooFitGlue: Minimized function has error status.
+Returning maximum FCN so far (4.68251) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a02=1496.22, a12=-272.607, mean2=5.36978, nbkg2=15.7381, nsig2=7.60679
+RooPolynomial::bkg2[ x=Bmass coefList=(a02,a12) ]
+     p.d.f value is less than zero (-28.963758), forcing value to zero @ x=Bmass=5.5085, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.5085, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37126, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37312, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.26108, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.31548, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.37181, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.36255, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.0491, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.02929, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.35866, coefList=(a02 = 1496.22,a12 = -272.607)
+     p.d.f normalization integral is zero or negative @ x=Bmass=5.20571, coefList=(a02 = 1496.22,a12 = -272.607)
+    ... (remaining 23 messages suppressed)
+
+ MIGRAD MINIMIZATION HAS CONVERGED.
+ MIGRAD WILL VERIFY CONVERGENCE AND ERROR MATRIX.
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-77.942 FROM MIGRAD    STATUS=CONVERGED     272 CALLS         273 TOTAL
+                     EDM=7.09945e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  a02          8.89210e+02   5.75484e+02   2.79121e-05   1.31986e+00
+   2  a12         -1.34182e+02   8.67631e+01   1.28126e-05   2.93480e+00
+   3  mean2        5.36843e+00   3.62789e-03   4.60008e-05  -1.17318e-01
+   4  nbkg2        1.54798e+01   4.05891e+00   1.99187e-05   1.80627e-02
+   5  nsig2        1.05033e+01   3.38941e+00   7.48705e-07** at limit **
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  3.312e+05 -4.831e+04 -4.188e-03 -8.942e+00  8.928e+00 
+ -4.831e+04  7.528e+03 -6.251e-04 -1.334e+00  1.332e+00 
+ -4.188e-03 -6.251e-04  1.316e-05  3.773e-04 -3.772e-04 
+ -8.942e+00 -1.334e+00  3.773e-04  1.647e+01 -9.932e-01 
+  8.928e+00  1.332e+00 -3.772e-04 -9.932e-01  1.149e+01 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.96745   1.000 -0.967 -0.002 -0.004  0.005
+        2  0.96745  -0.967  1.000 -0.002 -0.004  0.005
+        3  0.04105  -0.002 -0.002  1.000  0.026 -0.031
+        4  0.08053  -0.004 -0.004  0.026  1.000 -0.072
+        5  0.08449   0.005  0.005 -0.031 -0.072  1.000
+ **********
+ **   18 **HESSE        2500
+ **********
+ COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+ FCN=-77.942 FROM HESSE     STATUS=OK             31 CALLS         304 TOTAL
+                     EDM=7.04881e-05    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                INTERNAL      INTERNAL  
+  NO.   NAME      VALUE            ERROR       STEP SIZE       VALUE   
+   1  a02          8.89210e+02   1.25004e+03   5.58243e-06  -1.51115e+00
+   2  a12         -1.34182e+02   1.88496e+02   2.56252e-06  -1.34186e-02
+   3  mean2        5.36843e+00   3.62788e-03   9.20016e-06  -2.66270e-01
+   4  nbkg2        1.54798e+01   4.05891e+00   3.98374e-06  -1.54591e+00
+   5  nsig2        1.05033e+01   3.38940e+00   3.74352e-07  -1.57015e+00
+                                 WARNING -   - ABOVE PARAMETER IS AT LIMIT.
+                               ERR DEF= 0.5
+ EXTERNAL ERROR MATRIX.    NDIM=  25    NPAR=  5    ERR DEF=0.5
+  1.564e+06 -2.341e+05 -4.523e-03 -9.676e+00  9.665e+00 
+ -2.341e+05  3.553e+04 -5.608e-04 -1.200e+00  1.198e+00 
+ -4.523e-03 -5.608e-04  1.316e-05  3.765e-04 -3.763e-04 
+ -9.676e+00 -1.200e+00  3.765e-04  1.647e+01 -9.936e-01 
+  9.665e+00  1.198e+00 -3.763e-04 -9.936e-01  1.149e+01 
+ PARAMETER  CORRELATION COEFFICIENTS  
+       NO.  GLOBAL      1      2      3      4      5
+        1  0.99319   1.000 -0.993 -0.001 -0.002  0.002
+        2  0.99319  -0.993  1.000 -0.001 -0.002  0.002
+        3  0.04095  -0.001 -0.001  1.000  0.026 -0.031
+        4  0.08052  -0.002 -0.002  0.026  1.000 -0.072
+        5  0.08446   0.002  0.002 -0.031 -0.072  1.000
+[#1] INFO:Minization -- RooMinuit::optimizeConst: deactivating const optimization
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) directly selected PDF components: (bkg2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) indirectly selected PDF components: ()
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) directly selected PDF components: (sig2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) indirectly selected PDF components: (sig12,sig22)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) directly selected PDF components: (sig2)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(model2) indirectly selected PDF components: (sig12,sig22)
+nsig: 10.5033
+nsig error: 3.3894
+sig integral: 1
+sig integral error: 0
+nbkg: 15.4798
+nbkg error: 4.05891
+bkg integral: 1
+bkg integral error: 0
+frame->chiSquare: 0.768301
+chi2 Standard: 12.424253
+chi2 Neyman: 8.654206
+chi2 Peason: 52.241644
+chi2 Baker & Cousins: 42.692077
+bkg integral: 0.110571
+bkg integral error: 0.000379915
+Significance = 3
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooAddPdf::model2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooPolynomial::bkg2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::a02
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::a12
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::nbkg2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooAddPdf::sig2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooGaussian::sig12
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::mean2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::sigma12
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::sig1frac2
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooGaussian::sig22
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::sigma22
+[#1] INFO:ObjectHandling -- RooWorkspace::import(w) importing RooRealVar::nsig2
+yield: 10.503332, yieldErr: 3.389404
