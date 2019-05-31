@@ -1,4 +1,5 @@
 #include "uti.h"
+
 using namespace std;
 #define BSUBS_MASS 5.36682
 
@@ -79,15 +80,6 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	f->SetRange(minhisto,maxhisto);
 	//clean0(h);
 
-	if(weightdata != "1"){
-		int maxb = h->GetMaximumBin();
-		double _max = h->GetBinContent(maxb);
-		double _maxE = h->GetBinError(maxb);
-		_ErrCor = (_maxE/_max)/(1/sqrt(_max));
-		f->SetParLimits(0,0,1e5);
-		f->SetParLimits(4,-1e5,1e5);
-		f->SetParLimits(11,0,1e4);
-	}
 
 	//signal setting
 	f->SetParameter(0,setparam0);
