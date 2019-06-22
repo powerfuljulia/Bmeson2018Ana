@@ -29,27 +29,38 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 	TCanvas * c = new TCanvas("c","c",600,600);
 	TCanvas * cMC = new TCanvas("cMC","cMC",600,600);
 
+	TCanvas *cResults = new TCanvas("cResults","cResults",600,600);
+
 
 	if(collsyst == "pp") weightfunctionreco="(pthatweight)*(maxDgenpt<pthat/1.2)*(0.0116437+Dgenpt*(0.0602697)+Dgenpt*Dgenpt*(-0.00226879)+Dgenpt*Dgenpt*Dgenpt*(3.91035e-05)+Dgenpt*Dgenpt*Dgenpt*Dgenpt*(-3.0699e-07)+Dgenpt*Dgenpt*Dgenpt*Dgenpt*Dgenpt*(8.73234e-10))";
 
 
-	if(collsyst == "PbPb") weightfunctionreco="pthatweight";
+	if(collsyst == "PbPb")
+	{
+		//BptWeight="0.475953*TMath::Exp(-0.001731*Bpt)+38.069448/(Bpt*Bpt+0.001237*0.001237)";
+		BptWeight="0.474599*TMath::Exp(-0.001406*Bpt)+38.036016/(Bpt*Bpt+0.000330*0.000330)";
+		CentWeight = "CentWeight";
+		//PVzWeight = "TMath::Exp(0.057104 + -0.020908 * PVz + -0.001864 * PVz * PVz)";
+		//PVzWeight =	"(0.162740 * TMath::Exp(- 0.020823 * (PVz - 0.428205)*(PVz - 0.428205)))/(0.159489 * TMath::Exp(- 0.019979 * (PVz - 0.594276)*(PVz - 0.594276)))";
+		PVzWeight="(0.164847 * TMath::Exp(- 0.021378 * (PVz - 0.342927)*(PVz - 0.342927)))/(0.159507 * TMath::Exp(- 0.019986 * (PVz - 0.601387)*(PVz - 0.601387)))";
+	}
 
-	if(collsyst = "pp") isPbPb = 0;
-	if(collsyst = "PbPb") isPbPb = 1;
+	if(collsyst == "pp") isPbPb = 0;
+	if(collsyst == "PbPb") isPbPb = 1;
 
 	TFile *fin = new TFile(inputdata.Data());
 	TFile *finMC = new TFile(inputMC.Data());
 
 
-	cout << "weightfunctionreco = " << weightfunctionreco.Data() << endl;
+
 	TTree* nt = (TTree*) fin->Get("Bfinder/ntphi");
 	nt->AddFriend("hltanalysis/HltTree");
 	nt->AddFriend("hiEvtAnalyzer/HiTree");
 	nt->AddFriend("skimanalysis/HltTree");
-	nt->AddFriend("BDT_pt_15_20");
-	nt->AddFriend("BDT_pt_7_15");
-	nt->AddFriend("BDT_pt_20_50");	
+//	nt->AddFriend("BDT_pt_15_20");
+//	nt->AddFriend("BDT_pt_7_15");
+//	nt->AddFriend("BDT_pt_20_50");	
+	nt->AddFriend("BDT");	
 
 
 	TTree* ntMC = (TTree*)finMC->Get("Bfinder/ntphi");
@@ -57,27 +68,44 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 	ntMC->AddFriend("hiEvtAnalyzer/HiTree");
 	ntMC->AddFriend("skimanalysis/HltTree");
 
+	/*
 	ntMC->AddFriend("BDT_pt_15_20");
 	ntMC->AddFriend("BDT_pt_7_15");
 	ntMC->AddFriend("BDT_pt_20_50");	
+	*/
+	ntMC->AddFriend("BDT");	
+	ntMC->AddFriend("CentWeightTree");	
 
 
 	TH1D * alphahis = new TH1D("alphahis","alphahis",Nalpha,alphaini-0.5*alphastep,alphafin+0.5*alphastep);
 	TH1D * ratiohis = new TH1D("ratiohis","ratiohis",Nratio,ratioini-0.5*ratiostep,ratiofin+0.5*ratiostep);
 	TH1D * Probhis = new TH1D("Probhis","Probhis",NProb,Probini-0.5*Probstep,Probfin+0.5*Probstep);
-	TString PreCutMC = Form("%s * (%s && Bgen == 23333)",weightfunctionreco.Data(),PreCut.Data());
+	
+	
+	
+	TString PreCutMC = Form("(%s && Bgen == 23333)",PreCut.Data());
+
+
 	ofstream out1(Form("Alpha_%s.dat",collsyst.Data()));
 	ofstream out2(Form("Ratio_%s.dat",collsyst.Data()));
 	ofstream out3(Form("Prob_%s.dat",collsyst.Data()));
 
+	TH1D * DataPre = new TH1D("DataPre","DataPre",NBMassBin,BMassMin,BMassMax);
+
 
 	nt->Project("DataPre","Bmass",PreCut.Data());
-	ntMC->Project("MCPre","Bmass",PreCutMC.Data());
-	
+
+
+
+	TH1D * MCPre = new TH1D("MCPre","MCPre",NBMassBin,BMassMin,BMassMax);
+
+	ntMC->Project("MCPre","Bmass",(TCut(BptWeight.Data())*TCut(CentWeight.Data())*TCut(PVzWeight.Data())*TCut(weightfunctionreco.Data()))*(TCut(PreCutMC.Data())));
+
 	cout << "DataPre = " << DataPre->Integral() << endl;
 	cout << "MCPre = " << MCPre->Integral() << endl;
 
-
+	TFile * CutVarOut = new TFile("CutVarOut.root","RECREATE");
+	CutVarOut->cd();
 	fDataPre = fit(c, cMC, DataPre, MCPre, ptMin, ptMax, 0, isPbPb, total, CentMinBin, CentMaxBin, "1");
 
 	PreCutMC = Form("%s *  (%s && Bgen == 23333)",weightfunctionreco.Data(),PreCut.Data());
@@ -89,243 +117,94 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 	PreCutYieldMC = fMCPre->Integral(BMassMin,BMassMax)/binwidthmass;
 	PreCutYieldErrMC = fMCPre->Integral(BMassMin,BMassMax)/binwidthmass*fMCPre->GetParError(0)/fMCPre->GetParameter(0);
 
+
+
+	cout << "PreCutYieldData = " << PreCutYieldData << "   PreCutYieldMC  = " << PreCutYieldMC << endl;
 	//Alpha Variation//
-	for(int i = 0; i < Nalpha; i++)
-	{
-		//		cout << "Doing Alpha i = " << i << endl; 
-		alpha = alphaini + i * alphastep;
-		//	cout << "alpha = " << alpha << endl;
-		cutalpha = Form("(Balpha < %f) && %s",alpha,PreCut.Data());
 
-		cutalphaMC = Form("%s *  (%s && Bgen == 23333)",weightfunctionreco.Data(),cutalpha.Data());
+	for(int j = 0; j < NVar; j++){
 
-		halpha[i] = new TH1D(Form("halpha%d",i),Form("halpha%d",i),NBMassBin,BMassMin,BMassMax);
-		halphaMC[i] = new TH1D(Form("halphaMC%d",i),Form("halphaMC%d",i),NBMassBin,BMassMin,BMassMax);	
+		ResultHis = new TH1D(Form("%s",VarHisName[j].Data()),Form("%s",VarHisName[j].Data()),VarHisN[j],VarHisMin[j],VarHisMax[j]);
+		ResultHis->GetXaxis()->SetTitle(Form("%s ",VarXName[j].Data()));
+		ResultHis->GetYaxis()->SetTitle("Yield Double Ratio");
+		ResultHis->GetYaxis()->SetTitle(Form("%s Cut Variation",VarXName[j].Data()));
+		NVarStep[j] = (VarCutMax[j] - VarCutMin[j])/NCut[j];
 
-		nt->Project("halpha%d","Bmass",cutalpha.Data());
-		ntMC->Project("halphaMC%d","Bmass",cutalphaMC.Data());
+		for(int i = 0; i < NCut[j]; i++)
+		{
 
-		fData = fit(c, cMC, halpha[i], halphaMC[i], ptMin, ptMax, 0, isPbPb, total, CentMinBin, CentMaxBin, "1");
+			cout << "Now Working on " << Var[j].Data() << "  i = " << i <<  "  CutValue = " << CutValue << endl;
 
-		fMC = fit(c, cMC, halphaMC[i], halphaMC[i], ptMin, ptMax, 1, isPbPb, total, CentMinBin, CentMaxBin, "1");
+			CutValue = VarCutMin[j] + i * 	NVarStep[j];
+			VarCutData = Form("(%s %s %f) && (%s)",Var[j].Data(),Direction[j].Data(),CutValue,PreCut.Data());
 
+			cout << "VarCutData = " << VarCutData.Data() << endl;
 
+			VarCutMC = Form("((%s) && Bgen == 23333)",VarCutData.Data());
 
-		YieldDataAlpha = fData->Integral(BMassMin,BMassMax)/binwidthmass;
-		YieldErrDataAlpha = fData->Integral(BMassMin,BMassMax)/binwidthmass*fData->GetParError(0)/fData->GetParameter(0);
-
-		YieldMCAlpha = fMCPre->Integral(BMassMin,BMassMax)/binwidthmass;
-		YieldErrMCAlpha = fMC->Integral(BMassMin,BMassMax)/binwidthmass*fMC->GetParError(0)/fMC->GetParameter(0);
+			cout << "VarCutMC = " << VarCutMC.Data() << endl;
 
 
-		DataRatio = YieldDataAlpha/PreCutYieldData;
-		DataRatioErr = DataRatio * sqrt(1/YieldDataAlpha + 1/PreCutYieldData);
-
-		MCRatio = YieldMCAlpha/PreCutYieldMC;
-		MCRatioErr = MCRatio * sqrt(1/YieldMCAlpha + 1/PreCutYieldMC);
-
-		doubleratioalpha = DataRatio/MCRatio;
-		doubleratioalphaErr = doubleratioalpha * sqrt(1/YieldDataAlpha + 1/PreCutYieldData + 1/YieldMCAlpha + 1/PreCutYieldMC);
-
-		out1 << alpha	<<	 " & " << DataRatio << " $\\pm$ " << DataRatioErr <<  " & " << MCRatio <<  " $\\pm$ " << MCRatioErr << " & "  << doubleratioalpha << " $\\pm$ " << doubleratioalphaErr << endl;
-		alphahis->Fill(i+1,doubleratioalpha);
-		alphahis->SetBinError(i+1,doubleratioalphaErr);
-	}
-	/*
-	//Ratio Variation//
-	for(int i = 0; i < Nratio; i++)
-	{
-
-	//		cout << "Doing Ratio i = " << i << endl; 
-	ratio = ratioini + i * ratiostep;
-
-	//	TString cutratio = Form("Dalpha < %f && (DsvpvDistance/DsvpvDisErr) > %f && Dchi2cl > %f",alphafin,ratio,Probini);
-	TString cutratio = Form("(BsvpvDistance/BsvpvDisErr) > %f && %s",ratio,PreCut.Data());
-	TString cutratioMC = Form("%s * (%s && Bgen == 23333)",weightfunctionreco.Data(),cutratio.Data());
-
-	TH1D * hratio = new TH1D("hratio","hratio",100,1.7,2.0);
-
-
-	int ratioYmin = hratio->GetXaxis()->FindBin(center - width + 0.000001);
-	int ratioYmax = hratio->GetXaxis()->FindBin(center + width - 0.000001);
-
-	int ratioBminleft = hratio->GetXaxis()->FindBin(center - sidemax + 0.000001);
-	int ratioBmaxleft = hratio->GetXaxis()->FindBin(center - sidemin - 0.000001);
-
-	int ratioBminright = hratio->GetXaxis()->FindBin(center + sidemin + 0.000001);
-	int ratioBmaxright = hratio->GetXaxis()->FindBin(center + sidemax - 0.000001);
-
-	nt->Project("hratio","Bmass",PreCut.Data());
-
-
-	double ratioYNoCut = hratio->Integral(ratioYmin,ratioYmax);
-	double ratioBNoCut = hratio->Integral(ratioBminleft,ratioBmaxleft) +  hratio->Integral(ratioBminright,ratioBmaxright);
-	double ratioSigNoCut = ratioYNoCut - ratioBNoCut*width/(sidemax - sidemin);
-
-	nt->Project("hratio","Bmass",cutratio.Data());
-
-	double ratioYCut = hratio->Integral(ratioYmin,ratioYmax);
-	double ratioBCut =  hratio->Integral(ratioBminleft,ratioBmaxleft) +  hratio->Integral(ratioBminright,ratioBmaxright);
-	double ratioSigCut = ratioYCut - ratioBCut*width/(sidemax - sidemin);
-
-	//	cout <<" ratioYCut = " << ratioYCut << "  ratioBCut = " << ratioBCut <<  "   ratioSigCut =" << ratioSigCut << endl;
-
-	double DataRatio = ratioSigCut/ratioSigNoCut;
-	double DataRatioErr = DataRatio * sqrt(1/ratioSigNoCut + 1/ratioSigCut);
+			HisData = new TH1D(Form("%s_%d_DataHis",VarName[j].Data(),i),Form("%s_%d_DataHis",VarName[j].Data(),i),NBMassBin,BMassMin,BMassMax);
+			HisMC = new TH1D(Form("%s_%d_MCHis",VarName[j].Data(),i),Form("%s_%d_MCHis",Var[j].Data(),i),NBMassBin,BMassMin,BMassMax);	
 
 
 
-
-	ntMC->Project("hratio","Bmass",PreCutMC.Data());
-
-	double ratioSigNoCutMC = hratio->Integral(ratioYmin,ratioYmax);
-
+			nt->Project(Form("%s_%d_DataHis",VarName[j].Data(),i),"Bmass",VarCutData.Data());
+			ntMC->Project(Form("%s_%d_MCHis",VarName[j].Data(),i),"Bmass",(TCut(BptWeight.Data())*TCut(CentWeight.Data())*TCut(PVzWeight.Data())*TCut(weightfunctionreco.Data()))*(TCut(VarCutMC.Data())));
+	
 
 
-	ntMC->Project("hratio","Bmass",cutratioMC.Data());
+			cout << "Data Integral " << HisData->Integral() << endl;
+			cout << "MC Integral " << HisMC->Integral() << endl;
 
-	double ratioSigCutMC = hratio->Integral(ratioYmin,ratioYmax);
+			fData = fit(c, cMC, HisData, HisMC, ptMin, ptMax, 0, isPbPb, total, CentMinBin, CentMaxBin, "1");
 
-	double MCRatio = ratioSigCutMC/ratioSigNoCutMC;
-	double MCRatioErr = MCRatio * sqrt(1/ratioSigCutMC + 1/ratioSigNoCutMC);
-	double doubleratioratio = DataRatio/MCRatio;
-	double doubleratioratioErr = doubleratioratio * sqrt(1/ratioSigCut + 1/ratioSigNoCut + 1/ratioSigCutMC + 1/ratioSigNoCutMC);
-	ratiohis->SetBinContent(i+1,doubleratioratio);
-	ratiohis->SetBinError(i+1,doubleratioratioErr);
-	out2 << ratio	<<	 " & " << DataRatio << " $\\pm$ " << DataRatioErr <<  " & " << MCRatio <<  " $\\pm$ " << MCRatioErr << " & "  << doubleratioratio << " $\\pm$ " << doubleratioratioErr << endl;
+			fMC = fit(c, cMC, HisMC, HisMC, ptMin, ptMax, 1, isPbPb, total, CentMinBin, CentMaxBin, "1");
 
 
+			YieldData = fData->Integral(BMassMin,BMassMax)/binwidthmass;
+			YieldErrData = fData->Integral(BMassMin,BMassMax)/binwidthmass*fData->GetParError(0)/fData->GetParameter(0);
 
+			YieldMC = fMCPre->Integral(BMassMin,BMassMax)/binwidthmass;
+			YieldErrMC = fMC->Integral(BMassMin,BMassMax)/binwidthmass*fMC->GetParError(0)/fMC->GetParameter(0);
+
+
+			DataRatio = YieldData/PreCutYieldData;
+			DataRatioErr = DataRatio * sqrt(1/YieldData + 1/PreCutYieldData);
+
+			MCRatio = YieldMC/PreCutYieldMC;
+			MCRatioErr = MCRatio * sqrt(1/YieldMC + 1/PreCutYieldMC);
+
+			doubleratio = DataRatio/MCRatio;
+			doubleratioErr = doubleratio * sqrt(1/YieldData + 1/PreCutYieldData + 1/YieldErrMC + 1/PreCutYieldMC);
+
+
+			cout << "DataRatio = " << DataRatio << "  MCRatio = " << MCRatio << endl;
+
+
+			cout << "YieldData = " << YieldData << "  PreCutYieldData = " << PreCutYieldData << " YieldMC =  " << YieldMC << endl;
+
+			if(YieldData > 0 && YieldMC > 0){
+			cout << "doubleratio = " << doubleratio << "  doubleratioErr = " << doubleratioErr << endl;
+			out1 << alpha	<<	 " & " << DataRatio << " $\\pm$ " << DataRatioErr <<  " & " << MCRatio <<  " $\\pm$ " << MCRatioErr << " & "  << doubleratio << " $\\pm$ " << doubleratioErr << endl;
+		
+			CutValueXBin = ResultHis->GetXaxis()->FindBin(CutValue);
+			
+			ResultHis->SetBinContent(CutValueXBin,doubleratio);
+			ResultHis->SetBinError(CutValueXBin,doubleratioErr);
+			}
+		}
+		cResults->cd();
+		ResultHis->SetMarkerStyle(20);
+		ResultHis->SetMarkerColor(kBlack);
+		ResultHis->SetMarkerSize(2);
+		ResultHis->Draw("ep");
+		cResults->SaveAs(Form("Plots/CutVar%s.png",VarName[j].Data()));
 	}
 
-	//Prob Variation//
-	for(int i = 0; i < NProb; i++)
-	{
-	//	cout << "Doing Prob i = " << i << endl; 
-	Prob = Probini + i * Probstep;
-	TString cutProb = Form("Bchi2cl > %f && %s",Prob,PreCut.Data());
-	//TString cutProb = Form("Dalpha < %f && (DsvpvDistance/DsvpvDisErr) > %f && Dchi2cl > %f",alphafin,ratioini,Prob);
-	TString cutProbMC = Form("%s * (%s && Bgen == 23333)",weightfunctionreco.Data(),cutProb.Data());
 
-	TH1D * hProb = new TH1D("hProb","hProb",100,1.7,2.0);
-
-
-	int ProbYmin = hProb->GetXaxis()->FindBin(center - width + 0.000001);
-	int ProbYmax = hProb->GetXaxis()->FindBin(center + width - 0.000001);
-
-	int ProbBminleft = hProb->GetXaxis()->FindBin(center - sidemax + 0.000001);
-	int ProbBmaxleft = hProb->GetXaxis()->FindBin(center - sidemin - 0.000001);
-
-	int ProbBminright = hProb->GetXaxis()->FindBin(center + sidemin + 0.000001);
-	int ProbBmaxright = hProb->GetXaxis()->FindBin(center + sidemax - 0.000001);
-
-	nt->Project("hProb","Bmass",PreCut.Data());
-
-
-	double ProbYNoCut = hProb->Integral(ProbYmin,ProbYmax);
-	double ProbBNoCut = hProb->Integral(ProbBminleft,ProbBmaxleft) +  hProb->Integral(ProbBminright,ProbBmaxright);
-	double ProbSigNoCut = ProbYNoCut - ProbBNoCut*width/(sidemax - sidemin);
-
-	nt->Project("hProb","Bmass",cutProb.Data());
-
-	double ProbYCut = hProb->Integral(ProbYmin,ProbYmax);
-	double ProbBCut =  hProb->Integral(ProbBminleft,ProbBmaxleft) +  hProb->Integral(ProbBminright,ProbBmaxright);
-	double ProbSigCut = ProbYCut - ProbBCut*width/(sidemax - sidemin);
-
-	double DataRatio = ProbSigCut/ProbSigNoCut;
-	double DataRatioErr = DataRatio * sqrt(1/ProbSigCut + 1/ProbSigNoCut);
-
-
-	ntMC->Project("hProb","Bmass",PreCutMC.Data());
-
-	double ProbSigNoCutMC = hProb->Integral(ProbYmin,ProbYmax);
-
-
-	ntMC->Project("hProb","Bmass",cutProbMC.Data());
-
-	double ProbSigCutMC = hProb->Integral(ProbYmin,ProbYmax);
-
-	double MCRatio = ProbSigCutMC/ProbSigNoCutMC;
-	double MCRatioErr = MCRatio * sqrt(1/ProbSigCutMC + 1/ProbSigNoCutMC);
-	double doubleratioProb = DataRatio/MCRatio;
-	double doubleratioProbErr = doubleratioProb * sqrt(1/ProbSigCut + 1/ProbSigNoCut + 1/ProbSigCutMC + 1/ProbSigNoCutMC);
-
-	//	cout << " doubleratioProb = " << doubleratioProb << endl;
-
-	cout << "Prob = " << Prob << endl;
-	cout << "DataRatioProb = " << DataRatio << "  DataRatioProb Error =  " << DataRatioErr << endl;
-	cout << "MCRatioProb = " << MCRatio << "  MCRatioProb Error =  " << MCRatioErr << endl;
-	cout << "doubleratioProb = " << doubleratioProb << "  doubleratioProb Error =  " <<  doubleratioProbErr << endl;
-
-
-	Probhis->SetBinContent(i+1,doubleratioProb);
-	Probhis->SetBinError(i+1,doubleratioProbErr);
-
-	out3 << Prob	<<	 " & " << DataRatio << " $\\pm$ " << DataRatioErr <<  " & " << MCRatio <<  " $\\pm$ " << MCRatioErr << " & "  << doubleratioProb << " $\\pm$ " << doubleratioProbErr << endl;
-
-
-}
-*/
-
-
-
-
-TCanvas* c1= new TCanvas("c1","",1800,800);
-c1->cd();
-c1->Divide(3,1);
-c1->cd(1);
-/*
-   if(collsyst == "pp"){
-   alphahis->SetMinimum(0.90);
-   alphahis->SetMinimum(1.10);
-   ratiohis->SetMinimum(0.95);
-   ratiohis->SetMinimum(1.05);
-   Probhis->SetMinimum(0.95);
-   Probhis->SetMinimum(1.05);
-   }
-   if(collsyst == "pPb"){
-   alphahis->SetMinimum(1.00);
-   alphahis->SetMinimum(1.25);
-   ratiohis->SetMinimum(1.00);
-   ratiohis->SetMinimum(1.25);
-   Probhis->SetMinimum(0.95);
-   Probhis->SetMinimum(1.05);
-   }
-   */
-alphahis->GetXaxis()->SetTitle("D alpha");
-alphahis->GetYaxis()->SetTitle("Double Ratio");
-alphahis->SetTitle("CutVariation - D #alpha");
-alphahis->Draw("e0xp");
-alphahis->SetMarkerStyle(20);
-alphahis->SetMarkerSize(2);
-alphahis->SetMinimum(0.90);		
-alphahis->SetMaximum(1.10);
-
-alphahis->Draw("e0xp");
-c1->cd(2);
-ratiohis->GetXaxis()->SetTitle("Decay Length Ratio");
-ratiohis->GetYaxis()->SetTitle("Double Ratio");
-ratiohis->SetTitle("CutVariation - Decay Length Ratio");
-ratiohis->Draw("e0xp");
-ratiohis->SetMarkerStyle(20);
-ratiohis->SetMarkerSize(2);
-ratiohis->SetMinimum(0.90);		
-ratiohis->SetMaximum(1.10);
-
-ratiohis->Draw("e0xp");
-c1->cd(3);
-Probhis->GetXaxis()->SetTitle("Vertex Probability");
-Probhis->GetYaxis()->SetTitle("Double Ratio");
-Probhis->SetTitle("CutVariation - Vertex Probability");
-Probhis->Draw("e0xp");
-Probhis->SetMarkerStyle(20);
-Probhis->SetMarkerSize(2);
-Probhis->Draw("e0xp");
-Probhis->SetMinimum(0.90);		
-Probhis->SetMaximum(1.10);
-
-c1->SaveAs(Form("Plots/CutVariation_%s.pdf",collsyst.Data()));
-
+	CutVarOut->Close();
 }
 
 

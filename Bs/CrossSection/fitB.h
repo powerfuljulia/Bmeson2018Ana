@@ -1,4 +1,5 @@
 #include "uti.h"
+#include "parameters.h"
 using namespace std;
 #define BSUBS_MASS 5.36682
 
@@ -59,10 +60,15 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	TString iNP = npfit;
     TString funcform = "";
 	TString sigfunc = "[0]*([7]*Gaus(x,[1],[2])/(sqrt(2*3.14159)*[2])+(1-[7])*Gaus(x,[1],[8])/(sqrt(2*3.14159)*[8]))";
+
+	//TString sigfunc = "[0]*([7]*Gaus(x,[1],[2])/(sqrt(2*3.14159)*[2])+(1-[7])*([9]*Gaus(x,[1],[8])/(sqrt(2*3.14159)*[8])+(1-[9])*Gaus(x,[1],[10])/(sqrt(2*3.14159)*[10])))";
+
+	
 	//TString sigfunc = "[0]*([7]*Gaus(x,[1],[2])/(sqrt(2*3.14159)*[2])+(1-[7])*([9]*Gaus(x,[1],[8])/(sqrt(2*3.14159)*[8])+(1-[9])*Gaus(x,[1],[10])/(sqrt(2*3.14159)*[10])))";
 	//TString sigfunc = "[0]*([7]*exp(-0.5*((x-[1])/[2])^2)/(sqrt(2*3.14159)*[2])+(1-[7])*exp(-0.5*((x-[1])/[8])^2)/(sqrt(2*3.14159)*[8]))";
 	//TString bkgfunc = "[3]+[4]*x+[5]*x*x";
 	//TString bkgfunc = "[3]+[4]*x";
+	//TString sigfunc = "[0]*([7]*Gaus(x,[1],[2])/(sqrt(2*3.14159)*[2])+(1-[7])*([9]*Gaus(x,[1],[8])/(sqrt(2*3.14159)*[8])+(1-[9])*Gaus(x,[1],[10])/(sqrt(2*3.14159)*[10])))";
 	TString bkgfunc = "[3]+[4]*x+[5]*x*x+[6]*x*x*x";
 	if(funcOpt == singleGaus) sigfunc = "[0]*(Gaus(x,[1],[2])/(sqrt(2*3.14159)*[2]))";//single Gaussian
 	if(funcOpt == tripleGaus) sigfunc = "[0]*([7]*Gaus(x,[1],[2])/(sqrt(2*3.14159)*[2])+(1-[7])*([9]*Gaus(x,[1],[8])/(sqrt(2*3.14159)*[8])+(1-[9])*Gaus(x,[1],[10])/(sqrt(2*3.14159)*[10])))";//triple Gaussian
@@ -79,6 +85,7 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	f->SetRange(minhisto,maxhisto);
 	//clean0(h);
 
+	/*
 	if(weightdata != "1"){
 		int maxb = h->GetMaximumBin();
 		double _max = h->GetBinContent(maxb);
@@ -88,7 +95,7 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 		f->SetParLimits(4,-1e5,1e5);
 		f->SetParLimits(11,0,1e4);
 	}
-
+	*/
 	//signal setting
 	f->SetParameter(0,setparam0);
 	f->SetParameter(1,setparam1);
@@ -96,9 +103,9 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	f->SetParameter(8,setparam3);
 	f->SetParameter(10,setparam3);
 	f->SetParameter(12,0);
-	f->SetParLimits(2,0.01,0.1);
-	f->SetParLimits(8,0.01,0.1);
-	f->SetParLimits(10,0.01,0.1);
+	f->SetParLimits(2,0.01,0.3);
+	f->SetParLimits(8,0.01,0.3);
+	f->SetParLimits(10,0.01,0.3);
 	//signal fraction
 	f->SetParLimits(7,0,1);
 	f->SetParLimits(9,0,1);
@@ -262,6 +269,18 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	//print out chi2 calculations
 	Double_t yield = mass->Integral(minhisto,maxhisto)/binwidthmass;
 	Double_t yieldErr = mass->Integral(minhisto,maxhisto)/binwidthmass*mass->GetParError(0)/mass->GetParameter(0);
+
+	cout << "yield inside = " << yield << endl;
+	cout << "yieldErr inside = " << yieldErr << endl;
+
+	cout << "Gauss 1 Peak = " <<  mass->GetParameter(0) * mass->GetParameter(7) << endl;
+	cout << "Gauss 1 Width = " <<  mass->GetParameter(2)  << endl;
+	cout << "Gauss 2 Peak = " <<  mass->GetParameter(0) * (1 - mass->GetParameter(7)) * mass->GetParameter(9) << endl;
+	cout << "Gauss 2 Width = " <<  mass->GetParameter(2)  << endl;
+	cout << "Gauss 3 Peak = " <<  mass->GetParameter(0) * (1 - mass->GetParameter(7)) *(1 - mass->GetParameter(9)) << endl;
+	cout << "Gauss 3 Width = " <<  mass->GetParameter(10)  << endl;
+
+
 	TH1D* fh = (TH1D*)h->Clone("fh");
 	double dataArr[nbinsmasshisto]; double dataErrArr[nbinsmasshisto]; double fitArr[nbinsmasshisto]; 
 	for(int i = 0; i < nbinsmasshisto; i++){
@@ -375,7 +394,7 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	cout<<"BG in signal region: "<<bkgd<<endl;
 	Double_t SB = yield/bkgd;
     Double_t Significance =  yield/TMath::Sqrt(bkgd+yield);
-    int nDigit_Significance = 3;
+    int nDigit_Significance = 6;
     Significance = roundToNdigit(Significance);
     nDigit_Significance = sigDigitAfterDecimal(Significance);
     TLatex* texSig = new TLatex(0.55,0.54,Form("Significance = %.*f", nDigit_Significance, Significance));
@@ -385,19 +404,22 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	texSig->SetTextSize(0.04);
 	texSig->SetLineWidth(2);
 
-    int nDigit_yield = 3;
-    yield = roundToNdigit(yield);
-    nDigit_yield = sigDigitAfterDecimal(yield);
-    TLatex* texYield = new TLatex(0.55,0.44,Form("Yield = %.*f", nDigit_yield, yield));
+//    int nDigit_yield = 6;
+ //   yield = roundToNdigit(yield);
+//    nDigit_yield = sigDigitAfterDecimal(yield);
+ //   TLatex* texYield = new TLatex(0.55,0.44,Form("Yield = %.*f", nDigit_yield, yield));
+
+	TLatex* texYield = new TLatex(0.55,0.44,Form("Yield = %f", yield));
 	texYield->SetNDC();
 	texYield->SetTextFont(42);
 	texYield->SetTextSize(0.04);
 	texYield->SetLineWidth(2);
 
-	int nDigit_yieldErr = 3;
-	yieldErr = roundToNdigit(yieldErr);
-    nDigit_yieldErr = sigDigitAfterDecimal(yieldErr);
-    TLatex* texYieldErr = new TLatex(0.55,0.34,Form("YieldErr = %.*f", nDigit_yieldErr, yieldErr));
+//	int nDigit_yieldErr = 6;
+//	yieldErr = roundToNdigit(yieldErr);
+//    nDigit_yieldErr = sigDigitAfterDecimal(yieldErr);
+	//TLatex* texYieldErr = new TLatex(0.55,0.34,Form("YieldErr = %.*f", nDigit_yieldErr, yieldErr));
+	TLatex* texYieldErr = new TLatex(0.55,0.34,Form("YieldErr = %f", yieldErr));
 	texYieldErr->SetNDC();
 	texYieldErr->SetTextFont(42);
 	texYieldErr->SetTextSize(0.04);

@@ -11,7 +11,7 @@ DOANALYSISPP_ROOFITONSAVED=0
 DOANALYSISPP_MCSTUDY=0
 DOANALYSISPP_CROSS=0
 
-DOANALYSISPbPb_FIT=1
+DOANALYSISPbPb_FIT=0
 DOANALYSISPbPb_FITONSAVED=0
 DOANALYSISPbPb_ROOFIT=0
 DOANALYSISPbPb_ROOFITONSAVED=0
@@ -19,7 +19,11 @@ DOANALYSISPbPb_MCSTUDY=0
 DOANALYSISPbPb_CROSS=0
 DORAA=0
 DORAARATIO=0
+DOANALYSISPbPb_REWEIGHT=1
 
+
+DOANALYSISPbPb_PTSHAPESYST=1
+DOANALYSISPbPb_PTSHAPESYSTPLOT=1
 ### pt inclusive interval mass fit
 DOANALYSISPP_FIT_Inc=0
 DOANALYSISPP_FITONSAVED_Inc=0
@@ -130,7 +134,8 @@ INPUTDATAPbPb="/export/d00/scratch/tawei/HeavyFlavor/Run2Ana/BsTMVA/samples/Bntu
 #INPUTDATAPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsTMVA/TMVAHigh4BinsRedo/Data_Bs_pp_TMVA_BDT_pp.root"
 #INPUTDATAPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Recalculation/Reassigned.root"
 
-INPUTMCPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsTMVA/TMVAHigh3BinsRedo/MC_Bs_PbPb_TMVA_BDT_pp.root"
+#INPUTMCPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsTMVA/TMVAHigh3BinsRedo/MC_Bs_PbPb_TMVA_BDT_pp_CentWighted.root"
+INPUTMCPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/PthatService/output/PthatMergedCentreweightBDT.root"
 INPUTDATAPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsTMVA/TMVAHigh3BinsRedo/Data_Bs_PbPb_TMVA_BDT_pp.root"
 
 ## ANALYSIS PP TRIGGERED
@@ -138,6 +143,17 @@ FONLLDATINPUT="pp_Bplus_5p03TeV_y2p4"
 FONLLOUTPUTFILE="ROOTfiles/fonllOutput_pp_Bplus_5p03TeV_y2p4.root"
 FONLLOUTPUTFILEREWEIGHT="ROOTfiles/fonllOutput_pp_Bplus_5p03TeV_y2p4_reweightBin.root"
 OUTPUTFILERAA="ROOTfiles/outputRAA.root"
+
+
+
+##FILENAME PT SHAPE SYST
+
+WEIGHTEDEFFOUTFILE="plotPtShapeSyst/Files/EffWeighted.root"
+UNWEIGHTEDEFFOUTFILE="plotPtShapeSyst/Files/EffUnWeighted.root"
+PLOTNAME="plotPtShapeSyst/Plots/EffRatio.png"
+PTSHAPEOUTFILENAME="plotPtShapeSyst/Files/EffRatio.root"
+
+
 
 LABELPP="pp"
 LUMIPP=27.748 # paper 20170224
@@ -252,6 +268,7 @@ CUTPbPb=${BASECUTPbPb}"&&((Bpt>7&&Bpt<15&&BDT_pt_7_15>0.09)||(Bpt>15&&Bpt<20&&BD
 CUTPbPb=${CUTPbPb}"&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter"
 
 
+echo "NEW CUT CUTPbPb = " $CUTPbPb
 
 
 #CUTPbPbData=${BASECUTPbPb}"&&((Bpt>7&&Bpt<15&&BDT_pt_7_15>0.213755)||(Bpt>15&&Bpt<50&&BDT_pt_15_50>0.254413))"
@@ -278,6 +295,13 @@ NPFIT_PbPb="1"
 #NPFIT_PbPb="1.299998*Gaus(x,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((x-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*Gaus(x,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*Gaus(x,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))" 
 NPROOFIT_PbPb="1"
 #NPROOFIT_PbPb="1.299998*TMath::Gaus(Bmass,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((Bmass-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*TMath::Gaus(Bmass,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*TMath::Gaus(Bmass,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))" 
+
+
+if [ $DOANALYSISPbPb_REWEIGHT -eq 1 ]; then      
+g++ ReweightBpt.C $(root-config --cflags --libs) -g -o ReweightBpt.exe
+./ReweightBpt.exe "$INPUTMCPbPbCANDWISE" "$FONLLOUTPUTFILE"
+rm ReweightBpt.exe
+fi
 
 if [ $DOANALYSISPbPb_FIT -eq 1 ]; then      
 g++ fitB.C $(root-config --cflags --libs) -g -o fitB.exe 
@@ -333,6 +357,25 @@ cd plotBsBpRatioDORAA
 root -b -q plotBsBpRatio.cc
 cd -
 fi
+
+
+if [ $DOANALYSISPbPb_PTSHAPESYST -eq 1 ]; then      
+g++ MCefficiency.C $(root-config --cflags --libs) -g -o MCefficiency.exe 
+./MCefficiency.exe 1 "$INPUTMCPbPbCANDWISE" "$SELGENPbPb" "$SELGENPbPbACCPbPb" "$RECOONLYPbPb" "$CUTPbPb&&$TRGPbPbMC" "Bpt" "Gpt" "$LABELPbPb" "$WEIGHTEDEFFOUTFILE" "plotPtShapeSyst/Plots" 1 "$CENTPbPbMIN" "$CENTPbPbMAX"
+./MCefficiency.exe 1 "$INPUTMCPbPbCANDWISE" "$SELGENPbPb" "$SELGENPbPbACCPbPb" "$RECOONLYPbPb" "$CUTPbPb&&$TRGPbPbMC" "Bpt" "Gpt" "$LABELPbPb" "$UNWEIGHTEDEFFOUTFILE" "plotPtShapeSyst/Plots" 2 "$CENTPbPbMIN" "$CENTPbPbMAX"
+rm MCefficiency.exe
+fi
+
+
+if [ $DOANALYSISPbPb_PTSHAPESYSTPLOT -eq 1 ]; then    
+g++ PtShapeSyst.C $(root-config --cflags --libs) -g -o PtShapeSyst.exe 
+./PtShapeSyst.exe "$WEIGHTEDEFFOUTFILE" "$UNWEIGHTEDEFFOUTFILE" "$PLOTNAME" "$PTSHAPEOUTFILENAME"
+rm PtShapeSyst.exe
+fi
+
+
+
+
 
 ### pt inclusive interval mass fit
 OUTPUTFILEPPSAVEHIST_Inc="ROOTfiles/hPtSpectrumSaveHistBplusPP_Inc.root"

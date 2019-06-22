@@ -5,7 +5,8 @@ doPbPbComparison=1
 doShapePbPb=0
 doReweightPbPb=0
 doCentReweightPbPb=0
-WithCentWeights=1
+doCentTree=0
+WithCentWeights=0
 WithWeights=1
 
 #ppData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/D0Local/skim_Dntuple_crab_pp_MinimumBias1to20_AOD_D0Dsy1p1_tkpt0p5eta2p0_04122016.root"
@@ -19,9 +20,13 @@ WithWeights=1
 
 #ppData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/TMVAVeryLowCheck/Data_D0_pp_TMVA_BDTG_pp.root"
 #ppMC="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/Unskim2/ppUnskim2.root"
+CentOutFile="CentOut.root"
 
 ppData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/ppReweightStudy/Data/PD23.root"
 ppMC="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/ppReweightStudy/MC/MC.root"
+
+
+
 
 
 #PbPbData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BTMVA/TMVAMerge2/Data_D0_pp_TMVA_BDTG_pp.root"
@@ -36,6 +41,8 @@ ppMC="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/ppReweightStudy/MC/MC.r
 #PbPbMC="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/crab_Bfinder_20190520_Hydjet_Pythia8_BuToJpsiK_1033p1_pt3tkpt0p7dls2_v2_pthatweight.root"
 PbPbMC="/export/d00/scratch/gwangjun/crab_Bfinder_20190520_Hydjet_Pythia8_BuToJpsiK_1033p1_pt3tkpt0p7dls2_v2_pthatweight_hardcut.root"
 PbPbData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/crab_Bfinder_20190513_HIDoubleMuon__PsiPeri__HIRun2018A_04Apr2019_v1_1033p1_GoldenJSON_skimhltBsize_ntKp.root"
+
+PbPbMCCentWeight="crab_Bfinder_20190520_Hydjet_Pythia8_BuToJpsiK_1033p1_pt3tkpt0p7dls2_v2_pthatweight_hardcut_weighted.root"
 
 #PbPbData="crab_Bfinder_20181220_HIDoubleMuon_HIRun2018A_PromptReco_v1v2_1031_NoJSON_loose_skimhlt_empty.root"
 #CommonCut=('Btrk1Pt > 1 && Btrk2Pt > 1 && Bchi2cl > 0.05 && BsvpvDistance/BsvpvDisErr > 2 && abs(Btrk1Eta-0.0) < 2.4  && abs(Btrk2Eta-0.0) < 2.4 &&  abs(By-0.0) < 2.4')
@@ -81,9 +88,22 @@ if [ $doPbPbComparison -eq 1 ]; then
 #SideBandCut="Dalpha < 0.10 && (DsvpvDistance/DsvpvDisErr) > 4 && Dchi2cl > 0.10 && Dtrk1Pt > 1 && Dtrk2Pt > 1 && Dy < 1.465 && Dy > -0.535 && abs(Dtrk1Eta-0.465) < 1.5  && abs(Dtrk2Eta-0.465) < 1.5 && (Dtrk1PtErr/Dtrk1Pt) < 0.3 && (Dtrk2PtErr/Dtrk2Pt) < 0.3 && Dpt > 2 && Dpt < 20 && abs(Dmass - 1.865) > 0.06 &&  abs(Dmass - 1.865) < 0.12"
 #GenCut="Dalpha < 0.10 && (DsvpvDistance/DsvpvDisErr) > 4 && Dchi2cl > 0.10 && Dtrk1Pt > 1 && Dtrk2Pt > 1 && Dy < 1.465 && Dy > -0.535 && abs(Dtrk1Eta-0.465) < 1.5  && abs(Dtrk2Eta-0.465) < 1.5 && (Dtrk1PtErr/Dtrk1Pt) < 0.3 && (Dtrk2PtErr/Dtrk2Pt) < 0.3 && Dpt > 2 && Dpt < 20 && abs(Dmass - 1.865) < 0.02 && Dgen == 23333"
 
+echo "WITHWEIGHT IS = " $WithWeights "!!!!"
+
+if [ $WithWeights -eq 0 ]; then
 g++ MCDataComparison.C $(root-config --cflags --libs) -g -o MCDataComparison.exe 
 ./MCDataComparison.exe "PbPb" "$PbPbData"  "$PbPbMC" "$SignalCut" "$SideBandCut" "$GenCut" "$CommonCut" "$WithWeights" 
 rm MCDataComparison.exe
+fi
+
+if [ $WithWeights -eq 1 ]; then
+g++ MCDataComparison.C $(root-config --cflags --libs) -g -o MCDataComparison.exe 
+./MCDataComparison.exe "PbPb" "$PbPbData"  "$PbPbMCCentWeight" "$SignalCut" "$SideBandCut" "$GenCut" "$CommonCut" "$WithWeights" 
+rm MCDataComparison.exe
+fi
+
+
+
 fi
 
 if [ $doReweightPbPb -eq 1 ]; then
@@ -98,5 +118,13 @@ g++ CentReweight.C $(root-config --cflags --libs) -g -o CentReweight.exe
 ./CentReweight.exe "PbPb" "$PbPbData"  "$PbPbMC" $WithCentWeights
 rm CentReweight.exe
 fi
+
+
+if [ $doCentTree -eq 1 ]; then
+g++ CentWeightMaker.C $(root-config --cflags --libs) -g -o CentWeightMaker.exe 
+./CentWeightMaker.exe "PbPb" "$PbPbMC" "$CentOutFile"
+rm CentWeightMaker.exe
+fi
+
 
 

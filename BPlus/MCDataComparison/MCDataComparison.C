@@ -15,6 +15,8 @@
 #include <fstream>
 #include "uti.h"
 #include "parameters.h"
+#include "Centparameters.h"
+
 //#include "his.h"
 using namespace std;
 
@@ -38,7 +40,6 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 
 
 	if(collsyst == "PbPb") weightfunctionreco="(pthatweight)";
-
 	//cout << "Signal Cut = " << SignalCut.Data() << endl;
 
 
@@ -56,10 +57,10 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 	if(WithWeights == 1)
 	{
 
-		BptWeight="0.599212 + -0.020703 * Bpt + 0.003143 * Bpt ** 2 +  -0.000034 * Bpt ** 3";
-		CentWeight = "10.955696 * TMath::Exp(-0.056194 * hiBin)";
+		BptWeight="0.475953*TMath::Exp(-0.001731*Bpt)+38.069448/(Bpt*Bpt+0.001237*0.001237)";
+		CentWeight = "CentWeight";
 		//PVzWeight = "TMath::Exp(0.057104 + -0.020908 * PVz + -0.001864 * PVz * PVz)";
-		PVzWeight =	"1.055564 * TMath::Exp(-0.001720 * (PVz + 2.375584)*(PVz + 2.375584))";
+		PVzWeight =	"(0.162740 * TMath::Exp(- 0.020823 * (PVz - 0.428205)*(PVz - 0.428205)))/(0.159489 * TMath::Exp(- 0.019979 * (PVz - 0.594276)*(PVz - 0.594276)))";
 		WeightType="Weighted";
 	}
 
@@ -91,6 +92,22 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 
 
 	TFile * fout = new TFile("output.root","RECREATE");
+
+		TFile *fin = new TFile(inputdata.Data());
+		TFile *finMC = new TFile(inputMC.Data());
+
+
+
+		TTree* nt = (TTree*) fin->Get("Bfinder/ntKp");
+		nt->AddFriend("hltanalysis/HltTree");
+		nt->AddFriend("hiEvtAnalyzer/HiTree");  
+		nt->AddFriend("skimanalysis/HltTree");
+		//		nt->AddFriend("ntGen");
+		TTree* ntMC = (TTree*) finMC->Get("Bfinder/ntKp");
+		ntMC->AddFriend("hltanalysis/HltTree");
+		ntMC->AddFriend("hiEvtAnalyzer/HiTree");  
+		ntMC->AddFriend("skimanalysis/HltTree");
+		if(WithWeights == 1 ) ntMC->AddFriend("CentWeightTree");
 
 	for(int j = 0; j < NBins;j++){
 		cout << "ptL = " << ptBins[j] << "  ptU = " << ptBins[j+1] << endl;
@@ -130,7 +147,7 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 		HisBMC[2] =  new TH1D("ProbhisBMC","ProbhisBMC",NProb,Probmin,Probmax);  
 		HisGMC[2] =  new TH1D("ProbhisGMC","ProbhisGMC",NProb,Probmin,Probmax);  
 
-		HisSData[3] =  new TH1D("RatiohisSData","RatiohisSData",NRatio,Ratiomin,Ratiomax);
+	HisSData[3] =  new TH1D("RatiohisSData","RatiohisSData",NRatio,Ratiomin,Ratiomax);
 		HisBData[3] =  new TH1D("RatiohisBData","RatiohisBData",NRatio,Ratiomin,Ratiomax);  
 		HisSMC[3] =  new TH1D("RatiohisSMC","RatiohisSMC",NRatio,Ratiomin,Ratiomax);
 		HisBMC[3] =  new TH1D("RatiohisBMC","RatiohisBMC",NRatio,Ratiomin,Ratiomax);  
@@ -154,20 +171,6 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 		HisGMC[4] =  new TH1D("DyhisGMC","DyhisGMC",NDy,pPbDymin,pPbDymax);  
 		}
 		*/
-		TFile *fin = new TFile(inputdata.Data());
-		TFile *finMC = new TFile(inputMC.Data());
-
-
-
-		TTree* nt = (TTree*) fin->Get("Bfinder/ntKp");
-		nt->AddFriend("hltanalysis/HltTree");
-		nt->AddFriend("hiEvtAnalyzer/HiTree");  
-		nt->AddFriend("skimanalysis/HltTree");
-		//		nt->AddFriend("ntGen");
-		TTree* ntMC = (TTree*) finMC->Get("Bfinder/ntKp");
-		ntMC->AddFriend("hltanalysis/HltTree");
-		ntMC->AddFriend("hiEvtAnalyzer/HiTree");  
-		ntMC->AddFriend("skimanalysis/HltTree");
 
 
 
@@ -461,7 +464,7 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 
 			YRatioYMC[i]->SetMarkerColor(kBlue);
 			YRatioGMC[i]->SetMarkerColor(kGreen);
-
+			
 			YRatioYMC[i]->SetMinimum(0);
 			YRatioYMC[i]->SetMaximum(5.5);
 			if(i==27)	YRatioYMC[i]->SetMaximum(20);
