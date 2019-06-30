@@ -237,7 +237,7 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 
 		cout << "Total Variables = " << NVar << endl;
 
-		for(int i = 27; i < NVar; i ++)
+		for(int i = 0; i < 1; i ++)
 		{
 			cout << "i = " << i  << "    START Doing Variable " << Var[i].Data() << endl;
 			YRatioYMC[i] = new TH1D(VarYMCRatio[i].Data(),VarYMCRatio[i].Data(),Binning[i],Min[i],Max[i]);
@@ -418,6 +418,8 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 			HisYMC[i]->Draw("epSAME");
 
 
+
+
 			FileName = Form("Plots/%s/%s_%s_%d.pdf",WeightType.Data(),Name[i].Data(),collsyst.Data(),j);
 
 
@@ -465,9 +467,18 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 			YRatioYMC[i]->SetMarkerColor(kBlue);
 			YRatioGMC[i]->SetMarkerColor(kGreen);
 			
-			YRatioYMC[i]->SetMinimum(0);
+			YRatioYMC[i]->SetMinimum(0.0);
 			YRatioYMC[i]->SetMaximum(5.5);
 			if(i==27)	YRatioYMC[i]->SetMaximum(20);
+
+			TLine *l1 = new TLine(Min[i],1,Max[i],1);
+			l1->SetLineStyle(2);
+			l1->SetLineWidth(2);
+			l1->Draw();
+
+
+
+
 
 			YRatioYMC[i]->Draw();
 

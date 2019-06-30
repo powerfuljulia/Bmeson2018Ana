@@ -27,7 +27,7 @@ void ReweightBpt(TString inputMC,TString inputFONLL){
 	TCanvas * c = new TCanvas("c","c",1800,600);
 	c->Divide(3,1);
 	TCut weighpthat = "(pthatweight)";
-	TCut GenCut ="(TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0)";
+	TCut GenCut ="(TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0 && GcollisionId==0)";
 
 
 	TFile *finMC = new TFile(inputMC.Data());
@@ -118,6 +118,7 @@ void ReweightBpt(TString inputMC,TString inputFONLL){
 	cout << "Bpt Func = " << BptReweightFunc.Data() << endl;
 
 	c->SaveAs("plotReweight/BptReweigt.png");
+	c->SaveAs("plotReweight/BptReweigt.pdf");
 
 
 

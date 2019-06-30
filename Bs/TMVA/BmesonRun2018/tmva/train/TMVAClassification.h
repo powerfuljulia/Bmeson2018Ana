@@ -26,14 +26,14 @@ namespace mytmva
   
     mytmva::tmvavar("Btrk1Pt"  , "Btrk1Pt"                                                                                        , "FMax", "#pi_{1} p_{T} (GeV/c)"                , 0   , 10) , // 8
     mytmva::tmvavar("Btrk2Pt"  , "Btrk2Pt"                                                                                        , "FMax", "#pi_{2} p_{T} (GeV/c)"                , 0   , 10) , // 9	 
-	mytmva::tmvavar("Btrk1Eta"  , "Btrk1Eta"                                                                                        , "FMax", "#Eta_{1} "                , -3   , 3) , // 8
-    mytmva::tmvavar("Btrk2Eta"  , "Btrk2Eta"                                                                                        , "FMax", "#Eta_{2}"                , -3   , 3) , // 9	
-    mytmva::tmvavar("Trk1DCA"   , "Trk1DCA := Btrk1Dxy/Btrk1D0Err",                                                                 "FMin", "#DeltaR(#pi_{1},J/#psi)"              , 0   , 0.5), // 1
-    mytmva::tmvavar("Trk2DCA"   , "Trk2DCA := Btrk2Dxy/Btrk2D0Err"              ,                                    "FMin",      "#DeltaR(#pi_{2},J/#psi)"                     , 0   , 0.5), // 2
+	mytmva::tmvavar("Trk1DCAz"  , "Trk1DCAz := Btrk1Dz1/Btrk1DzError1"                                                                                        , "FMax", "#Eta_{1} "                , -3   , 3) , // 8
+    mytmva::tmvavar("Trk2DCAz"  , "Trk2DCAz := Btrk2Dz1/Btrk2DzError1"                                                                                        , "FMax", "#Eta_{2}"                , -3   , 3) , // 9	
+    mytmva::tmvavar("Trk1DCAxy"   , "Trk1DCAxy := Btrk1Dxy1/Btrk1DxyError1",                                                                 "FMin", "#DeltaR(#pi_{1},J/#psi)"              , 0   , 0.5), // 1
+    mytmva::tmvavar("Trk2DCAxy"   , "Trk2DCAxy := Btrk2Dxy1/Btrk2DxyError1"              ,                                    "FMin",      "#DeltaR(#pi_{2},J/#psi)"                     , 0   , 0.5), // 2
     mytmva::tmvavar("MassDis"   , "MassDis := abs(Btktkmass-1.019455)"                                                           , "FMin", "Q (GeV/c^{2})"                        , -0.2   , 0.2), // 3
 	mytmva::tmvavar("dls"    , "dls := BsvpvDistance/BsvpvDisErr"                                                 , "FMax", "l_{xyz}/#sigma(l_{xyz})"              , 0   , 10) , // 6
 	mytmva::tmvavar("Balpha"   , "Balpha"                                                                                         , "FMin", "#alpha"                               , 0   , 3.2), // 4
-    mytmva::tmvavar("dls2D"    , "dls2D := Bd0/Bd0Err"                                                                            , "FMax", "l_{xy}/#sigma(l_{xy})"                , 0   , 10) , // 7
+    mytmva::tmvavar("dls2D"    , "dls2D := Bd0"                                                                            , "FMax", "l_{xy}/#sigma(l_{xy})"                , 0   , 10) , // 7
 	mytmva::tmvavar("cos(Bdtheta)" , "cos(Bdtheta)"                                                                , "FMax", "cos(#theta)"                          , -1  , 1)  , 
 	mytmva::tmvavar("Bchi2cl"  , "Bchi2cl"                                                                                        , "FMax", "vertex #chi^{2} prob"                 , 0   , 1)   // 0
   };

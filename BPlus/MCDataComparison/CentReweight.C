@@ -85,6 +85,9 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	CentMC->GetYaxis()->SetTitle("NColl");
 	CentMC->SetTitle("NColl vs hiBin");
 
+	TCanvas *cAll = new TCanvas("cAll","cAll",1800,600);
+	cAll->Divide(3,1);
+
 
 	for(int i = 0; i < nbins; i ++){
 
@@ -136,6 +139,12 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	legDataNColl->Draw("SAME");
 
 	c->SaveAs("CentWeight/CentDataNcoll.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentDataNcoll.png");
+	
+	cAll->cd(1);
+	CentData->Draw("ep");
+	NCollHis->Draw("epSAME");
+	legDataNColl->Draw("SAME");
 
 
 
@@ -164,7 +173,14 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	leg->Draw("SAME");
 
 	c->SaveAs("CentWeight/CentBeforeNColl.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentBeforeNColl.png");
 	CentData->SetTitle("Centrality Distribution Comparison After NColl Correction");
+
+	cAll->cd(2);
+	CentData->Draw("ep");
+	CentMC->Draw("epSAME");
+	leg->Draw("SAME");
+
 
 
 	if(Method == 0){
@@ -183,8 +199,19 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	leg->Draw("SAME");
 
 	c->SaveAs("CentWeight/CentAfterNColl.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentAfterNColl.png");
+
+	
+	cAll->cd(3);
+	CentData->Draw("ep");
+	CentMC->Draw("hist p SAME");
+	leg->Draw("SAME");
+
 	}
 
+
+	cAll->SaveAs("CentWeight/CentralityWeight.pdf");
+	cAll->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentralityWeight.pdf");
 
 
 	if(Method == 1){
@@ -215,7 +242,10 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 
 		leg->Draw("SAME");
 		c->SaveAs("CentWeight/CentAfterNColl2.png");
+		c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentAfterNColl2.png");	
 	}
+
+
 
 
 }

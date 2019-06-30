@@ -113,10 +113,10 @@ void GetAccFromToy(){
 	double totweight = 0;
 double wAll = 0;
 	double wPass = 0;
-//std::cout << "nvar  = " << nvar << std::endl;
+std::cout << "nvar  = " << nvar << std::endl;
     for(int vari=0;vari<nvar;vari++) {
 
-//	std::cout << vari <<std::endl;
+	if(vari%100==0)std::cout << vari <<std::endl;
 		//    for(int vari=0;vari<1000;vari++) {
 //    for(int vari=0;vari<1;vari++) {
 		anar->GetEntry(vari);
@@ -125,7 +125,6 @@ double wAll = 0;
 		hNum1TriPtBin->Reset();
 		hNum1TriYBin->Reset();
 		for(int candi = 0; candi < ncand; candi++){
-		//	std::cout << "candidates = " << candi << "  Total = " << ncand <<std::endl; 
 			ExclBAna->GetEntry(candi);			
 			if(var == "pt"){
 				ratio = a1*pt+a2;

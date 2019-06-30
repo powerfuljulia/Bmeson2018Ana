@@ -14,7 +14,6 @@ using namespace std;
 
 bool ispp = 0;
 TString inputmc;
-
 void SkimBntuple(){
 	string label = "";
 	if(ispp){
@@ -25,22 +24,22 @@ void SkimBntuple(){
 	else{
 		label = "PbPb";
 		//inputmc = "/data/HeavyFlavourRun2/MC2015/Bntuple/PbPb/Bntuple20160816_Bpt7svpv5p5Bpt10svpv3p5_BfinderMC_PbPb_Pythia8_BuToJpsiK_TuneCUEP8M1_20160816_bPt5jpsiPt0tkPt0p8_Bp_pthatweight_JingBDT.root";
-	inputmc = "/data/BmesonMCPbPb/loop_Bs0_PbPb_MC_25072017_pthat10.root";
+	inputmc = "/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/PthatService/output/BsPthat10Redo.root";
 	}
     TFile* infMC = new TFile(inputmc.Data());
-    TTree* ntphi = (TTree*)infMC->Get("ntphi");
-    TTree* ntHlt = (TTree*)infMC->Get("ntHlt");
-    TTree* ntSkim = (TTree*)infMC->Get("ntSkim");
-    TTree* ntHi = (TTree*)infMC->Get("ntHi");
+    TTree* ntphi = (TTree*)infMC->Get("Bfinder/ntphi");
+    TTree* ntHlt = (TTree*)infMC->Get("hltanalysis/HltTree");
+    TTree* ntSkim = (TTree*)infMC->Get("skimanalysis/HltTree");
+    TTree* ntHi = (TTree*)infMC->Get("hiEvtAnalyzer/HiTree");
  //   TTree* mvaTree = (TTree*)infMC->Get("mvaTree");
-    TTree* ntGen = (TTree*)infMC->Get("ntGen");
+    TTree* ntGen = (TTree*)infMC->Get("Bfinder/ntGen");
 //	ntKp->AddFriend("ntSkim");
 //	ntKp->AddFriend("ntHlt");
 //	ntKp->AddFriend("ntGen");
 //	ntKp->AddFriend("mvaTree");
-		ntphi->AddFriend("ntSkim");
-	ntphi->AddFriend("ntHlt");
-	ntphi->AddFriend("ntGen");
+	ntphi->AddFriend("skimanalysis/HltTree");
+	ntphi->AddFriend("hltanalysis/HltTree");
+	ntphi->AddFriend("Bfinder/ntGen");
 //	ntphi->AddFriend("mvaTree");
 	setAddressTree(ntphi, ntHlt, ntSkim, ntHi, ntGen, ispp);
 	int nevents_total = ntphi->GetEntries();
@@ -67,7 +66,7 @@ cout << " Total = " << nevents_total << endl;
 //		cout << "Gy = " << Gy[g] << endl;
 	//	cout << "GisSignal = " << GisSignal[g] << endl;
 		//	if(TMath::Abs(Gy[g])<2.4&&abs(GpdgId[g])==521&&GisSignal[g]==1&&Gpt[g]>=7&&Gpt[g]<=50)
-		if(TMath::Abs(Gy[g])<2.4&&abs(GpdgId[g])==531&&GisSignal[g]>0&&Gpt[g]>=5&&Gpt[g]<=60){
+		if(TMath::Abs(Gy[g])<2.4&&abs(GpdgId[g])==531&&GisSignal[g]>0&&Gpt[g]>=7&&Gpt[g]<=50){
 				pt = Gpt[g];
 				y = Gy[g];
 				weight = 0;

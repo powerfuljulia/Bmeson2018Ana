@@ -104,7 +104,7 @@ TF1 *fit(T* c, TCanvas* cMC, TH1D* h, TH1D* hMCSignal, Double_t ptmin, Double_t 
 	f->SetParameter(10,setparam3);
 	f->SetParameter(12,0);
 	f->SetParLimits(2,0.01,0.3);
-	f->SetParLimits(8,0.01,0.3);
+	f->SetParLimits(8,0.01,1.0);
 	f->SetParLimits(10,0.01,0.3);
 	//signal fraction
 	f->SetParLimits(7,0,1);

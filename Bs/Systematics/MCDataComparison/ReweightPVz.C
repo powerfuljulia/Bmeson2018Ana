@@ -88,7 +88,8 @@ void ReweightPVz(){
 	TCanvas* c = new TCanvas("c","",600,600);
 	c->cd();
 	PVzData->Draw("ep");
-	c->SaveAs("FitResults/PVzDataFit.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzDataFit.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzDataFit.pdf");
 
 	FuncData = Form("%f * TMath::Exp(- %f * (PVz - %f)*(PVz - %f))",f1->GetParameter(0),f1->GetParameter(1),f1->GetParameter(2),f1->GetParameter(2));
 
@@ -109,7 +110,22 @@ void ReweightPVz(){
 
 
 	PVzMC->Draw("ep");
-	c->SaveAs("FitResults/PVzMCFit.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzMCFit.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzMCFit.pdf");
+
+
+	TCanvas *cAll = new TCanvas("cAll","cAll",1200,600);
+	cAll->Divide(2,1);
+	cAll->cd(1);
+	PVzData->Draw("ep");
+
+	cAll->cd(2);
+	PVzMC->Draw("ep");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzBoth.png");
+	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzBoth.pdf");
+
+
+
 
 
 
