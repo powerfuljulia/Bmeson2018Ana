@@ -135,6 +135,9 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 
 	PreCutYieldMC = fMCPre->Integral(BMassMin,BMassMax)/binwidthmass;
 	PreCutYieldErrMC = fMCPre->Integral(BMassMin,BMassMax)/binwidthmass*fMCPre->GetParError(0)/fMCPre->GetParameter(0);
+	
+//	PreCutYieldMC = MCPre->Integral();
+//	PreCutYieldErrMC = TMath::Sqrt(PreCutYieldMC);
 
 
 
@@ -175,28 +178,57 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 
 			nt->Project(Form("%s_%d_DataHis",VarName[j].Data(),i),"Bmass",VarCutData.Data());
 			ntMC->Project(Form("%s_%d_MCHis",VarName[j].Data(),i),"Bmass",(TCut(BptWeight.Data())*TCut(CentWeight.Data())*TCut(PVzWeight.Data())*TCut(weightfunctionreco.Data()))*(TCut(VarCutMC.Data())));
-	
+
 
 
 			cout << "Data Integral " << HisData->Integral() << endl;
 			cout << "MC Integral " << HisMC->Integral() << endl;
 			HisData->SetTitle("");
 			HisMC->SetTitle("");
-
 			fData = fit(c, cMC, HisData, HisMC, ptMin, ptMax, 0, isPbPb, total, CentMinBin, CentMaxBin, "1");
-
-			c->SaveAs(Form("Plots/Fits/Data_%s_%d.png",VarName[j].Data(),i));
-
-			fMC = fit(c, cMC, HisMC, HisMC, ptMin, ptMax, 1, isPbPb, total, CentMinBin, CentMaxBin, "1");
-
-			cMC->SaveAs(Form("Plots/Fits/MC_%s_%d.png",VarName[j].Data(),i));
-
+			
+			
 
 			YieldData = fData->Integral(BMassMin,BMassMax)/binwidthmass;
 			YieldErrData = fData->Integral(BMassMin,BMassMax)/binwidthmass*fData->GetParError(0)/fData->GetParameter(0);
 
+			cout << "YieldData = " << YieldData << endl;
+			cout << "YieldErrData = " << YieldErrData << endl;
+
+			TLatex* tex;
+	 		tex = new TLatex(0.25,0.80,Form("%s %s %f - Data Yield = %f  -  Data Yield Error = %f",Var[j].Data(),Direction[j].Data(),CutValue,YieldData,YieldErrData));
+			tex->SetNDC();
+			tex->SetTextFont(42);
+			tex->SetTextSize(0.045);
+			tex->SetLineWidth(2);
+			tex->Draw("SAME");
+
+
+			c->SaveAs(Form("Plots/Fits/Data_%s_%d.png",VarName[j].Data(),i));
+			c->SaveAs(Form("Plots/Fits/Data_%s_%d.pdf",VarName[j].Data(),i));
+
+
+
+
+			fMC = fit(c, cMC, HisMC, HisMC, ptMin, ptMax, 1, isPbPb, total, CentMinBin, CentMaxBin, "1");
+			
 			YieldMC = fMC->Integral(BMassMin,BMassMax)/binwidthmass;
 			YieldErrMC = fMC->Integral(BMassMin,BMassMax)/binwidthmass*fMC->GetParError(0)/fMC->GetParameter(0);
+
+			tex = new TLatex(0.25,0.80,Form("%s %s %f  | MC Yield = %f  |  MC Yield Error = %f",Var[j].Data(),Direction[j].Data(),CutValue,YieldMC,YieldErrMC));
+			tex->SetNDC();
+			tex->SetTextFont(42);
+			tex->SetTextSize(0.045);
+			tex->SetLineWidth(2);
+			tex->Draw("SAME");
+
+			c->SaveAs(Form("Plots/Fits/MC_%s_%d.png",VarName[j].Data(),i));
+			c->SaveAs(Form("Plots/Fits/MC_%s_%d.pdf",VarName[j].Data(),i));
+
+		
+	//		YieldMC = HisMC->Integral();
+	//		YieldErrMC = TMath::Sqrt(YieldMC);	
+
 
 
 			DataRatio = YieldData/PreCutYieldData;
@@ -231,6 +263,9 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 		ResultHis->SetMarkerSize(2);
 		ResultHis->Draw("ep");
 		cResults->SaveAs(Form("Plots/CutVar%s.png",VarName[j].Data()));
+		cResults->SaveAs(Form("Plots/CutVar%s.pdf",VarName[j].Data()));
+		ResultHis->Write();
+
 	}
 
 

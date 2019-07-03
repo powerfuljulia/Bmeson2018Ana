@@ -36,8 +36,8 @@ void PtShapeSyst(TString WeightedFile, TString UnWeightedFile,  TString plotname
 	double PtShapeSyst = 0;
 
 	for(int i = 1; i < nBins + 1; i++){
-		Ratio = hEffRatio->GetBinContent(i);
-		PtShapeSyst = PtShapeSyst + (1-Ratio)*(1-Ratio);
+		Ratio = abs(hEffWeighted->GetBinContent(i)-hEffUnWeighted->GetBinContent(i))/hEffWeighted->GetBinContent(i);
+		PtShapeSyst = PtShapeSyst + Ratio;
 	}
 	
 	double PtShapeSystFinal = TMath::Sqrt(PtShapeSyst)/nBins;

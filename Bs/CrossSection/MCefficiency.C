@@ -112,11 +112,15 @@ void MCefficiency(int isPbPb=0, TString inputmc="", TString selmcgen="", TString
 	ntMC->AddFriend("hltanalysis/HltTree");
 	ntMC->AddFriend("hiEvtAnalyzer/HiTree");
 	ntMC->AddFriend("skimanalysis/HltTree");
+	ntMC->AddFriend("BDT");
+	ntMC->AddFriend("CentWeightTree");
+
+	/*
 	ntMC->AddFriend("BDT_pt_15_20");
 	ntMC->AddFriend("BDT_pt_7_15");
 	ntMC->AddFriend("BDT_pt_20_50");
 	ntMC->AddFriend("BDT_pt_5_7");
-
+	*/
 	ntMC->AddFriend("Bfinder/ntGen");
 	ntGen->AddFriend("hiEvtAnalyzer/HiTree");
 	ntGen->AddFriend("Bfinder/ntphi");
@@ -149,6 +153,14 @@ void MCefficiency(int isPbPb=0, TString inputmc="", TString selmcgen="", TString
 		weightHiBin = weightHiBin_PbPb;
 		weightPVz = weightPVz_PbPb;
 	}
+	if(PbPbweight==2) {
+		weightGpt = weightGpt_pp;
+		weightBgenpt = weightGpt_pp;
+		weightHiBin = weightHiBin_PbPb;
+		weightPVz = weightPVz_PbPb;
+	}
+
+
 	if(customizedOpt == 1) { weightGpt = "1"; weightBgenpt = "1"; }
 	//if(customizedOpt == 2) { weightGpt = weightGpt*TCut(weightGtk1eta); weightBgenpt = weightBgenpt*TCut(weightBtk1eta); }
 	if(customizedOpt == 2) { weightGpt = weightGpt*TCut(weightGtk1eta)*TCut(weightGtk2eta); weightBgenpt = weightBgenpt*TCut(weightBtk1eta)*TCut(weightBtk2eta); }

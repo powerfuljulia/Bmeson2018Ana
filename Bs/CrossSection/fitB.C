@@ -71,11 +71,14 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 		nt->AddFriend("hltanalysis/HltTree");
 		nt->AddFriend("hiEvtAnalyzer/HiTree");
 		nt->AddFriend("skimanalysis/HltTree");
+		/*
 		nt->AddFriend("BDT_pt_15_20");
 		nt->AddFriend("BDT_pt_7_15");
 		nt->AddFriend("BDT_pt_5_7");
 		nt->AddFriend("BDT_pt_20_50");	
-	
+		*/
+		nt->AddFriend("BDT");	
+
 		/*
 		   ntGen = (TTree*)infMC->Get("ntGen");
 		   ntGen->AddFriend("ntHlt");
@@ -101,11 +104,13 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 		ntMC->AddFriend("hltanalysis/HltTree");
 		ntMC->AddFriend("hiEvtAnalyzer/HiTree");
 		ntMC->AddFriend("skimanalysis/HltTree");
+		/*
 		ntMC->AddFriend("BDT_pt_15_20");
 		ntMC->AddFriend("BDT_pt_7_15");
 		ntMC->AddFriend("BDT_pt_5_7");
 		ntMC->AddFriend("BDT_pt_20_50");	
-
+		*/
+		ntMC->AddFriend("BDT");
 		ntMC->AddFriend("Bfinder/ntGen");
 	}
 
@@ -274,6 +279,11 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 				hMCSignal = (TH1D*)inf->Get(Form("hMCSignal%d",_count));
 			}
 			h->SetBinErrorOption(TH1::kPoisson);
+			if(isMC == 1){
+				h->SetMaxmimum(10);
+				hMCSignal->SetMaxmimum(10);
+			}
+
 			//TF1* f = fit(c, cMC, h, hMCSignal, _ptBins[i], _ptBins[i+1], isMC, isPbPb, total, centmin, centmax, npfit);
 			TF1* f = fit(c, cMC, h, hMCSignal, _ptBins[i], _ptBins[i+1], isMC, isPbPb, total, CentMinBin[j], CentMaxBin[j], npfit);
 
@@ -312,6 +322,7 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 			tex->SetTextSize(0.045);
 			tex->SetLineWidth(2);
 			tex->Draw();
+
 
 			c->SaveAs(Form("%s%s/%s_%s_%d_%d%s.pdf",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,j,_postfix.Data()));
 			c->SaveAs(Form("%s%s/%s_%s_%d_%d%s.png",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,j,_postfix.Data()));

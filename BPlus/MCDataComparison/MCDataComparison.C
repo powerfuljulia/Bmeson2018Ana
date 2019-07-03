@@ -237,7 +237,7 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 
 		cout << "Total Variables = " << NVar << endl;
 
-		for(int i = 0; i < 1; i ++)
+		for(int i = 39; i < NVar; i ++)
 		{
 			cout << "i = " << i  << "    START Doing Variable " << Var[i].Data() << endl;
 			YRatioYMC[i] = new TH1D(VarYMCRatio[i].Data(),VarYMCRatio[i].Data(),Binning[i],Min[i],Max[i]);
@@ -471,10 +471,10 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 			YRatioYMC[i]->SetMaximum(5.5);
 			if(i==27)	YRatioYMC[i]->SetMaximum(20);
 
-			TLine *l1 = new TLine(Min[i],1,Max[i],1);
-			l1->SetLineStyle(2);
-			l1->SetLineWidth(2);
-			l1->Draw();
+			TLine *l10 = new TLine(Min[i],1,Max[i],1);
+			l10->SetLineStyle(2);
+			l10->SetLineWidth(2);
+			l10->Draw();
 
 
 
