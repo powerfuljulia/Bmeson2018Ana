@@ -1,12 +1,12 @@
 #!/bin/bash
 
 ##
-ptmin=7; ptmax=15 ;
-inputs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/PthatService/output/PthatMergedreweighted.root" 
+ptmin=7; ptmax=50 ;
+inputs="/eos/user/j/jusilva/2018_data/newMCsamples/PthatMergedreweighted.root" 
 #inputs=/mnt/hadoop/cms/store/user/gwangjun/Bp2018/MC/crab_Bfinder_20190221_Pythia8_BuToJpsiK_Bpt0p0_1032_NoJSON_pthatweight_hardcut_v2.root ;
 ## inputs=/mnt/hadoop/cms/store/user/gwangjun/Bp2018/MC/Bntuple20160816_Bpt7svpv5p5Bpt10svpv3p5_BfinderMC_PbPb_Pythia8_BuToJpsiK_TuneCUEP8M1_20160816_bPt5jpsiPt0tkPt0p8_Bp_pthatweight_JingBDT.root ;
 output=rootfiles/TMVA_X ;
-inputb="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/ToCopy/Data/New/crab_Bfinder_20181220_HIDoubleMuon_HIRun2018A_PromptReco_v1v2_1031_NoJSON_skimhltBsize_ntphi.root";
+inputb="/eos/user/j/jusilva/2018_data/crab_Bfinder_20181220_HIDoubleMuon_HIRun2018A_PromptReco_v1v2_1031_NoJSON_skimhltBsize_ntphi.root";
 
 inputm=$inputs ;
 # outputmva=/mnt/hadoop/cms/store/user/gwangjun/tmva ;
