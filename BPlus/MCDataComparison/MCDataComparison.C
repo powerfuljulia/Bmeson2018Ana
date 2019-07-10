@@ -470,11 +470,10 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 			YRatioYMC[i]->SetMinimum(0.0);
 			YRatioYMC[i]->SetMaximum(5.5);
 			if(i==27)	YRatioYMC[i]->SetMaximum(20);
-
-			TLine *l10 = new TLine(Min[i],1,Max[i],1);
-			l10->SetLineStyle(2);
-			l10->SetLineWidth(2);
-			l10->Draw();
+			if(i > 38){
+			YRatioYMC[i]->SetMinimum(0.3);
+			YRatioYMC[i]->SetMaximum(2.0);
+			}
 
 
 
@@ -528,10 +527,19 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 			p2->SetBottomMargin(0.2);
 			p2->Draw();
 			p2->cd();
+
+
+
 			YRatioYMC[i]->Draw();
 			YRatioGMC[i]->Draw("SAME");
 			legRatio[i]->Draw("SAME");
 			//		lPull->Draw();
+			TLine *l10 = new TLine(Min[i],1,Max[i],1);
+			l10->SetLineStyle(2);
+			l10->SetLineWidth(2);
+			l10->Draw("SAME");
+
+			
 			cBoth->cd();
 
 			FileName = Form("Plots/%s/Pull/RatioPlotsPull%s_%s_%d.pdf",WeightType.Data(),Name[i].Data(),collsyst.Data(),j);

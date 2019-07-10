@@ -15,8 +15,13 @@ using namespace std;
 //const int nBins = 5;
 //double ptBins[nBins+1] = {7.,10.,15.,20.,30,50};
 
-const int nBins=3;
-double ptBins[nBins+1] = {7,10,15,50};
+//const int nBins=3;
+//double ptBins[nBins+1] = {7,15,20,50};
+
+
+const int nBins=4;
+double ptBins[nBins+1] = {5,10,15,20,50};
+
 
 //const int nBins = 4;
 //double ptBins[nBins+1] = {5,10.,15.,20.,60};
@@ -40,71 +45,82 @@ void FakeInput_Bplus(){
 
 	if(ispp) label = "pp";
 	else label = "PbPb";
-// call the root files including raw yield from data and MC (for pt and y binning)
-    TFile *foutDataPt   = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPP.root","read");
-    TFile *foutDatay    = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPP_Y.root","read");
-    TFile *foutMCPt     = new TFile("../../Inputfileforreweighting/MCstudiesPP.root","read");
-    TFile *foutMCy      = new TFile("../../Inputfileforreweighting/MCstudiesPP_Y.root","read");
+	// call the root files including raw yield from data and MC (for pt and y binning)
+	TFile *foutDataPt;
+	TFile *foutDatay;
+	TFile *foutMCPt;
+	TFile *foutMCy;
+
+	if(ispp == 1){
+		foutDataPt = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPP.root","read");
+		foutDatay    = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPP_Y.root","read");
+		foutMCPt     = new TFile("../../Inputfileforreweighting/MCstudiesPP.root","read");
+		foutMCy      = new TFile("../../Inputfileforreweighting/MCstudiesPP_Y.root","read");
+	}
 	if(ispp==0){
-	    foutDataPt   = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPbPb.root","read");
-	    foutDatay    = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPbPb_Y.root","read");
-	    foutMCPt     = new TFile("../../Inputfileforreweighting/MCstudiesPbPb.root","read");
-	    foutMCy      = new TFile("../../Inputfileforreweighting/MCstudiesPbPb_Y.root","read");
+		foutDataPt   = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPbPb.root","read");
+		foutDatay    = new TFile("../../Inputfileforreweighting/hPtSpectrumBplusPbPb_Y.root","read");
+		foutMCPt     = new TFile("../../Inputfileforreweighting/MCstudiesPbPb.root","read");
+		foutMCy      = new TFile("../../Inputfileforreweighting/MCstudiesPbPb_Y.root","read");
 	}
 
-// call the histogram of raw yied from each file
-    TH1D*hPtMC   = (TH1D*)foutMCPt->Get("hPtMC");
-    TH1D*hPtData = (TH1D*)foutDataPt->Get("hPt");
-    TH1D*hyMC        = (TH1D*)foutMCy->Get("hPtMC");
-    TH1D*hyData  = (TH1D*)foutDatay->Get("hPt");
+	// call the histogram of raw yied from each file
+	TH1D*hPtMC   = (TH1D*)foutMCPt->Get("hPtMC");
+	TH1D*hPtData = (TH1D*)foutDataPt->Get("hPt");
+	TH1D*hyMC        = (TH1D*)foutMCy->Get("hPtMC");
+	TH1D*hyData  = (TH1D*)foutDatay->Get("hPt");
 
-// should be apply sumw2
+	// should be apply sumw2
 	hPtMC->Sumw2();
 	hPtData->Sumw2();
 	hyMC->Sumw2();
 	hyData->Sumw2();
 
-// set the name of each histogram, because originally all the histogram's name was "hPt"
+	// set the name of each histogram, because originally all the histogram's name was "hPt"
 	hPtMC->SetName("hPtMC");
 	hPtData->SetName("hPtData");
 	hyMC->SetName("hyMC");
 	hyData->SetName("hyData");
 
-// For the comparison, we scaled each histogram by the integral of each histogram
+	// For the comparison, we scaled each histogram by the integral of each histogram
 	hPtMC->Scale(1./hPtMC->Integral());
 	hPtData->Scale(1./hPtData->Integral());
 	hyMC->Scale(1./hyMC->Integral());
 	hyData->Scale(1./hyData->Integral());
 
-/*
-// Check the state
+	/*
+	// Check the state
 	cout<<"QUI"<<hPtMC->Integral()<<endl;
 	cout<<"QUI"<<hPtData->Integral()<<endl;
 	cout<<"QUI"<<hyMC->Integral()<<endl;
 	cout<<"QUI"<<hyData->Integral()<<endl;
-*/
+	*/
 
-// call the histogram with same structure of "hPtData(hyData)", by clone it
+
+
+	// call the histogram with same structure of "hPtData(hyData)", by clone it
 	TH1D*hReweightDataOverMC_Pt=(TH1D*)hPtData->Clone("hReweightDataOverMC_Pt");
 	TH1D*hReweightDataOverMC_y=(TH1D*)hyData->Clone("hReweightDataOverMC_y");
 
-// Get the ratio of raw yield (Data/MC)
+
+
+	// Get the ratio of raw yield (Data/MC)
 	hReweightDataOverMC_Pt->Divide(hPtData,hPtMC,1,1,"B");
 	cout << "Pass pT" << endl;
 	hReweightDataOverMC_y->Divide(hyData,hyMC,1,1,"B");
 	cout << "Pass y" << endl;
 
-// Prove whether input file is right or not in one canvas, if remove line 65-71, values of stat box in plots is changed because of unknown problem
+	// Prove whether input file is right or not in one canvas, if remove line 65-71, values of stat box in plots is changed because of unknown problem
 	TCanvas*c=new TCanvas("c","c",800,500);
 	c->Divide(2,2);
 	c->cd(1);hPtData->Draw();
 	c->cd(2);hPtMC->Draw();
 	c->cd(3);hyData->Draw();
 	c->cd(4);hyMC->Draw();
-	c->SaveAs(Form("prova_Bplus_%s.pdf", label.c_str()));
+	c->SaveAs(Form("prova_Bs_%s.pdf", label.c_str()));
 
-// call the output file and save the histograms until now
-	TFile*fout=new TFile(Form("InputFilesMCData_Bplus_%s.root",label.c_str()),"recreate");
+	// call the output file and save the histograms until now
+	TFile*fout=new TFile(Form("InputFilesMCData_Bs_%s.root",label.c_str()),"recreate");
 	fout->cd();
 	hPtData->Write();
 	hPtMC->Write();
@@ -116,12 +132,12 @@ void FakeInput_Bplus(){
 
 	std::cout << "### Data/MC ratio is saved in root file. ###" << std::endl;
 
-////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
 
-// call the resulted file from last step
-	TFile* fin = new TFile(Form("InputFilesMCData_Bplus_%s.root", label.c_str()),"read");
+	// call the resulted file from last step
+	TFile* fin = new TFile(Form("InputFilesMCData_Bs_%s.root", label.c_str()),"read");
 
-// call the saved histogram (raw yield from Data and MC and Data/MC ratio)
+	// call the saved histogram (raw yield from Data and MC and Data/MC ratio)
 	hPtData=(TH1D*)fin->Get("hPtData");
 	hPtMC=(TH1D*)fin->Get("hPtMC");
 	hyData=(TH1D*)fin->Get("hyData");
@@ -129,14 +145,14 @@ void FakeInput_Bplus(){
 	hReweightDataOverMC_Pt=(TH1D*)fin->Get("hReweightDataOverMC_Pt");
 	hReweightDataOverMC_y=(TH1D*)fin->Get("hReweightDataOverMC_y");
 
-// set the fitting function for pt and y ratio
-	TF1 *fRfitft_Bpluspt = new TF1("fRfitft_Bpluspt","[0]+x*[1]",10.0,60.0);//Bplus, pt dependence
-	//TF1 *fRfitft_Bplusy = new TF1("fRfitft_Bplusy","[0]*pow((x-0.0),2)+[1]",-2.865,1.935);
-	TF1 *fRfitft_Bplusy = new TF1("fRfitft_Bplusy","[0]*pow(x,2)+[1]",-2.865,1.935);//Bplus, y dependence
+	// set the fitting function for pt and y ratio
+	TF1 *fRfitft_Bpluspt = new TF1("fRfitft_Bpluspt","[0]+x*[1]",5,50.0);//Bplus, pt dependence
+	//TF1 *fRfitft_Bsy = new TF1("fRfitft_Bsy","[0]*pow((x-0.0),2)+[1]",-2.865,1.935);
+	TF1 *fRfitft_Bsy = new TF1("fRfitft_Bsy","[0]*x*x + [1]",-2.865,1.935);//Bplus, y dependence
 
-// call histogram for parameter fit
+	// call histogram for parameter fit
 	TH1D* hParafitft_Bpluspt = new TH1D("hParafitft_Bpluspt","",2,0,2);
-	TH1D* hParafitft_Bplusy  = new TH1D("hParafitft_Bplusy","",2,0,2);
+	TH1D* hParafitft_Bsy  = new TH1D("hParafitft_Bsy","",2,0,2);
 
 	TCanvas* canvas11 = new TCanvas("canvas11","",600,600);
 	canvas11->cd();
@@ -168,10 +184,10 @@ void FakeInput_Bplus(){
 	hPtData->Draw("samepe");
 	leg11->Draw();
 	pt11->Draw();
-	canvas11->SaveAs(Form("AccSys_CompNormUncorYield_Bplus_%s.pdf", label.c_str()));
+	canvas11->SaveAs(Form("AccSys_CompNormUncorYield_Bs_%s.pdf", label.c_str()));
 
-	hReweightDataOverMC_Pt->SetMinimum(0.6);
-	hReweightDataOverMC_Pt->SetMaximum(1.8);
+	hReweightDataOverMC_Pt->SetMinimum(0.0);
+	hReweightDataOverMC_Pt->SetMaximum(2.5);
 	hReweightDataOverMC_Pt->Draw("p");
 	hReweightDataOverMC_Pt->SetMarkerStyle(20);
 	hReweightDataOverMC_Pt->SetMarkerSize(1.5);
@@ -194,7 +210,7 @@ void FakeInput_Bplus(){
 	pt11->SetBorderSize(0);
 	pt11->AddText("B_{s}");
 	pt11->Draw();
-	canvas11->SaveAs(Form("AccSys_RatioNormUncorYield_Bplus_%s.pdf", label.c_str()));
+	canvas11->SaveAs(Form("AccSys_RatioNormUncorYield_Bs_%s.pdf", label.c_str()));
 
 	for (int i=0;i<5;i++) {
 		std::cout << i << ": " << hReweightDataOverMC_Pt->GetBinContent(i+1) << " , " << hReweightDataOverMC_Pt->GetBinError(i+1) << std::endl;
@@ -230,7 +246,7 @@ void FakeInput_Bplus(){
 	pt11->SetBorderSize(0);
 	pt11->AddText("B^{0}");
 	pt11->Draw();
-	canvas11->SaveAs(Form("AccSys_CompNormUncorYield_Bplusy_%s.pdf", label.c_str()));
+	canvas11->SaveAs(Form("AccSys_CompNormUncorYield_Bsy_%s.pdf", label.c_str()));
 
 	hReweightDataOverMC_y->SetMinimum(0.6);
 	hReweightDataOverMC_y->SetMaximum(1.8);
@@ -241,13 +257,13 @@ void FakeInput_Bplus(){
 	hReweightDataOverMC_y->SetLineColor(kBlack);
 	hReweightDataOverMC_y->GetYaxis()->SetTitle("Ratio of uncorrected B_{s} dN/dy_{CM} (Data/MC)");
 
-	fRfitft_Bplusy->SetLineColor(kRed);
-	fRfitft_Bplusy->SetLineWidth(2.0);
-	std::cout << "##### Fit with fRfitft_Bplusy  \"[0]*pow(x,2)+[1]\" ######" << std::string(20,'#') << std::endl; 
-	hReweightDataOverMC_y->Fit("fRfitft_Bplusy"); 
+	fRfitft_Bsy->SetLineColor(kRed);
+	fRfitft_Bsy->SetLineWidth(2.0);
+	std::cout << "##### Fit with fRfitft_Bsy  \"[0]*pow(x,2)+[1]\" ######" << std::string(20,'#') << std::endl; 
+	hReweightDataOverMC_y->Fit("fRfitft_Bsy"); 
 	std::cout << std::string(76,'#') << std::endl;
-	hParafitft_Bplusy->SetBinContent(1,fRfitft_Bplusy->GetParameter(0));
-	hParafitft_Bplusy->SetBinContent(2,fRfitft_Bplusy->GetParameter(1));
+	hParafitft_Bsy->SetBinContent(1,fRfitft_Bsy->GetParameter(0));
+	hParafitft_Bsy->SetBinContent(2,fRfitft_Bsy->GetParameter(1));
 
 	pt11->Clear();
 	pt11 = new TPaveText(0.22,0.80,0.27,0.85,"NDC");
@@ -256,13 +272,13 @@ void FakeInput_Bplus(){
 	pt11->SetBorderSize(0);
 	pt11->AddText("B_{s}");
 	pt11->Draw();
-	canvas11->SaveAs(Form("AccSys_RatioNormUncorYield_Bplusy_%s.pdf", label.c_str()));
+	canvas11->SaveAs(Form("AccSys_RatioNormUncorYield_Bsy_%s.pdf", label.c_str()));
 
 	for (int i=0;i<5;i++) {
 		std::cout << i << ": " << hReweightDataOverMC_y->GetBinContent(i+1) << " , " << hReweightDataOverMC_y->GetBinError(i+1) << std::endl;
 	}
 
-/*
+	/*
 	// Prove pt dependence results in one canvas
 
 	double p0,p1,p2,p3;
@@ -343,18 +359,18 @@ void FakeInput_Bplus(){
 	hReweightDataOverMC_y->SetMarkerSize(0.5);
 
 	TF1 *fRy2 = new TF1("fRy2","[0]*pow((x-[2]),2)+[1]",-2.865,1.935);
-	fRfitft_Bplusy->SetLineColor(kBlue);
-	hReweightDataOverMC_y->Fit("fRfitft_Bplusy");
+	fRfitft_Bsy->SetLineColor(kBlue);
+	hReweightDataOverMC_y->Fit("fRfitft_Bsy");
 	fRy2->SetLineColor(kRed);
 	hReweightDataOverMC_y->Fit("fRy2");
-	//fRfitft_Bplusy->Draw("same");
+	//fRfitft_Bsy->Draw("same");
 	fRy2->Draw("same");
 
-	canvas2->SaveAs("FitstoRatioDataMC_Bplusy.pdf");
-*/
-	////////////////////////////////////////////////////////////////////////////////////////
+	canvas2->SaveAs("FitstoRatioDataMC_Bsy.pdf");
+	*/
+		////////////////////////////////////////////////////////////////////////////////////////
 
-	TFile* fout2 = new TFile(Form("FunctionsReweighting_Bplus_%s.root", label.c_str()),"recreate");
+		TFile* fout2 = new TFile(Form("FunctionsReweighting_Bs_%s.root", label.c_str()),"recreate");
 	fout2->cd();
 	hPtData->Write();
 	hPtMC->Write();
@@ -362,14 +378,14 @@ void FakeInput_Bplus(){
 	hyData->Write();
 	hyMC->Write();
 	hReweightDataOverMC_y->Write();
-	fRfitft_Bplusy->Write();
+	fRfitft_Bsy->Write();
 	fRfitft_Bpluspt->Write();
 	hParafitft_Bpluspt->Write();
-	hParafitft_Bplusy->Write();
+	hParafitft_Bsy->Write();
 	/*
-		 fexpoPtData->Write();
-		 fexpoPtMC->Write();
-		 fRexpoPt->Write();
-	 */
+	   fexpoPtData->Write();
+	   fexpoPtMC->Write();
+	   fRexpoPt->Write();
+	   */
 	fout2->Close();
 }

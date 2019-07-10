@@ -27,13 +27,13 @@ TString VarPtRange[NVar] = {"Bpt > 1","Bpt > 1","Bpt > 1","Bpt > 7 && Bpt < 15",
 TString OutSideCut[NVar] = {"Bpt < 1","Bpt < 1","Bpt < 1","Bpt < 7 || Bpt > 15","Bpt < 15 || Bpt > 20","Bpt < 20 || Bpt > 50","Bpt < 1","Bpt < 1","Bpt < 1","Bpt < 1"};
 
 int CutValueXBin;
-double VarCutMin[NVar] = {0.02,2.0,0.10,0.10,0.20,0.40,0,0,0,0};
-double VarCutMax[NVar] = {0.12,18.0,0.40,0.70,0.70,0.70,10,10,10,10};
+double VarCutMin[NVar] = {0.02,2.0,0.10,-0.20,-0.20,-0.20,0,0,0,0};
+double VarCutMax[NVar] = {0.12,18.0,0.40,0.50,0.50,0.50,10,10,10,10};
 int NCut[NVar] = {10,10,10,10,10,10,10,10,10,10};
 double NVarStep[NVar];
 
-double VarHisMin[NVar] = {0.00,0,0.00,0.00,0.10,0.30,0,0,0,0};
-double VarHisMax[NVar] = {0.12,20.0,1.00,0.80,0.80,0.80,10,10,10,10};
+double VarHisMin[NVar] = {0.00,0,0.00,-0.30,-0.30,-0.30,0,0,0,0};
+double VarHisMax[NVar] = {0.12,20.0,1.00,0.70,0.70,0.70,10,10,10,10};
 int VarHisN[NVar] = {100,100,100,100,100,100,100,100,100,100};
 
 

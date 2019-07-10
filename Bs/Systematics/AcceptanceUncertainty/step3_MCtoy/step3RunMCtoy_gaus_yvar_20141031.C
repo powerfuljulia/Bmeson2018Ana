@@ -30,7 +30,7 @@ void step3RunMCtoy_gaus_yvar_20141031() {
     if(ispp) label = "pp";
     else label = "PbPb";
 
-    TFile* fIn = new TFile(Form("../step2_GettheRatio/FunctionsReweighting_Bplus_%s.root", label.c_str()),"read");
+    TFile* fIn = new TFile(Form("../step2_GettheRatio/FunctionsReweighting_Bs_%s.root", label.c_str()),"read");
     TH1D*hReweightDataOverMC_y=(TH1D*)fIn->Get("hReweightDataOverMC_y");
     TFile* fOut = new TFile(Form("gaus_try10k_yvar_%s.root", label.c_str()),"RECREATE");
 

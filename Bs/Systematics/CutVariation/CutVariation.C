@@ -22,7 +22,6 @@ using std::endl;
 #endif
 
 
-
 void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString PreCut){
 	gStyle->SetOptStat(0); 
 
@@ -144,7 +143,7 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 	cout << "PreCutYieldData = " << PreCutYieldData << "   PreCutYieldMC  = " << PreCutYieldMC << endl;
 	//Alpha Variation//
 
-	for(int j = 0; j < NVar; j++){
+	for(int j = 3; j < 6; j++){
 
 		ResultHis = new TH1D(Form("%s",VarHisName[j].Data()),Form("%s",VarHisName[j].Data()),VarHisN[j],VarHisMin[j],VarHisMax[j]);
 		ResultHis->GetXaxis()->SetTitle(Form("%s ",VarXName[j].Data()));
@@ -196,12 +195,30 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 			cout << "YieldErrData = " << YieldErrData << endl;
 
 			TLatex* tex;
-	 		tex = new TLatex(0.25,0.80,Form("%s %s %f - Data Yield = %f  -  Data Yield Error = %f",Var[j].Data(),Direction[j].Data(),CutValue,YieldData,YieldErrData));
+			TLatex* tex2;
+			TLatex* tex3;
+
+	 		tex = new TLatex(0.25,0.80,Form("%s %s %.2f",Var[j].Data(),Direction[j].Data(),CutValue));
 			tex->SetNDC();
 			tex->SetTextFont(42);
 			tex->SetTextSize(0.045);
 			tex->SetLineWidth(2);
 			tex->Draw("SAME");
+
+	 		tex2 = new TLatex(0.25,0.70,Form("Data Yield = %.1f ",YieldData));
+			tex2->SetNDC();
+			tex2->SetTextFont(42);
+			tex2->SetTextSize(0.045);
+			tex2->SetLineWidth(2);
+			tex2->Draw("SAME");
+
+			tex3 = new TLatex(0.25,0.60,Form("Data Yield Error = %.1f",YieldErrData));
+			tex3->SetNDC();
+			tex3->SetTextFont(42);
+			tex3->SetTextSize(0.045);
+			tex3->SetLineWidth(2);
+			tex3->Draw("SAME");
+
 
 
 			c->SaveAs(Form("Plots/Fits/Data_%s_%d.png",VarName[j].Data(),i));
@@ -215,12 +232,32 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 			YieldMC = fMC->Integral(BMassMin,BMassMax)/binwidthmass;
 			YieldErrMC = fMC->Integral(BMassMin,BMassMax)/binwidthmass*fMC->GetParError(0)/fMC->GetParameter(0);
 
-			tex = new TLatex(0.25,0.80,Form("%s %s %f  | MC Yield = %f  |  MC Yield Error = %f",Var[j].Data(),Direction[j].Data(),CutValue,YieldMC,YieldErrMC));
+
+
+	 		tex = new TLatex(0.25,0.80,Form("%s %s %f",Var[j].Data(),Direction[j].Data(),CutValue));
 			tex->SetNDC();
 			tex->SetTextFont(42);
 			tex->SetTextSize(0.045);
 			tex->SetLineWidth(2);
 			tex->Draw("SAME");
+
+	 		tex2 = new TLatex(0.25,0.70,Form("MC Yield = %f  -  Data Yield Error = %f",YieldData));
+			tex2->SetNDC();
+			tex2->SetTextFont(42);
+			tex2->SetTextSize(0.045);
+			tex2->SetLineWidth(2);
+			tex2->Draw("SAME");
+
+			tex3 = new TLatex(0.25,0.60,Form("MC Yield Error = %f",YieldErrData));
+			tex3->SetNDC();
+			tex3->SetTextFont(42);
+			tex3->SetTextSize(0.045);
+			tex3->SetLineWidth(2);
+			tex3->Draw("SAME");
+
+
+
+
 
 			c->SaveAs(Form("Plots/Fits/MC_%s_%d.png",VarName[j].Data(),i));
 			c->SaveAs(Form("Plots/Fits/MC_%s_%d.pdf",VarName[j].Data(),i));

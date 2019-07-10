@@ -40,7 +40,7 @@ void drawmacro() {
 	TFile *inf = new TFile(Form("../step4_SkimBntuple/results_%s.root", label.c_str()));
 	TFile* facc_gaus_ptdep=new TFile(Form("../step5_getAccFromtoy/AccVar_ptvar_%s.root", label.c_str()));
 	TFile* facc_gaus_ydep=new TFile(Form("../step5_getAccFromtoy/AccVar_yvar_%s.root", label.c_str()));
-	TFile* fout=new TFile(Form("AccSys_Bplus_%s.root",label.c_str()),"RECREATE");
+	TFile* fout=new TFile(Form("AccSys_Bs_%s.root",label.c_str()),"RECREATE");
 
 	TTree* tr11=(TTree*)fratio_gaus_ptdep->Get("ditTree");
 	TTree* tr21=(TTree*)fratio_gaus_ydep->Get("ditTree");
@@ -86,13 +86,23 @@ void drawmacro() {
 	ExclBAna->Project("hyProjectPass", "abs(y)", "weight*passAcc");
 	hPtProjectAcc->Divide(hPtProjectPass, hPtProject, 1, 1, "B");
 	hyProjectAcc->Divide(hyProjectPass, hyProject, 1, 1, "B");
+
 	double avghpt[nBins];
 	double avghy[nBinsy];
+
+
+
+
 	for(int i = 0; i < nBins; i++){
 		avghpt[i] = hPtProjectAcc->GetBinContent(i+1);
-	}
+
+		cout << "i = "  << i << "   avghpt  = " << avghpt[i] << endl;
+
+	} 
 	for(int i = 0; i < nBinsy; i++){
 		avghy[i] = hyProjectAcc->GetBinContent(i+1);
+		cout << "i = "  << i << "   avghy  = " << avghy[i] << endl;
+
 	}
 	//double avghpt[5]={0.2458,0.4240,0.5134,0.6468,0.7215};
 	//double avghy[5]={0.3395,0.3186,0.2486,0.3189,0.3422};
@@ -234,7 +244,7 @@ void drawmacro() {
 		cout << "pass 4 before crash = " << endl; 
 
 
-		c1->SaveAs(Form("Bplus_ptdep_%i_%s.pdf",i,label.c_str()));
+		c1->SaveAs(Form("Bs_ptdep_%i_%s.pdf",i,label.c_str()));
 	}
 
 	cout << "Pass nBins" << endl;
@@ -288,7 +298,7 @@ void drawmacro() {
 	//	p21->Draw("same");
 		leg1->Draw("same");
 		cout << "Pass 3" << endl;
-		c->SaveAs(Form("Bplus_ydep_%i_%s.pdf",i,label.c_str()));
+		c->SaveAs(Form("Bs_ydep_%i_%s.pdf",i,label.c_str()));
 		cout << "Pass 4" << endl;
 	}
 
@@ -301,6 +311,9 @@ void drawmacro() {
 		double aMean2, aMin2, aMax2;
 		GetMinMaxMean(hf11pt[i], aMean1, aMin1, aMax1);
 		GetMinMaxMean(hf21pt[i], aMean2, aMin2, aMax2);
+		
+		cout << "i = " << i << "   avghpt = " << avghpt[i] << endl;
+
 		double unc1 = max(fabs(aMean1-avghpt[i]), max(fabs(aMin1-avghpt[i]), fabs(aMax1-avghpt[i])));
 		double unc2 = max(fabs(aMean2-avghpt[i]), max(fabs(aMin2-avghpt[i]), fabs(aMax2-avghpt[i])));
 		printf("avg: %f, pt var unc: %f, y var unc: %f, final: %f\n", avghpt[i], unc1, unc2, 100*max(unc1, unc2));
@@ -322,16 +335,16 @@ void drawmacro() {
 		   */
 		hf11pt[i]->GetYaxis()->SetRangeUser(0.0,1.4*maxuser);
 		if(i == 0){
-		hf11pt[i]->GetXaxis()->SetRangeUser(hf11pt[i]->GetMean()-0.05,hf11pt[i]->GetMean()+0.05);
-		hf21pt[i]->GetXaxis()->SetRangeUser(hf11pt[i]->GetMean()-0.05,hf11pt[i]->GetMean()+0.05);
+		hf11pt[i]->GetXaxis()->SetRangeUser(0,0.03);
+		hf21pt[i]->GetXaxis()->SetRangeUser(0,0.03);
 		}
 		if(i == 1){
 		hf11pt[i]->GetXaxis()->SetRangeUser(0,0.3);
 		hf21pt[i]->GetXaxis()->SetRangeUser(0,0.3);
 		}
 		if(i == 2){
-		hf11pt[i]->GetXaxis()->SetRangeUser(0.4,0.65);
-		hf21pt[i]->GetXaxis()->SetRangeUser(0.4,0.65);
+		hf11pt[i]->GetXaxis()->SetRangeUser(0.1,0.65);
+		hf21pt[i]->GetXaxis()->SetRangeUser(0.1,0.65);
 		}
 
 
@@ -381,7 +394,7 @@ void drawmacro() {
 		leg1->Draw("same");
 		ptline->Draw("same");
 
-		c2->SaveAs(Form("Bplus_accvar_ptdep_%i_%s.pdf",i,label.c_str()));
+		c2->SaveAs(Form("Bs_accvar_ptdep_%i_%s.pdf",i,label.c_str()));
 	}
 	/*
 	   for (int i=0;i<nBinsy;i++){
@@ -439,7 +452,7 @@ p21->Draw("same");
 leg1->Draw("same");
 yline->Draw("same");
 
-c1->SaveAs(Form("Bplus_accvar_ydep_%i_%s.pdf",i,label.c_str()));
+c1->SaveAs(Form("Bs_accvar_ydep_%i_%s.pdf",i,label.c_str()));
 }
 */
 
@@ -487,7 +500,7 @@ leg1->SetBorderSize(0);
 ha1gaus->SetLineColor(kRed+2);
 ha1gaus->Draw("");
 leg1->Draw("same");
-c1->SaveAs(Form("Bplus_ha1comp_%s.pdf",label.c_str()));
+c1->SaveAs(Form("Bs_ha1comp_%s.pdf",label.c_str()));
 
 leg1->Clear();
 leg1->AddEntry(ha2gaus,"p_{T} variation with gaussian","l");
@@ -504,7 +517,7 @@ pa2g->SetTextColor(kRed+2);
 ha2gaus->SetLineColor(kRed+2);
 ha2gaus->Draw("");
 leg1->Draw("same");
-c3->SaveAs(Form("Bplus_ha2comp_%s.pdf",label.c_str()));
+c3->SaveAs(Form("Bs_ha2comp_%s.pdf",label.c_str()));
 
 leg1->Clear();
 leg1->AddEntry(hay1gaus,"y variation with gaussian","l");
@@ -522,7 +535,7 @@ pay1g->SetTextColor(kBlue);
 hay1gaus->SetLineColor(kBlue);
 hay1gaus->Draw("");
 leg1->Draw("same");
-c3->SaveAs(Form("Bplus_hay1comp_%s.pdf",label.c_str()));
+c3->SaveAs(Form("Bs_hay1comp_%s.pdf",label.c_str()));
 
 leg1->Clear();
 leg1->AddEntry(hay2gaus,"y variation with gaussian","l");
@@ -540,7 +553,7 @@ pay2g->SetTextColor(kBlue);
 hay2gaus->SetLineColor(kBlue);
 hay2gaus->Draw("");
 leg1->Draw("same");
-c3->SaveAs(Form("Bplus_hay2comp_%s.pdf",label.c_str()));
+c3->SaveAs(Form("Bs_hay2comp_%s.pdf",label.c_str()));
 
 //////////////////////
 leg1->Clear();
@@ -564,7 +577,7 @@ pht11->SetTextColor(kRed+2);
 htest11->SetLineColor(kRed+2);
 htest11->Draw("");
 leg1->Draw("same");
-c3->SaveAs(Form("Bplus_ratioptbin1_%s.pdf",label.c_str()));
+c3->SaveAs(Form("Bs_ratioptbin1_%s.pdf",label.c_str()));
 
 leg1->Clear();
 //	leg1->AddEntry(htest21,"y variation with gaussian","l");
@@ -584,7 +597,7 @@ gPad->Update();
    htest21->Draw("");
    */
 leg1->Draw("same");
-c3->SaveAs(Form("Bplus_ratioybin1_%s.pdf",label.c_str()));
+c3->SaveAs(Form("Bs_ratioybin1_%s.pdf",label.c_str()));
 
 fout->Write();
 fout->Close();

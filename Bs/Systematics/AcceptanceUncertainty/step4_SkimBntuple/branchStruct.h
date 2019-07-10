@@ -16,7 +16,7 @@ int     HLT_HIL1DoubleMu0_part2_v1;
 int     HLT_HIL1DoubleMu0_part3_v1;
 int     hiBin;
 //common
-//float   pthatweight;
+float   pthatweight;
 int     Gsize;
 float   Gpt[MAX_GEN];
 float   Gy[MAX_GEN];
@@ -48,7 +48,7 @@ void setAddressTree(TTree* ntKp, TTree* ntHlt, TTree* ntSkim, TTree* ntHi, TTree
 		ntHlt->SetBranchAddress("HLT_HIL1DoubleMu0_part3_v1",&HLT_HIL1DoubleMu0_part3_v1);
 		ntHi->SetBranchAddress("hiBin",&hiBin);
 	}
-//ntHi->SetBranchAddress("pthatweight",&pthatweight);
+	ntHi->SetBranchAddress("pthatweight",&pthatweight);
 	ntGen->SetBranchAddress("Gsize",&Gsize);
     ntGen->SetBranchAddress("Gpt",Gpt);
     ntGen->SetBranchAddress("Gy",Gy);
@@ -60,6 +60,6 @@ void setAddressTree(TTree* ntKp, TTree* ntHlt, TTree* ntSkim, TTree* ntHi, TTree
     ntGen->SetBranchAddress("Gmu2eta",Gmu2eta);
     ntGen->SetBranchAddress("Gtk1pt",Gtk1pt);
    ntGen->SetBranchAddress("Gtk1eta",Gtk1eta);
-       ntGen->SetBranchAddress("Gtk2pt",Gtk2pt);
+      ntGen->SetBranchAddress("Gtk2pt",Gtk2pt);
     ntGen->SetBranchAddress("Gtk2eta",Gtk2eta);
 }

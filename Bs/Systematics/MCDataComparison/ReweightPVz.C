@@ -26,8 +26,8 @@ void ReweightPVz(){
 
 	gStyle->SetOptStat(0); 
 	
-	TFile *finData = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsTMVA/TMVAHigh3BinsRedo/Data_Bs_PbPb_TMVA_BDT_pp.root");
-	TFile *finMC = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/PthatService/output/PthatMergedCentreweight.root");
+	TFile *finData = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/Data_Bs_PbPb_TMVA_BDT_PbPb.root");
+	TFile *finMC = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/MC_Bs_PbPb_TMVA_BDT_PbPb.root");
 
 
 
@@ -121,8 +121,8 @@ void ReweightPVz(){
 
 	cAll->cd(2);
 	PVzMC->Draw("ep");
-	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzBoth.png");
-	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzBoth.pdf");
+	cAll->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzBoth.png");
+	cAll->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/PVzFitResults/PVzBoth.pdf");
 
 
 

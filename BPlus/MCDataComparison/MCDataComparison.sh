@@ -4,10 +4,14 @@ doppComparison=0
 doPbPbComparison=1
 doShapePbPb=0
 doReweightPbPb=0
-doCentReweightPbPb=0
+doCentReweightPbPbBP=0
+doCentReweightPbPbBs=0
 doCentTree=0
-WithCentWeights=0
+WithCentWeights=1
 WithWeights=1
+
+
+
 
 #ppData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/D0Local/skim_Dntuple_crab_pp_MinimumBias1to20_AOD_D0Dsy1p1_tkpt0p5eta2p0_04122016.root"
 #ppMC="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/D0Local/ntD_EvtBase_20161206_DfinderMC_pp_20160502_dPt0tkPt0p5_D0_prompt_Dpt1Dy1p5tkPt0p5Decay2p9Dalpha0p14Skim_pthatweight.root"
@@ -43,6 +47,11 @@ PbPbMC="/export/d00/scratch/gwangjun/crab_Bfinder_20190520_Hydjet_Pythia8_BuToJp
 PbPbData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/crab_Bfinder_20190513_HIDoubleMuon__PsiPeri__HIRun2018A_04Apr2019_v1_1033p1_GoldenJSON_skimhltBsize_ntKp.root"
 
 PbPbMCCentWeight="crab_Bfinder_20190520_Hydjet_Pythia8_BuToJpsiK_1033p1_pt3tkpt0p7dls2_v2_pthatweight_hardcut_weighted.root"
+
+
+PbPbMCBs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/MC_Bs_PbPb_TMVA_BDT_PbPb.root"
+PbPbDataBs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/Data_Bs_PbPb_TMVA_BDT_PbPb.root"
+
 
 #PbPbData="crab_Bfinder_20181220_HIDoubleMuon_HIRun2018A_PromptReco_v1v2_1031_NoJSON_loose_skimhlt_empty.root"
 #CommonCut=('Btrk1Pt > 1 && Btrk2Pt > 1 && Bchi2cl > 0.05 && BsvpvDistance/BsvpvDisErr > 2 && abs(Btrk1Eta-0.0) < 2.4  && abs(Btrk2Eta-0.0) < 2.4 &&  abs(By-0.0) < 2.4')
@@ -113,9 +122,17 @@ if [ $doReweightPbPb -eq 1 ]; then
 root -b -l -q Reweight.C
 fi
 
-if [ $doCentReweightPbPb -eq 1 ]; then
+
+if [ $doCentReweightPbPbBP -eq 1 ]; then
 g++ CentReweight.C $(root-config --cflags --libs) -g -o CentReweight.exe 
 ./CentReweight.exe "PbPb" "$PbPbData"  "$PbPbMC" $WithCentWeights
+rm CentReweight.exe
+fi
+
+
+if [ $doCentReweightPbPbBs -eq 1 ]; then
+g++ CentReweight.C $(root-config --cflags --libs) -g -o CentReweight.exe 
+./CentReweight.exe "PbPb" "$PbPbDataBs"  "$PbPbMCBs" $WithCentWeights
 rm CentReweight.exe
 fi
 

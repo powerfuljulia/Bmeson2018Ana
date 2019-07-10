@@ -46,6 +46,11 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 		selmcgen = Form("%s&&hiBin>=%f&&hiBin<=%f",cutmcgen.Data(),hiBinMin,hiBinMax);
 	}
 
+	TFile *foutCheck = new TFile("CheckPlots.root","RECREATE");
+
+
+
+
 	gStyle->SetTextSize(0.05);
 	gStyle->SetTextFont(42);
 	gStyle->SetPadRightMargin(cRightMargin);
@@ -279,13 +284,19 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 				hMCSignal = (TH1D*)inf->Get(Form("hMCSignal%d",_count));
 			}
 			h->SetBinErrorOption(TH1::kPoisson);
-			if(isMC == 1){
-				h->SetMaxmimum(10);
-				hMCSignal->SetMaxmimum(10);
-			}
+
 
 			//TF1* f = fit(c, cMC, h, hMCSignal, _ptBins[i], _ptBins[i+1], isMC, isPbPb, total, centmin, centmax, npfit);
 			TF1* f = fit(c, cMC, h, hMCSignal, _ptBins[i], _ptBins[i+1], isMC, isPbPb, total, CentMinBin[j], CentMaxBin[j], npfit);
+
+
+			if(isMC == 1){
+
+				foutCheck->cd();
+				h->Write();
+				foutCheck->Close();
+
+			}
 
 			cout << "Pass 5" << endl;
 

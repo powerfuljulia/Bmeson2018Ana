@@ -65,7 +65,8 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 
 	if(doweight == 1){
 
-		PVzWeight =	"1.055564 * TMath::Exp(-0.001720 * (vz + 2.375584)*(vz + 2.375584))";
+		//PVzWeight =	"1.055564 * TMath::Exp(-0.001720 * (Pvz + 2.375584)*(Pvz + 2.375584))";
+	PVzWeight = "(0.164847 * TMath::Exp(- 0.021378 * (vz - 0.342927)*(vz - 0.342927)))/(0.159507 * TMath::Exp(- 0.019986 * (vz - 0.601387)*(vz - 0.601387)))";
 	}
 
 
@@ -81,9 +82,9 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	CentData->SetTitle("Centrality Distribution");
 
 	TH1D * NCollHis = new TH1D("NCollHis","NCollHis",nbins,0,nbins);
-	CentMC->GetXaxis()->SetTitle("hiBin");
-	CentMC->GetYaxis()->SetTitle("NColl");
-	CentMC->SetTitle("NColl vs hiBin");
+	NCollHis->GetXaxis()->SetTitle("hiBin");
+	NCollHis->GetYaxis()->SetTitle("NColl");
+	NCollHis->SetTitle("NColl vs hiBin");
 
 	TCanvas *cAll = new TCanvas("cAll","cAll",1800,600);
 	cAll->Divide(3,1);
@@ -158,6 +159,10 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 
 	CentData->SetMaximum(0.1);
 	CentData->SetMinimum(0.0);
+	
+
+	TCanvas *c2 = new TCanvas("c2","c2",600,600);
+	c2->cd();
 
 	CentMC->Sumw2();
 	CentData->Sumw2();
@@ -172,8 +177,8 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	leg->AddEntry(CentMC,"MC","pl");
 	leg->Draw("SAME");
 
-	c->SaveAs("CentWeight/CentBeforeNColl.png");
-	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentBeforeNColl.png");
+	c2->SaveAs("CentWeight/CentBeforeNColl.png");
+	c2->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentBeforeNColl.png");
 	CentData->SetTitle("Centrality Distribution Comparison After NColl Correction");
 
 	cAll->cd(2);
@@ -181,7 +186,8 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	CentMC->Draw("epSAME");
 	leg->Draw("SAME");
 
-
+	TCanvas *c3 = new TCanvas("c3","c3",600,600);
+	c3->cd();
 
 	if(Method == 0){
 
@@ -194,24 +200,26 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 	CentData->Sumw2();
 	CentMC->Sumw2();
 
+
+
+
+	leg2->SetBorderSize(0);
+	leg2->SetTextSize(0.04);
+	leg2->SetTextFont(42);
+	leg2->SetFillStyle(0);
+	leg2->AddEntry(CentData,"Data","pl");
+	leg2->AddEntry(CentMC,"MC","pl");
+	leg2->Draw("SAME");
+
+
 	CentData->Draw("ep");
 	CentMC->Draw("hist p SAME");
-	leg->Draw("SAME");
+	leg2->Draw("SAME");
 
-	c->SaveAs("CentWeight/CentAfterNColl.png");
-	c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentAfterNColl.png");
-
-	
-	cAll->cd(3);
-	CentData->Draw("ep");
-	CentMC->Draw("hist p SAME");
-	leg->Draw("SAME");
 
 	}
 
 
-	cAll->SaveAs("CentWeight/CentralityWeight.pdf");
-	cAll->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentralityWeight.pdf");
 
 
 	if(Method == 1){
@@ -241,9 +249,21 @@ void CentReweight(TString collsyst, TString inputdata, TString inputMC, int dowe
 		CentMCNew->Draw("epSAME");
 
 		leg->Draw("SAME");
-		c->SaveAs("CentWeight/CentAfterNColl2.png");
-		c->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentAfterNColl2.png");	
+
+		c3->SaveAs("CentWeight/CentAfterNColl.png");
+		c3->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentAfterNColl.png");
+
+	
+		cAll->cd(3);
+		CentData->Draw("ep");
+		CentMCNew->Draw("hist p SAME");
+		leg->Draw("SAME");
+	
 	}
+
+	
+	cAll->SaveAs("CentWeight/CentralityWeight.pdf");
+	cAll->SaveAs("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/CrossSection/CentWeight/CentralityWeight.pdf");
 
 
 
