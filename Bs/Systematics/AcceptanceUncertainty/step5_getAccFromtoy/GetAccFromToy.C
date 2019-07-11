@@ -28,7 +28,7 @@ double yBins[nBinsy+1] = {0.0, 0.5, 1.0, 1.5, 2.4};
 double Ratylab[nBinsy];
 double RatErrylab[nBinsy];
 
-bool ispp = 1;
+bool ispp = 0;
 string label;
 bool ispt = 1;
 string var;
@@ -89,7 +89,7 @@ void GetAccFromToy(){
 	cout<<hyProjectPass->Integral()<<endl;
 	cout<<hyProjectAcc->GetBinContent(1)<<endl;;
 
-    TFile* fnominal = new TFile(Form("../step2_GettheRatio/FunctionsReweighting_Bplus_%s.root", label.c_str()),"read");
+    TFile* fnominal = new TFile(Form("../step2_GettheRatio/FunctionsReweighting_Bs_%s.root", label.c_str()),"read");
     TH1D*hReweightDataOverMC_Pt=(TH1D*)fnominal->Get("hReweightDataOverMC_Pt");
     TH1D*hReweightDataOverMC_y=(TH1D*)fnominal->Get("hReweightDataOverMC_y");
 
@@ -98,7 +98,7 @@ void GetAccFromToy(){
         Rat[i]=hReweightDataOverMC_Pt->GetBinContent(i+1);
         RatErr[i]=hReweightDataOverMC_Pt->GetBinError(i+1);
         std::cout << Rat[i] << " , " << RatErr[i] << std::endl;
-		hAccCompBin[i] = new TH1D(Form("hAccCompBin%d",i+1),"",1000,hPtProjectAcc->GetBinContent(i+1)*0.8,hPtProjectAcc->GetBinContent(i+1)*1.2);
+		hAccCompBin[i] = new TH1D(Form("hAccCompBin%d",i+1),"",1000,hPtProjectAcc->GetBinContent(i+1)*0.3,hPtProjectAcc->GetBinContent(i+1)*3.0);
 	}
 	for(int i = 0; i < nBinsy; i++){ 
         Ratylab[i]=hReweightDataOverMC_Pt->GetBinContent(i+1);
@@ -113,10 +113,10 @@ void GetAccFromToy(){
 	double totweight = 0;
 double wAll = 0;
 	double wPass = 0;
-//std::cout << "nvar  = " << nvar << std::endl;
+std::cout << "nvar  = " << nvar << std::endl;
     for(int vari=0;vari<nvar;vari++) {
 
-//	std::cout << vari <<std::endl;
+	if(vari%100==0)std::cout << vari <<std::endl;
 		//    for(int vari=0;vari<1000;vari++) {
 //    for(int vari=0;vari<1;vari++) {
 		anar->GetEntry(vari);
@@ -125,7 +125,6 @@ double wAll = 0;
 		hNum1TriPtBin->Reset();
 		hNum1TriYBin->Reset();
 		for(int candi = 0; candi < ncand; candi++){
-		//	std::cout << "candidates = " << candi << "  Total = " << ncand <<std::endl; 
 			ExclBAna->GetEntry(candi);			
 			if(var == "pt"){
 				ratio = a1*pt+a2;

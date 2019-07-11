@@ -20,8 +20,12 @@ string label;
 //double ptBins[nBins+1] = {7,10,15,20,30,50};
 
 
-const int nBins = 4;
-double ptBins[nBins+1] = {5,10.,15.,20.,60};
+//const int nBins = 4;
+//double ptBins[nBins+1] = {5,10.,15.,20.,60};
+
+const int nBins = 3;
+double ptBins[nBins+1] = {7,15.,20.,50};
+
 
 double Rat[nBins];
 double RatErr[nBins];
@@ -37,18 +41,18 @@ void step3RunMCtoy_gaus_ptvar_20141031() {
     if(ispp) label = "pp";
     else label = "PbPb";
 
-	TFile* fIn = new TFile(Form("../step2_GettheRatio/FunctionsReweighting_Bplus_%s.root", label.c_str()),"read");
+	TFile* fIn = new TFile(Form("../step2_GettheRatio/FunctionsReweighting_Bs_%s.root", label.c_str()),"read");
 	TH1D*hReweightDataOverMC_Pt=(TH1D*)fIn->Get("hReweightDataOverMC_Pt");
 	TFile* fOut = new TFile(Form("gaus_try10k_ptvar_%s.root", label.c_str()),"RECREATE");
 
 	hfit = new TH1D("hfit","",nBins,ptBins);
 	htest = new TH1D("htest","",200,0.00,2.00);
-	flinear = new TF1("flinear","[0]*x+[1]",10.0,60.0);
+	flinear = new TF1("flinear","[0]*x+[1]",7.0,50.0);
 
 	for (int i=0;i<nBins;i++) {
 		Rat[i]=hReweightDataOverMC_Pt->GetBinContent(i+1);
 		RatErr[i]=hReweightDataOverMC_Pt->GetBinError(i+1);
-		std::cout << Rat[i] << " , " << RatErr[i] << std::endl;
+		std::cout << "i = " << i << "   Rat = " << Rat[i] << "  , " << "  RatErr =  " << RatErr[i] << std::endl;
 	}
 
 	ditTree = new TTree("ditTree","Test tree");
@@ -83,10 +87,13 @@ double gaussianRandom(double average, double stdev) {
 		v1 =  2 * ((double) rand() / RAND_MAX) - 1;      // -1.0 ~ 1.0 까지의 값
 		v2 =  2 * ((double) rand()  / RAND_MAX) - 1;      // -1.0 ~ 1.0 까지의 값
 		s = v1 * v1 + v2 * v2;
-		cout << "s  = " << s << endl; 
-	} while (s >= 1 || s == 0);
+		cout << "v1 = " << v1 << endl;
+		cout << "v2 = " << v2 << endl;
 
+	} while (s >= 1 || s == 0);
+	cout << "s Before  = " << s << endl; 
 	s = sqrt( (-2 * log(s)) / s );
+	cout << "s After  = " << s << endl; 
 	temp = v1*s;
 	temp = (stdev*temp)+average;
 	return temp;

@@ -69,8 +69,8 @@ void NuclearModificationFactor(TString inputPP="ROOTfiles/CrossSectionPP.root", 
 	TH1D*hNuclearModification=(TH1D*)fPbPb->Get("hPtSigma");
 	hNuclearModification->SetName("hNuclearModification");
 	hNuclearModification->Divide(hSigmaPPStat);
-	hNuclearModification->SetMaximum(2.5);
-	
+	hNuclearModification->SetMaximum(3.5);
+
 	double apt[nBins];
 	//bin half width
 	double aptl[nBins];
@@ -134,7 +134,7 @@ void NuclearModificationFactor(TString inputPP="ROOTfiles/CrossSectionPP.root", 
 	}
 
 	//TH2F* hemptyEff=new TH2F("hemptyEff","",50,pti,pte,10.,0,1.55);  
-	TH2F* hemptyEff=new TH2F("hemptyEff","",50,pti,pte,10.,0,2.5);  
+	TH2F* hemptyEff=new TH2F("hemptyEff","",50,pti,pte,10.,0,3.5);  
 	if(drawChHad) hemptyEff=new TH2F("hemptyEff","",50,pti,pte,10.,0,4);  
 	hemptyEff->GetXaxis()->CenterTitle();
 	hemptyEff->GetYaxis()->CenterTitle();

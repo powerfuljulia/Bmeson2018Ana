@@ -313,11 +313,11 @@ TF1* fit(Float_t ptmin, Float_t ptmax, TString npfit)
   pPull->SetBottomMargin(0.3);
   pPull->Draw();
   pPull->cd();
-  hPull->Draw("p");
+  hPull->Draw("phist");
   lPull->Draw();
   cPull->cd();
   cPull->SaveAs(Form("plotFits/DMass_decreasewid_%s_cent_%.0f_%.0f_pt_%.0f_%.0f_Pull.pdf",collisionsystem.Data(),centmin,centmax,ptmin,ptmax));
-  
+ 
   return mass;
 }
 

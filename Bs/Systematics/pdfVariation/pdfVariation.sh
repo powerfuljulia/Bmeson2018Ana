@@ -16,31 +16,39 @@ DOFITDEFAULTNEWPbPb=0
 #DOFITDEFAULTNEWPbPbMB=1
 
 DOFITINCREASEWIDPP=0
-DOFITINCREASEWIDPbPb=1
+DOFITINCREASEWIDPbPb=0
 #DOFITINCREASEWIDPPMB=1
 #DOFITINCREASEWIDPbPbMB=1
 
 DOFITDECREASEWIDPP=0
-DOFITDECREASEWIDPbPb=1
+DOFITDECREASEWIDPbPb=0
 #DOFITDECREASEWIDPPMB=1
 #DOFITDECREASEWIDPbPbMB=1
 
 DOFITPOLY3PP=0
-DOFITPOLY3PbPb=1
+DOFITPOLY3PbPb=0
 #DOFITPOLY2PPMB=1
 #DOFITPOLY2PbPbMB=1
 
 
 DOFITPOLY1PP=0
-DOFITPOLY1PbPb=1
+DOFITPOLY1PbPb=0
 #DOFITEXPO2PPMB=1
 #DOFITEXPO2PbPbMB=1
 
 
 DOFITEXPO2PP=0
-DOFITEXPO2PbPb=1
+DOFITEXPO2PbPb=0
 #DOFITEXPO2PPMB=1
 #DOFITEXPO2PbPbMB=1
+
+
+DOFITSINGLEGAUSPP=0
+DOFITSINGLEGAUSPbPb=0
+
+DOFITTRIPLEGAUSPP=0
+DOFITTRIPLEGAUSPbPb=1
+
 
 ##
 
@@ -172,6 +180,33 @@ if [ $DOFITEXPO2PbPb -eq 1 ]; then
 g++ fitDexpo2.C $(root-config --cflags --libs) -g -o fitDexpo2.exe 
 ./fitDexpo2.exe "$LABELPbPb" "$NPFIT_PbPb" "$CENTPbPbMIN" "$CENTPbPbMAX"
 rm fitDexpo2.exe
+fi
+
+
+
+if [ $DOFITSINGLEGAUSPP -eq 1 ]; then
+g++ fitDdSingle.C $(root-config --cflags --libs) -g -o fitDdSingle.exe 
+./fitDdSingle.exe "$LABELPP" "$NPFIT_PP"
+rm fitDdSingle.exe
+fi
+
+if [ $DOFITSINGLEGAUSPbPb -eq 1 ]; then
+g++ fitDdSingle.C $(root-config --cflags --libs) -g -o fitDdSingle.exe 
+./fitDdSingle.exe "$LABELPbPb" "$NPFIT_PbPb" "$CENTPbPbMIN" "$CENTPbPbMAX"
+rm fitDdSingle.exe
+fi
+
+
+if [ $DOFITTRIPLEGAUSPP -eq 1 ]; then
+g++ fitDdTriple.C $(root-config --cflags --libs) -g -o fitDdTriple.exe 
+./fitDdTriple.exe "$LABELPP" "$NPFIT_PP"
+rm fitDdTriple.exe
+fi
+
+if [ $DOFITTRIPLEGAUSPbPb -eq 1 ]; then
+g++ fitDdTriple.C $(root-config --cflags --libs) -g -o fitDdTriple.exe 
+./fitDdTriple.exe "$LABELPbPb" "$NPFIT_PbPb" "$CENTPbPbMIN" "$CENTPbPbMAX"
+rm fitDdTriple.exe
 fi
 
 #
