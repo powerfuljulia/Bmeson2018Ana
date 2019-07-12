@@ -143,8 +143,8 @@ INPUTDATAPbPb="/export/d00/scratch/tawei/HeavyFlavor/Run2Ana/BsTMVA/samples/Bntu
 #INPUTMCPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/PthatService/output/PthatMergedCentreweightBDT.root"
 #INPUTDATAPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsTMVA/TMVAHigh3BinsRedo/Data_Bs_PbPb_TMVA_BDT_pp.root"
 
-INPUTMCPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data-New/MC_Bs_PbPb_TMVA_BDT_PbPb.root"
-INPUTDATAPbPbCANDWISE="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data-New/Data_Bs_PbPb_TMVA_BDT_PbPb.root"
+INPUTMCPbPbCANDWISE="/eos/cms/store/group/phys_heavyions/zshi/ForJulia/BsNewBDTSamples/MC_Bs_PbPb_TMVA_BDT_PbPb.root"
+INPUTDATAPbPbCANDWISE="/eos/cms/store/group/phys_heavyions/zshi/ForJulia/BsNewBDTSamples/Data_Bs_PbPb_TMVA_BDT_PbPb.root"
 
 ## ANALYSIS PP TRIGGERED
 FONLLDATINPUT="pp_Bplus_5p03TeV_y2p4"
@@ -291,7 +291,7 @@ TRGPbPb="(Bpt > 0)"
 TRGPbPbMC="(Bpt > 0)"
 
 OUTPUTFILEPbPbSAVEHIST="ROOTfiles/hPtSpectrumSaveHistBplusPbPb.root"
-OUTPUTFILEPbPb="ROOTfiles/hPtSpectrumBplusPbPb.root"
+OUTPUTFILEPbPb="ROOTfiles/hPtSpectrumBsPbPb.root"
 OUTPUTFILEPbPbONY="ROOTfiles/hPtSpectrumBplusPbPb_Y.root"
 
 OUTPUTFILEPbPbSAVEHIST_ROOFIT="ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root"
