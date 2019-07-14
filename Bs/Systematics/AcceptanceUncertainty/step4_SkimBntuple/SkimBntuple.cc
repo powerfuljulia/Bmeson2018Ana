@@ -25,7 +25,7 @@ void SkimBntuple(){
 		label = "PbPb";
 		//inputmc = "/data/HeavyFlavourRun2/MC2015/Bntuple/PbPb/Bntuple20160816_Bpt7svpv5p5Bpt10svpv3p5_BfinderMC_PbPb_Pythia8_BuToJpsiK_TuneCUEP8M1_20160816_bPt5jpsiPt0tkPt0p8_Bp_pthatweight_JingBDT.root";
 	//inputmc = "/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/BsRAA2015RunII/PthatService/output/BsPthat10Redo.root";
-	inputmc="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/MC_Bs_PbPb_TMVA_BDT_PbPb.root";
+	inputmc="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data-New/MC_Bs_PbPb_TMVA_BDT_PbPb.root";
 	}
     TFile* infMC = new TFile(inputmc.Data());
     TTree* ntphi = (TTree*)infMC->Get("Bfinder/ntphi");
@@ -64,11 +64,12 @@ cout << " Total = " << nevents_total << endl;
     	ntHi->GetEntry(entry);
     //mvaTree->GetEntry(entry);
     	ntGen->GetEntry(entry);
-	    for(int g=0; g<Gsize; g++){
+		//cout << pthatweight << endl;
+		for(int g=0; g<Gsize; g++){
 //		cout << "Gy = " << Gy[g] << endl;
 	//	cout << "GisSignal = " << GisSignal[g] << endl;
 		//	if(TMath::Abs(Gy[g])<2.4&&abs(GpdgId[g])==521&&GisSignal[g]==1&&Gpt[g]>=7&&Gpt[g]<=50)
-		if(TMath::Abs(Gy[g])<2.4&&abs(GpdgId[g])==531&&GisSignal[g]>0&&Gpt[g]>=7&&Gpt[g]<=50){
+		if(TMath::Abs(Gy[g])<2.4&&abs(GpdgId[g])==531&&GisSignal[g]>0&&Gpt[g]>=5&&Gpt[g]<=50){
 				pt = Gpt[g];
 				y = Gy[g];
 				weight = 0;
@@ -79,6 +80,7 @@ cout << " Total = " << nevents_total << endl;
 				} 
 				else{
 				//weight = pthatweight*(pow(10,-0.107832+0.010248*Gpt[g]+Gpt[g]*Gpt[g]*0.000079+Gpt[g]*Gpt[g]*Gpt[g]*-0.000003+Gpt[g]*Gpt[g]*Gpt[g]*Gpt[g]*-0.000000+Gpt[g]*Gpt[g]*Gpt[g]*Gpt[g]*Gpt[g]*0.000000));
+				//weight = 1;
 				weight = pthatweight*(0.474599*TMath::Exp(-0.001406*Gpt[g])+38.036016/(Gpt[g]*Gpt[g]+0.000330*0.000330));
 				}		
 				wAll += weight;

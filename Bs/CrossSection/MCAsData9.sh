@@ -15,16 +15,21 @@ DOANALYSISPbPb_FIT=1
 DOANALYSISPbPb_FITONSAVED=0
 DOANALYSISPbPb_ROOFIT=0
 DOANALYSISPbPb_ROOFITONSAVED=0
-DOANALYSISPbPb_MCSTUDY=0
+DOANALYSISPbPb_MCSTUDY=1
 DOANALYSISPbPb_CROSS=0
 DORAA=0
 DORAARATIO=0
 DOANALYSISPbPb_REWEIGHT=0
 
 
+#Closure Test
+
+DOCLOSUREPbPb=1
+FINCLOSUREPbPb=1
+
 #ONY For Acceptance Studies
-DOANALYSISPbPb_FITONY=1
-DOANALYSISPbPb_MCSTUDYONY=1
+DOANALYSISPbPb_FITONY=0
+DOANALYSISPbPb_MCSTUDYONY=0
 
 
 DOANALYSISPbPb_PTSHAPESYST=0
@@ -272,8 +277,7 @@ BASECUTPbPb="(hiBin < 181) && Btrk1Pt > 1 && Btrk2Pt > 1 && Bchi2cl > 0.05 && Bs
 #CUTPbPb=${BASECUTPbPb}"&&((Bpt>7&&Bpt<15&&BDT_pt_7_15>0.213755)||(Bpt>15&&Bpt<50&&BDT_pt_15_50>0.254413)||(Bpt>50&&Bpt<100&&BDT_pt_15_50>-0.4) )"
 
 #CUTPbPb=${BASECUTPbPb}"&&((Bpt>7&&Bpt<15&&BDT_pt_7_15>0.57)||(Bpt>15&&Bpt<30&&BDT_pt_15_30> 0.59)||(Bpt>30&&Bpt<50&&BDT_pt_30_50>0.70) )"
-CUTPbPb=${BASECUTPbPb}"&&((Bpt>5&&Bpt<10&&BDT_pt_5_10>0.02)||(Bpt>10&&Bpt<15&&BDT_pt_10_15> 0.20)||(Bpt>15&&Bpt<20&&BDT_pt_15_20>0.22)||(Bpt>20&&Bpt<50&&BDT_pt_20_50>0.29))"
-
+CUTPbPb=${BASECUTPbPb}"&&((Bpt>5&&Bpt<10&&BDT_pt_5_10>0.12)||(Bpt>10&&Bpt<15&&BDT_pt_10_15> 0.15)||(Bpt>15&&Bpt<20&&BDT_pt_15_20>0.21)||(Bpt>20&&Bpt<50&&BDT_pt_20_50>-0.31))"
 CUTPbPb=${CUTPbPb}"&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter && (Bgen== 23333)"
 
 
@@ -309,6 +313,24 @@ NPFIT_PbPb="1"
 #NPFIT_PbPb="1.299998*Gaus(x,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((x-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*Gaus(x,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*Gaus(x,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))" 
 NPROOFIT_PbPb="1"
 #NPROOFIT_PbPb="1.299998*TMath::Gaus(Bmass,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((Bmass-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*TMath::Gaus(Bmass,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*TMath::Gaus(Bmass,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))" 
+
+
+if [ $DOCLOSUREPbPb -eq 1 ]; then      
+g++ fitB.C $(root-config --cflags --libs) -g -o fitB.exe 
+./fitB.exe 1 0 "$INPUTMCPbPbCANDWISE"  "$INPUTMCPbPbCANDWISE" "Bpt" "$TRGPbPb" "$CUTPbPb"   "$SELGENPbPb"   "$ISMCPbPb"   1   "$ISDOWEIGHTPbPb"   "$LABELPbPb"  "$OUTPUTFILECLOSUREPbPb" "plotFits/plotFits" "$NPFIT_PbPb" 0 "$CENTPbPbMIN" "$CENTPbPbMAX"
+rm fitB.exe
+echo "Closure Part 1 DONE !!!"
+fi
+
+
+if [ $FINCLOSUREPbPb -eq 1 ]; then  
+g++ Closure.C $(root-config --cflags --libs) -g -o Closure.exe 
+./Closure.exe "PbPb" "$OUTPUTFILECLOSUREPbPb" "$OUTPUTFILEMCSTUDYPbPb" "$CLOSUREPbPb"
+rm Closure.exe
+echo "Closure Part 2 DONE !!!"
+fi
+
+
 
 
 if [ $DOANALYSISPbPb_REWEIGHT -eq 1 ]; then      

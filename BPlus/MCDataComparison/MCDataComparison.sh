@@ -4,8 +4,7 @@ doppComparison=0
 doPbPbComparison=1
 doShapePbPb=0
 doReweightPbPb=0
-doCentReweightPbPbBP=0
-doCentReweightPbPbBs=0
+doCentReweightPbPb=0
 doCentTree=0
 WithCentWeights=1
 WithWeights=1
@@ -49,8 +48,10 @@ PbPbData="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/cra
 PbPbMCCentWeight="crab_Bfinder_20190520_Hydjet_Pythia8_BuToJpsiK_1033p1_pt3tkpt0p7dls2_v2_pthatweight_hardcut_weighted.root"
 
 
-PbPbMCBs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/MC_Bs_PbPb_TMVA_BDT_PbPb.root"
-PbPbDataBs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/Data_Bs_PbPb_TMVA_BDT_PbPb.root"
+#PbPbMCBs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/MC_Bs_PbPb_TMVA_BDT_PbPb.root"
+#PbPbDataBs="/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/Data_Bs_PbPb_TMVA_BDT_PbPb.root"
+
+
 
 
 #PbPbData="crab_Bfinder_20181220_HIDoubleMuon_HIRun2018A_PromptReco_v1v2_1031_NoJSON_loose_skimhlt_empty.root"
@@ -123,18 +124,13 @@ root -b -l -q Reweight.C
 fi
 
 
-if [ $doCentReweightPbPbBP -eq 1 ]; then
+if [ $doCentReweightPbPb -eq 1 ]; then
 g++ CentReweight.C $(root-config --cflags --libs) -g -o CentReweight.exe 
 ./CentReweight.exe "PbPb" "$PbPbData"  "$PbPbMC" $WithCentWeights
 rm CentReweight.exe
 fi
 
 
-if [ $doCentReweightPbPbBs -eq 1 ]; then
-g++ CentReweight.C $(root-config --cflags --libs) -g -o CentReweight.exe 
-./CentReweight.exe "PbPb" "$PbPbDataBs"  "$PbPbMCBs" $WithCentWeights
-rm CentReweight.exe
-fi
 
 
 if [ $doCentTree -eq 1 ]; then

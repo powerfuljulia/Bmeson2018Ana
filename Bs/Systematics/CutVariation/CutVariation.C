@@ -25,6 +25,8 @@ using std::endl;
 void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString PreCut){
 	gStyle->SetOptStat(0); 
 
+	ofstream fout("CutVar.dat");
+
 	TCanvas * c = new TCanvas("c","c",600,600);
 	TCanvas * cMC = new TCanvas("cMC","cMC",600,600);
 
@@ -42,7 +44,7 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 		CentWeight = "CentWeight";
 		//PVzWeight = "TMath::Exp(0.057104 + -0.020908 * PVz + -0.001864 * PVz * PVz)";
 		//PVzWeight =	"(0.162740 * TMath::Exp(- 0.020823 * (PVz - 0.428205)*(PVz - 0.428205)))/(0.159489 * TMath::Exp(- 0.019979 * (PVz - 0.594276)*(PVz - 0.594276)))";
-		PVzWeight="(0.164847 * TMath::Exp(- 0.021378 * (PVz - 0.342927)*(PVz - 0.342927)))/(0.159507 * TMath::Exp(- 0.019986 * (PVz - 0.601387)*(PVz - 0.601387)))";
+		PVzWeight="0.163562 * TMath::Exp(- 0.021039 * (PVz - 0.426587)*(PVz - 0.426587))/(0.159619 * TMath::Exp(- 0.020011 * (PVz - 0.587652)*(PVz - 0.587652)))";
 		
 		cout << "WEIGHT = YES" << endl;
 
@@ -143,7 +145,7 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 	cout << "PreCutYieldData = " << PreCutYieldData << "   PreCutYieldMC  = " << PreCutYieldMC << endl;
 	//Alpha Variation//
 
-	for(int j = 3; j < 6; j++){
+	for(int j = 3; j < 7; j++){
 
 		ResultHis = new TH1D(Form("%s",VarHisName[j].Data()),Form("%s",VarHisName[j].Data()),VarHisN[j],VarHisMin[j],VarHisMax[j]);
 		ResultHis->GetXaxis()->SetTitle(Form("%s ",VarXName[j].Data()));
@@ -298,7 +300,28 @@ void CutVariation(TString collsyst, TString inputdata, TString inputMC, TString 
 		ResultHis->SetMarkerStyle(20);
 		ResultHis->SetMarkerColor(kBlack);
 		ResultHis->SetMarkerSize(2);
+	
+	
+		TF1 *func = new TF1("func","[0] + [1] * x");
+		ResultHis->Fit(func);
+		
+		double par0 = func->GetParameter(0);
+		double par0Err = func->GetParError(0);
+
+		double par1 = func->GetParameter(1);
+		double par1Err = func->GetParError(1);
+
+
+		cout <<  Var[j].Data() << "  " << " y - intercept = " << par0 << "  y - intercept Error = " << par0Err << "   " << "slope = " << par1 <<  " slope error = " << par1Err << endl;
+
+		fout <<  Var[j].Data() << "  " << " y - intercept = " << par0 << "  y - intercept Error = " << par0Err << "   " << "slope = " << par1 <<  " slope error = " << par1Err << endl;
 		ResultHis->Draw("ep");
+		TLine *l10 = new TLine(WorkingPoint[j],0,WorkingPoint[j],2);
+		l10->SetLineStyle(2);
+		l10->SetLineWidth(2);
+		l10->SetLineColor(kBlue);
+		l10->Draw("SAME");
+
 		cResults->SaveAs(Form("Plots/CutVar%s.png",VarName[j].Data()));
 		cResults->SaveAs(Form("Plots/CutVar%s.pdf",VarName[j].Data()));
 		ResultHis->Write();

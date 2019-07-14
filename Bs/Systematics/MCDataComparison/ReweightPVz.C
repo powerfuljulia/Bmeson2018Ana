@@ -26,8 +26,8 @@ void ReweightPVz(){
 
 	gStyle->SetOptStat(0); 
 	
-	TFile *finData = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/Data_Bs_PbPb_TMVA_BDT_PbPb.root");
-	TFile *finMC = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data/MC_Bs_PbPb_TMVA_BDT_PbPb.root");
+	TFile *finData = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data-Official/Data_Bs_PbPb_TMVA_BDT_PbPb.root");
+	TFile *finMC = new TFile("/export/d00/scratch/zzshi/CMSSW_7_5_8_patch3/Merge/2018Ana/Samples/FinalAnaSamples/PrivateMC-Data-Official/MC_Bs_PbPb_TMVA_BDT_PbPb.root");
 
 
 
@@ -46,7 +46,7 @@ void ReweightPVz(){
 
 	PVzData->GetXaxis()->SetTitle("PVz (mm)");
 	PVzData->GetYaxis()->SetTitle("Normalized Counts");
-	PVzData->SetTitle("PVz Distribution in B^{+} Data");
+	PVzData->SetTitle("PVz Distribution in B_{s} Data");
 	PVzData->SetMarkerStyle(20);
 	PVzData->SetMarkerColor(kBlack);
 	PVzData->SetMarkerSize(1);
