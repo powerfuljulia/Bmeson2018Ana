@@ -20,7 +20,7 @@
 //double ptBins[nBins+1] = {7,10,15,20,30,50};
 
 const int nBins = 4;
-double ptBins[nBins+1] = {5,10.,15.,20.,60};
+double ptBins[nBins+1] = {5,10.,15.,20.,50};
 double Rat[nBins];
 double RatErr[nBins];
 const int nBinsy=4;
@@ -30,7 +30,7 @@ double RatErrylab[nBinsy];
 
 bool ispp = 0;
 string label;
-bool ispt = 1;
+bool ispt = 0;
 string var;
 
 TH1D *hAccCompBin[nBins];
@@ -51,7 +51,8 @@ void GetAccFromToy(){
 
     TFile *ratiofile = new TFile(Form("../step3_MCtoy/gaus_try10k_%svar_%s.root", var.c_str(), label.c_str()));
     TTree *anar = (TTree*)ratiofile->Get("ditTree");
-    double a1,a2;
+    double a1,a2, a3;
+
 	if(ispt){
 	    anar->SetBranchAddress("a1", &a1);
     	anar->SetBranchAddress("a2", &a2);
@@ -59,6 +60,7 @@ void GetAccFromToy(){
 	else{
 	    anar->SetBranchAddress("ay1", &a1);
     	anar->SetBranchAddress("ay2", &a2);
+		anar->SetBranchAddress("ay3", &a3);
 	}
 
 
@@ -114,6 +116,7 @@ void GetAccFromToy(){
 double wAll = 0;
 	double wPass = 0;
 std::cout << "nvar  = " << nvar << std::endl;
+
     for(int vari=0;vari<nvar;vari++) {
 
 	if(vari%100==0)std::cout << vari <<std::endl;
@@ -127,10 +130,12 @@ std::cout << "nvar  = " << nvar << std::endl;
 		for(int candi = 0; candi < ncand; candi++){
 			ExclBAna->GetEntry(candi);			
 			if(var == "pt"){
-				ratio = a1*pt+a2;
+				//ratio = a1*pt+a2;
+				ratio = a1 * pt + a2/pow(pt,5);
 			}
 			else{
-				ratio = a1*pow(y,2)+a2;
+				//ratio = a1*pow(y,2)+a2;
+				ratio = a1 + a2 * y + a3 * y * y;
 			}
 			totweight = weight*ratio;
 		//cout<<ratio<<endl;

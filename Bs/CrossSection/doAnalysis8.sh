@@ -11,15 +11,18 @@ DOANALYSISPP_ROOFITONSAVED=0
 DOANALYSISPP_MCSTUDY=0
 DOANALYSISPP_CROSS=0
 
-DOANALYSISPbPb_FIT=1
+DOANALYSISPbPb_FIT=0
 DOANALYSISPbPb_FITONSAVED=0
 DOANALYSISPbPb_ROOFIT=0
 DOANALYSISPbPb_ROOFITONSAVED=0
-DOANALYSISPbPb_MCSTUDY=1
+DOANALYSISPbPb_MCSTUDY=0
 DOANALYSISPbPb_CROSS=0
 DORAA=0
 DORAARATIO=0
 DOANALYSISPbPb_REWEIGHT=0
+
+DOCLOSUREPbPb=1
+FINCLOSUREPbPb=1
 
 
 #ONY For Acceptance Studies
@@ -299,6 +302,10 @@ OUTPUTFILEPbPb_ROOFIT="ROOTfiles/hPtSpectrumBplusPbPb_roofit.root"
 OUTPUTFILEMCSTUDYPbPb="ROOTfiles/MCstudiesPbPb.root"
 OUTPUTFILEMCSTUDYPbPbONY="ROOTfiles/MCstudiesPbPb_Y.root"
 
+OUTPUTFILECLOSUREPbPb="ROOTfiles/hPtMCPbPbClosurePart1.root"
+CLOSUREPPMB="ROOTfiles/hPtMCPbPbClosurePart2.root"
+
+
 
 OUTPUTFILEPlotPbPb="ROOTfiles/CrossSectionPbPb.root"
 OUTPUTFILEPbPbDATA="ROOTfiles/data_PbPb.root"
@@ -309,6 +316,21 @@ NPFIT_PbPb="1"
 #NPFIT_PbPb="1.299998*Gaus(x,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((x-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*Gaus(x,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*Gaus(x,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))" 
 NPROOFIT_PbPb="1"
 #NPROOFIT_PbPb="1.299998*TMath::Gaus(Bmass,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((Bmass-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*TMath::Gaus(Bmass,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*TMath::Gaus(Bmass,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))" 
+
+
+if [ $DOCLOSUREPbPb -eq 1 ]; then      
+g++ fitB.C $(root-config --cflags --libs) -g -o fitB.exe 
+./fitB.exe 0 "$INPUTMCPbPbCANDWISE"  "$INPUTMCPbPbCANDWISE" "Bpt" "$TRGPbPb" "$CUTPbPb"   "$SELGENPbPb"   "$ISMCPbPb"   1   "$ISDOWEIGHTPbPb"   "$LABELPbPb"  "$OUTPUTFILECLOSUREPbPb" "plotFits/plotFits" "$NPFIT_PbPb" 0 "$CENTPbPbMIN" "$CENTPbPbMAX"
+rm fitB.exe
+echo "Closure Part 1 DONE !"
+fi
+
+if [ $FINCLOSUREPbPb -eq 1 ]; then  
+g++ Closure.C $(root-config --cflags --libs) -g -o Closure.exe 
+./Closure.exe "PbPb" "$OUTPUTFILECLOSUREPbPb" "$OUTPUTFILEMCSTUDYPbPb" "$CLOSUREPbPb"
+rm Closure.exe
+echo "Closure Part 2 DONE !"
+fi
 
 
 if [ $DOANALYSISPbPb_REWEIGHT -eq 1 ]; then      

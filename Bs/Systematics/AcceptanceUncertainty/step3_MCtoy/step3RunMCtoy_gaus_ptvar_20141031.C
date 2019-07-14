@@ -23,8 +23,11 @@ string label;
 //const int nBins = 4;
 //double ptBins[nBins+1] = {5,10.,15.,20.,60};
 
-const int nBins = 3;
-double ptBins[nBins+1] = {7,15.,20.,50};
+//const int nBins = 3;
+//double ptBins[nBins+1] = {7,15.,20.,50};
+
+const int nBins = 4;
+double ptBins[nBins+1] = {5,10.,15.,20.,50};
 
 
 double Rat[nBins];
@@ -47,7 +50,7 @@ void step3RunMCtoy_gaus_ptvar_20141031() {
 
 	hfit = new TH1D("hfit","",nBins,ptBins);
 	htest = new TH1D("htest","",200,0.00,2.00);
-	flinear = new TF1("flinear","[0]*x+[1]",7.0,50.0);
+	flinear = new TF1("flinear","[0]*x + [1]/x**5",5.0,50.0);
 
 	for (int i=0;i<nBins;i++) {
 		Rat[i]=hReweightDataOverMC_Pt->GetBinContent(i+1);

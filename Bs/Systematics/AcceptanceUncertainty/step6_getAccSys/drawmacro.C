@@ -14,8 +14,8 @@ using namespace std;
 
 void GetMinMaxMean(TH1D* hs, double& aMean, double& aMin, double& aMax);
 
-const int nBins = 3;
-double ptbin[nBins+1] = {7,15,20,50};
+const int nBins = 4;
+double ptbin[nBins+1] = {5,10,15,20,50};
 double Rat[nBins];
 double RatErr[nBins];
 const int nBinsy=4;

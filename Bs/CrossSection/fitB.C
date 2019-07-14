@@ -139,7 +139,8 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 	if(usePbPb){
 		weightgen = weightgen_PbPb;
 		//weightmc = weightmc_PbPb;
-		weightmc = "pthatweight";
+		if(doweight == 0 ) weightmc = "1"; 
+		if(doweight == 1) weightmc = "pthatweight";
 	}
 
 	TString _prefix = "";

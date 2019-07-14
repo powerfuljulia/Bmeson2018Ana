@@ -237,7 +237,7 @@ void MCDataComparison(TString collsyst, TString inputdata, TString inputMC, TStr
 
 		cout << "Total Variables = " << NVar << endl;
 
-		for(int i = 39; i < NVar; i ++)
+		for(int i = 0; i < NVar; i ++)
 		{
 			cout << "i = " << i  << "    START Doing Variable " << Var[i].Data() << endl;
 			YRatioYMC[i] = new TH1D(VarYMCRatio[i].Data(),VarYMCRatio[i].Data(),Binning[i],Min[i],Max[i]);

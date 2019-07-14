@@ -146,13 +146,16 @@ void FakeInput_Bplus(){
 	hReweightDataOverMC_y=(TH1D*)fin->Get("hReweightDataOverMC_y");
 
 	// set the fitting function for pt and y ratio
-	TF1 *fRfitft_Bpluspt = new TF1("fRfitft_Bpluspt","[0]+x*[1]",5,50.0);//Bplus, pt dependence
+	TF1 *fRfitft_Bpluspt = new TF1("fRfitft_Bpluspt","[0]*x + [1]/x**5",5,50.0);//Bplus, pt dependence
+	fRfitft_Bpluspt->SetParLimits(2,1,3);
 	//TF1 *fRfitft_Bsy = new TF1("fRfitft_Bsy","[0]*pow((x-0.0),2)+[1]",-2.865,1.935);
-	TF1 *fRfitft_Bsy = new TF1("fRfitft_Bsy","[0]*x*x + [1]",-2.865,1.935);//Bplus, y dependence
+	TF1 *fRfitft_Bsy = new TF1("fRfitft_Bsy","[0] +[1] *x + [2] *x *x",0.0,2.4);//Bplus, y dependence
+	fRfitft_Bsy->SetParLimits(0,0.2,0.9);
+	fRfitft_Bsy->SetParLimits(2,-5,0);
 
 	// call histogram for parameter fit
 	TH1D* hParafitft_Bpluspt = new TH1D("hParafitft_Bpluspt","",2,0,2);
-	TH1D* hParafitft_Bsy  = new TH1D("hParafitft_Bsy","",2,0,2);
+	TH1D* hParafitft_Bsy  = new TH1D("hParafitft_Bsy","",3,0,3);
 
 	TCanvas* canvas11 = new TCanvas("canvas11","",600,600);
 	canvas11->cd();
@@ -187,7 +190,7 @@ void FakeInput_Bplus(){
 	canvas11->SaveAs(Form("AccSys_CompNormUncorYield_Bs_%s.pdf", label.c_str()));
 
 	hReweightDataOverMC_Pt->SetMinimum(0.0);
-	hReweightDataOverMC_Pt->SetMaximum(2.5);
+	hReweightDataOverMC_Pt->SetMaximum(6);
 	hReweightDataOverMC_Pt->Draw("p");
 	hReweightDataOverMC_Pt->SetMarkerStyle(20);
 	hReweightDataOverMC_Pt->SetMarkerSize(1.5);
@@ -197,11 +200,13 @@ void FakeInput_Bplus(){
 
 	fRfitft_Bpluspt->SetLineColor(kRed);
 	fRfitft_Bpluspt->SetLineWidth(2.0);
-	std::cout << "##### Fit with fRfitft_Bpluspt \"[0]+x*[1]\" #############" << std::string(20,'#') << std::endl; 
+	std::cout << "##### Fit with fRfitft_Bpluspt \"[0] * x + [1]/x \" #############" << std::string(20,'#') << std::endl; 
 	hReweightDataOverMC_Pt->Fit("fRfitft_Bpluspt"); 
 	std::cout << std::string(76,'#') << std::endl;
 	hParafitft_Bpluspt->SetBinContent(1,fRfitft_Bpluspt->GetParameter(0));
 	hParafitft_Bpluspt->SetBinContent(2,fRfitft_Bpluspt->GetParameter(1));
+
+
 
 	pt11->Clear();
 	pt11 = new TPaveText(0.22,0.80,0.27,0.85,"NDC");
@@ -259,11 +264,12 @@ void FakeInput_Bplus(){
 
 	fRfitft_Bsy->SetLineColor(kRed);
 	fRfitft_Bsy->SetLineWidth(2.0);
-	std::cout << "##### Fit with fRfitft_Bsy  \"[0]*pow(x,2)+[1]\" ######" << std::string(20,'#') << std::endl; 
+	std::cout << "##### Fit with fRfitft_Bsy  \"[0] + [1] * x + [2] * x * x \" ######" << std::string(20,'#') << std::endl; 
 	hReweightDataOverMC_y->Fit("fRfitft_Bsy"); 
 	std::cout << std::string(76,'#') << std::endl;
 	hParafitft_Bsy->SetBinContent(1,fRfitft_Bsy->GetParameter(0));
 	hParafitft_Bsy->SetBinContent(2,fRfitft_Bsy->GetParameter(1));
+	hParafitft_Bsy->SetBinContent(3,fRfitft_Bsy->GetParameter(2));
 
 	pt11->Clear();
 	pt11 = new TPaveText(0.22,0.80,0.27,0.85,"NDC");
