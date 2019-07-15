@@ -1,10 +1,14 @@
-//const int nBins=2;
+#include "TCut.h"
+//donst int nBins=2;
 //double ptBins[nBins+1] = {7,15,50};
-
-const int nBins=3;
-double ptBins[nBins+1] = {7,10,15,50};
 //const int nBins=1;
-//double ptBins[nBins+1] = {7,50};
+//double ptBins[nBins+1]={20,50};
+//const int nBins=3;
+//double ptBins[nBins+1] = {7,15,20,50};
+const int nBins=4;
+double ptBins[nBins+1] = {5,10,15,20,50};
+//const int nBins=1;
+//double ptBins[nBins+1] = {20,50};
 const int nBinsInc=1;
 double ptBinsInc[nBinsInc+1] = {7,50};
 const int nBins750=3;
@@ -37,10 +41,25 @@ TCut weightGpt_pp = "(0.675236 + 0.035587*Gpt + -0.000358*Gpt*Gpt)";
 TCut weightBgenpt_pp = "(0.675236 + 0.035587*Bgenpt + -0.000358*Bgenpt*Bgenpt)";
 TCut weightHiBin_pp = "1";
 TCut weightPVz_pp = "1";
+/*
 TCut weightGpt_PbPb = "(0.675091 + 0.035578*Gpt + -0.000359*Gpt*Gpt)";
 TCut weightBgenpt_PbPb = "(0.675091 + 0.035578*Bgenpt + -0.000359*Bgenpt*Bgenpt)";
 TCut weightHiBin_PbPb = "(6.625124*exp(-0.093135*pow(abs(hiBin-0.500000),0.884917)))";
 TCut weightPVz_PbPb = "(0.08*exp(-0.5*((PVz-0.44)/5.12)**2))/(0.08*exp(-0.5*((PVz-3.25)/5.23)**2))";
+*/
+
+//TCut weightGpt_PbPb="0.475953*TMath::Exp(-0.001731*Gpt)+38.069448/(Gpt*Gpt+0.001237*0.001237)";
+//TCut weightBgenpt_PbPb = "0.475953*TMath::Exp(-0.001731*Bgenpt)+38.069448/(Bgenpt*Bgenpt+0.001237*0.001237)";
+//TCut weightHiBin_PbPb = "CentWeight";
+//PVzWeight = "TMath::Exp(0.057104 + -0.020908 * PVz + -0.001864 * PVz * PVz)";
+//TCut weightPVz_PbPb =	"(0.162740 * TMath::Exp(- 0.020823 * (PVz - 0.428205)*(PVz - 0.428205)))/(0.159489 * TMath::Exp(- 0.019979 * (PVz - 0.594276)*(PVz - 0.594276)))";
+
+TCut weightGpt_PbPb="0.603534*TMath::Exp(-0.006505*Bpt)+13.177674/(Bpt*Bpt -4.418950 * Bpt + 0.009566*0.009566)";
+TCut weightBgenpt_PbPb = "0.603534*TMath::Exp(-0.006505*Bgenpt)+13.177674/(Bgenpt*Bgenpt -4.418950 * Bgenpt + 0.009566*0.009566)";
+TCut weightHiBin_PbPb = "CentWeight";
+TCut weightPVz_PbPb = "(0.163562 * TMath::Exp(- 0.021039 * (PVz - 0.426587)*(PVz - 0.426587)))/(0.159619 * TMath::Exp(- 0.020011 * (PVz - 0.587652)*(PVz - 0.587652)))";
+
+
 TString weightgen_pp = "pthatweight*"+TString(weightGpt_pp);
 TString weightmc_pp  = "HLT_HIL1DoubleMu0ForPPRef_v1*pthatweight*"+TString(weightBgenpt_pp);
 TString weightgen_PbPb = "pthatweight*"+TString(weightGpt_PbPb);
@@ -61,9 +80,9 @@ double npart[nBinsCent] = {358.8, 226.7, 109.2, 21.87};
 //https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideHeavyIonCentrality?rev=100#Ncoll_Npart_5_TeV
 //https://twiki.cern.ch/twiki/pub/CMS/HI2015DailyMeetings/Ncoll_Npart_04Dec2015.pdf
 
-const int BIN_NUM= 1196;
-const int HMIN=1;
-const int HMAX=300;
+const int BIN_NUM= 21;
+const int HMIN=5;
+const int HMAX=105;
 
 const double binsize=((double)(HMAX)-(double)(HMIN))/(double)(BIN_NUM);
 Double_t BRchain=3.118974e-5; //Bs->JpsiPhi = 0.107%, Jpsi->mumu = 5.961%, Phi->KK = 48.9%
