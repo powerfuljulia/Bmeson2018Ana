@@ -184,9 +184,9 @@ void fitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString i
 					ntMC->Project(Form("hMCSignalStat%d",_count),"Bmass",Form("%s*((Btrk1Pt > 1 && Btrk2Pt > 1 && Bchi2cl > 0.05 && BsvpvDistance/BsvpvDisErr > 2 && Bpt > 5 && abs(Btrk1Eta-0.0) < 2.4  && abs(Btrk2Eta-0.0) < 2.4)&&%s>%f&&%s<%f && hiBin < %d && hiBin > %d)*(1/%s)",weightmc.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],CentMaxBin[j],CentMinBin[j],weightdata.Data()));
 				cout << "pt = " << _ptBins[i] << "    Statistics = " << 	hMCSignalStat->Integral() << endl;
 				}
-				ntMC->Project(Form("hMCSignal%d",_count),"Bmass",Form("%s*(%s&&%s>%f&&%s<%f && hiBin < %d && hiBin > %d)*(1/%s)",weightmc.Data(),seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],CentMaxBin[j],CentMinBin[j],weightdata.Data()));
+				ntMC->Project(Form("hMCSignal%d",_count),"Bmass",Form("%s*(%s&&%s>%f&&%s<%f && hiBin < %d && hiBin > %d && Bgen == 23333)*(1/%s)",weightmc.Data(),seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],CentMaxBin[j],CentMinBin[j],weightdata.Data()));
 
-				
+			
 
 				cout << "Pass 4.8" << endl;
 				h->SetAxisRange(0,h->GetMaximum()*1.4*1.2,"Y");
