@@ -21,9 +21,13 @@ TTree* makeTTree(TTree* intree, TString treeTitle)
 	}
 	return outtree ;
 }
-void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 0, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
+void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 1, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
 {
+	std::cout<<"DEBUG "<<std::endl;
+
+
 	collisionsystem=collsyst;
+
     TString varExp = _varExp;
 	if(_varExp == "Bpt750"){
 		_nBins = nBins750;
@@ -43,10 +47,13 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 	hiBinMax = centmax*2;
 	centMin = centmin;
 	centMax = centmax;
+	std::cout<<"DEBUG 2 "<<std::endl;
+
 
 	if (!(usePbPb==1||usePbPb==0)) std::cout<<"ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!, you are using a non valid isPbPb option"<<std::endl;
 	bool isPbPb=(bool)(usePbPb);
 
+	std::cout<<"DEBUG 3"<<std::endl;
 	if(!isPbPb)
 	{
 		seldata = Form("%s&&%s",trgselection.Data(),cut.Data());
@@ -82,10 +89,50 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 	TTree* skimtreeMC = new TTree();
 
 	if(fitOnSaved == 0){
-		nt = (TTree*)inf->Get("ntphi");
-		ntMC = (TTree*)infMC->Get("ntphi");
-		ntGen = (TTree*)infMC->Get("ntGen");
-	}
+
+		std::cout<<"Creating trees "<<std::endl;
+
+                nt = (TTree*)inf->Get("Bfinder/ntphi");
+		nt->AddFriend("hltanalysis/HltTree");
+		nt->AddFriend("hiEvtAnalyzer/HiTree");
+		nt->AddFriend("skimanalysis/HltTree");
+		/*
+		nt->AddFriend("BDT_pt_15_20");
+		nt->AddFriend("BDT_pt_7_15");
+		nt->AddFriend("BDT_pt_5_7");
+		nt->AddFriend("BDT_pt_20_50");	
+		*/
+		nt->AddFriend("BDT");	
+
+		/*
+		   ntGen = (TTree*)infMC->Get("ntGen");
+		   ntGen->AddFriend("ntHlt");
+		   ntGen->AddFriend("ntHi");
+		   cout << "Pass 2" << endl;
+		   ntMC = (TTree*)infMC->Get("ntphi");
+		   ntMC->AddFriend("ntHlt");
+		   ntMC->AddFriend("ntHi");
+		   ntMC->AddFriend("ntSkim");
+		   ntMC->AddFriend("mvaTree");
+		   ntMC->AddFriend("ntGen");
+		   */
+		ntGen = (TTree*)infMC->Get("Bfinder/ntGen");
+		ntGen->AddFriend("hltanalysis/HltTree");
+		ntGen->AddFriend("hiEvtAnalyzer/HiTree");
+
+
+		ntMC = (TTree*)infMC->Get("Bfinder/ntphi");
+		ntMC->AddFriend("hltanalysis/HltTree");
+		ntMC->AddFriend("hiEvtAnalyzer/HiTree");
+		ntMC->AddFriend("skimanalysis/HltTree");
+		/*
+		ntMC->AddFriend("BDT_pt_15_20");
+		ntMC->AddFriend("BDT_pt_7_15");
+		ntMC->AddFriend("BDT_pt_5_7");
+		ntMC->AddFriend("BDT_pt_20_50");	
+		*/
+		ntMC->AddFriend("BDT");
+		ntMC->AddFriend("Bfinder/ntGen");	}
 
 	TString outputf;
 	outputf = Form("%s",outputfile.Data());
@@ -113,7 +160,9 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 	weightmc  = weightmc_pp;
 	if(usePbPb){
 		weightgen = weightgen_PbPb;
-		weightmc = weightmc_PbPb;
+		//weightmc = weightmc_PbPb;
+		if(doweight == 0 ) weightmc = "1"; 
+		if(doweight == 1) weightmc = "pthatweight";
 	}
 
     TString _prefix = "";
@@ -133,7 +182,7 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 		if(fitOnSaved == 0){
 			drawOpt = 1;
 			// tree with selecitons applied, create RooDataSet
-			if(isMC==1) skimtree = (TTree*)nt->CopyTree(Form("%s*(%s&&%s>%f&&%s<%f)*(1/%s)",weightmc.Data(),seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],weightdata.Data()), "skimtree");
+			if(isMC==1) skimtree = (TTree*)nt->CopyTree(Form("%s*(%s&&%s>%f&&%s<%f)*(1/%s)&& Bgen == 23333",weightmc.Data(),seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],weightdata.Data()), "skimtree");
 			else        skimtree = (TTree*)nt->CopyTree(   Form("(%s&&%s>%f&&%s<%f)*(1/%s)",                seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],weightdata.Data()), "skimtree");
 			skimtreeMC = (TTree*)ntMC->CopyTree(Form("%s*(%s&&%s>%f&&%s<%f)",weightmc.Data(),Form("%s&&Bgen==23333",selmc.Data()),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1]), "skimtreeMC");
 			ds = new RooDataSet(Form("ds%d",_count),"",skimtree, RooArgSet(*mass));
@@ -142,7 +191,7 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 			// create RooDataHist
 			h = new TH1D(Form("h%d",_count),"",nbinsmasshisto,minhisto,maxhisto);
 			hMC = new TH1D(Form("hMC%d",_count),"",nbinsmasshisto,minhisto,maxhisto);
-			if(isMC==1) skimtree->Project(Form("h%d",_count),"Bmass",Form("%s*(%s&&%s>%f&&%s<%f)*(1/%s)",weightmc.Data(),seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],weightdata.Data()));
+			if(isMC==1) skimtree->Project(Form("h%d",_count),"Bmass",Form("%s*(%s&&%s>%f&&%s<%f && Bgen == 23333)*(1/%s)",weightmc.Data(),seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],weightdata.Data()));
 			else        skimtree->Project(Form("h%d",_count),"Bmass",   Form("(%s&&%s>%f&&%s<%f)*(1/%s)",                seldata.Data(),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1],weightdata.Data()));
 			skimtreeMC->Project(Form("hMC%d",_count),"Bmass",Form("%s*(%s&&%s>%f&&%s<%f)",weightmc.Data(),Form("%s&&Bgen==23333",selmc.Data()),varExp.Data(),_ptBins[i],varExp.Data(),_ptBins[i+1]));
 			dh = new RooDataHist(Form("dh%d",_count),"",*mass,Import(*h));
@@ -318,3 +367,4 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 	outf->Delete("ntphi;1");
 	outf->Close();
 }
+
