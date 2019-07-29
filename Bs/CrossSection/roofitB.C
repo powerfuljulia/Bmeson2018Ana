@@ -21,10 +21,14 @@ TTree* makeTTree(TTree* intree, TString treeTitle)
 	}
 	return outtree ;
 }
+
+//void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 1, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
+
 void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 1, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
 {
 	std::cout<<"DEBUG "<<std::endl;
 
+//	return;
 
 	collisionsystem=collsyst;
 
@@ -56,15 +60,23 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 	std::cout<<"DEBUG 3"<<std::endl;
 	if(!isPbPb)
 	{
+		std::cout<<"DEBUG 4 !PbPb"<<std::endl;
 		seldata = Form("%s&&%s",trgselection.Data(),cut.Data());
+		std::cout<<"DEBUG 5"<<std::endl;
 		selmc = Form("%s",cut.Data());
+		std::cout<<"DEBUG 6"<<std::endl;
 		selmcgen = Form("%s",cutmcgen.Data());
+		std::cout<<"DEBUG 7"<<std::endl;
 	}
 	else
 	{
+		std::cout<<"DEBUG 4 else"<<std::endl;
 		seldata = Form("%s&&%s&&hiBin>=%f&&hiBin<=%f",trgselection.Data(),cut.Data(),hiBinMin,hiBinMax);
+		std::cout<<"DEBUG 5"<<std::endl;
 		selmc = Form("%s&&hiBin>=%f&&hiBin<=%f",cut.Data(),hiBinMin,hiBinMax);
-		selmcgen = Form("%s&&hiBin>=%f&&hiBin<=%f",cutmcgen.Data(),hiBinMin,hiBinMax);
+		std::cout<<"DEBUG 6"<<std::endl;
+		selmcgen = Form("%s&&hiBin>=%f&&<hiBin<=%f",cutmcgen.Data(),hiBinMin,hiBinMax);
+		std::cout<<"DEBUG 7"<<std::endl;
 	}
 
 	gStyle->SetTextSize(0.05);
