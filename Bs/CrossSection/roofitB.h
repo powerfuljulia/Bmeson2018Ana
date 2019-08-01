@@ -94,15 +94,23 @@ RooFitResult *fit(TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, Ro
 	RooAddPdf* modelMC = new RooAddPdf(Form("modelMC%d",_count),"",RooArgList(sigMC),RooArgList(nsigMC));
 	//RooAddPdf* modelMC = new RooAddPdf(Form("modelMC%d",_count),"",RooArgList(bkgMC,sigMC),RooArgList(nbkgMC,nsigMC));
 	RooFitResult* fitResultMC = modelMC->fitTo(*dsMC,Save());
+
+std::cout<<"mean_MC= "<<meanMC.getVal()<<std::endl;
+std::cout<<"sigma1_MC= "<<sigma1MC.getVal()<<std::endl;
+std::cout<<"sigma2_MC= "<<sigma2MC.getVal()<<std::endl;
+std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
+
 	dsMC->plotOn(frameMC,Name(Form("dsMC%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
-	modelMC->plotOn(frameMC,Name(Form("bkgMC%d",_count)),Components(bkgMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
+	modelMC->plot<On(frameMC,Name(Form("bkgMC%d",_count)),Components(bkgMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
 	modelMC->plotOn(frameMC,Name(Form("sigMC%d",_count)),Components(sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
 	modelMC->plotOn(frameMC,Name(Form("sigFMC%d",_count)),Components(sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
 	modelMC->plotOn(frameMC,Name(Form("modelMC%d",_count)),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
 	dsMC->plotOn(frameMC,Name(Form("dsMC%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
+  modelMC->paramOn(frameMC);
 	frameMC->Draw();
-    cMC->RedrawAxis();
-
+  
+  cMC->RedrawAxis();
+  cMC->SaveAs("mc_afterfit_test.pdf");
 	c->cd();
 	RooRealVar mean(Form("mean%d",_count),"",meanMC.getVal(),5.,6.) ;
 	RooRealVar sigma1(Form("sigma1%d",_count),"",sigma1MC.getVal(),0.01,0.1) ;
@@ -118,33 +126,39 @@ RooFitResult *fit(TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, Ro
 	RooRealVar a0(Form("a0%d",_count),"",1e3,0,1e6);
 	RooRealVar a1(Form("a1%d",_count),"",1e0,-1e4,1e4);
 	RooRealVar a2(Form("a2%d",_count),"",1e0,-1e4,1e4);
-	//RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));//2nd orderpoly
-	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
+	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));//2nd orderpoly
+  //	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
 	RooGenericPdf peakbg(Form("peakbg%d",_count),"",Form("(%s)",npfit.Data()),RooArgSet(*mass));
 	RooRealVar nsig(Form("nsig%d",_count),"",1,0,1e8);
 	RooRealVar nbkg(Form("nbkg%d",_count),"",1,0,1e5);
 	RooRealVar npeakbg(Form("npeakbg%d",_count),"",1,0,1e5);
 	RooAddPdf* model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,sig),RooArgList(nbkg,nsig));
 	if(npfit != "1") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
-	//mean.setConstant();
+//	mean.setConstant();
 	sigma1.setConstant();
 	sigma2.setConstant();
 	sig1frac.setConstant();
 	RooFitResult* fitResult = model->fitTo(*ds,Save());
 	//RooFitResult* fitResult = model->fitTo(*ds,Save(),Minos());
+std::cout<<"mean= "<<mean.getVal()<<std::endl;
+std::cout<<"sigma= "<<sigma1.getVal()<<std::endl;
+std::cout<<"sigma= "<<sigma2.getVal()<<std::endl;
+std::cout<<"fraction= "<<sig1frac.getVal()<<std::endl;
+std::cout<<"******************************************"<<std::endl;
 
 	//ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
-	ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),MarkerColor(0),LineColor(1),LineWidth(4),LineColor(0));//draw an transparent hist
-	if(npfit != "1") model->plotOn(frame,Name(Form("peakbg%d",_count)),Components(peakbg),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3005),FillColor(kGreen+4),LineStyle(1),LineColor(kGreen+4),LineWidth(4));
-	if(npfit != "1") model->plotOn(frame,Name(Form("peakbgF%d",_count)),Components(peakbg),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3005),FillColor(kGreen+4),LineStyle(1),LineColor(kGreen+4),LineWidth(4));
-	model->plotOn(frame,Name(Form("bkg%d",_count)),Components(bkg),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
-	model->plotOn(frame,Name(Form("sig%d",_count)),Components(sig),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
-	model->plotOn(frame,Name(Form("sigF%d",_count)),Components(sig),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
-	model->plotOn(frame,Name(Form("model%d",_count)),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
+	ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),MarkerColor(1),LineColor(1),LineWidth(4),LineColor(1));//draw an transparent hist
+	if(npfit != "1") model->plotOn(frame,Name(Form("peakbg%d",_count)),Components(peakbg),Precision(1e-6),DrawOption("L"),FillStyle(3005),FillColor(kGreen+4),LineStyle(1),LineColor(kGreen+4),LineWidth(4));
+	if(npfit != "1") model->plotOn(frame,Name(Form("peakbgF%d",_count)),Components(peakbg),Precision(1e-6),DrawOption("F"),FillStyle(3005),FillColor(kGreen+4),LineStyle(1),LineColor(kGreen+4),LineWidth(4));
+	model->plotOn(frame,Name(Form("bkg%d",_count)),Components(bkg),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
+	model->plotOn(frame,Name(Form("sig%d",_count)),Components(sig),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+	model->plotOn(frame,Name(Form("sigF%d",_count)),Components(sig),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+	model->plotOn(frame,Name(Form("model%d",_count)),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
 	//ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
 	//frame->SetMaximum(h->GetBinContent(h->GetMaximumBin())*1.8);
-	frame->SetMaximum((h->GetBinContent(h->GetMaximumBin())+h->GetBinError(h->GetMaximumBin()))*1.8);
+//	frame->SetMaximum((h->GetBinContent(h->GetMaximumBin())+h->GetBinError(h->GetMaximumBin()))*1.8);
 	frame->Draw();
+  c->SaveAs("dataset_afterfit_test.pdf");
 	h->Draw("same e");
     c->RedrawAxis();
 
