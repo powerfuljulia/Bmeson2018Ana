@@ -8,8 +8,8 @@ DOANALYSISPbPb_ROOFIT=1
 CENTPbPbMIN=0
 CENTPbPbMAX=100
 
-INPUTMCPbPbCANDWISE="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntphi_PbPb_2018_pthatweight.root"
-INPUTDATAPbPbCANDWISE="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntphi_PbPb_2018.root"  
+INPUTMCPbPbCANDWISE="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntphi_PbPb_2018_corrected.root"
+INPUTDATAPbPbCANDWISE="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntphi_PbPb_2018_test_onlyevtscuts+mass.root"  
 
 
 LABELPbPb="PbPb"

@@ -83,7 +83,7 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
     std::cout<<"selmc= "<<selmc<<std::endl;
 	}
 //return;
-	gStyle->SetTextSize(0.05);
+  gStyle->SetTextSize(0.05);
 	gStyle->SetTextFont(42);
 	gStyle->SetPadRightMargin(cRightMargin);
 	gStyle->SetPadLeftMargin(cLeftMargin);
@@ -193,6 +193,7 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 	//RooWorkspace* w = new RooWorkspace("w");
 	RooRealVar* mass = new RooRealVar("Bmass","Bmass",5,6);
 	RooRealVar* pt = new RooRealVar("Bpt","Bpt",5,50);
+  RooRealVar* w = new RooRealVar("Pthatweight","Pthatweight",0.,12.) ;
 	RooDataSet* ds = new RooDataSet();
 	RooDataSet* dsMC = new RooDataSet();   
 	std::cout<<"Created dataset"<<std::endl;
@@ -211,7 +212,7 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 		weightgen = weightgen_PbPb;
 		//weightmc = weightmc_PbPb;
 		if(doweight == 0 ) weightmc = "1"; 
-		if(doweight == 1) weightmc = "pthatweight";
+		if(doweight == 1) weightmc = "Pthatweight";
 	std::cout<<"weights defined"<<std::endl;	
 
 	}
@@ -248,9 +249,15 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
 			ds = new RooDataSet(Form("ds%d",_count),"",skimtree_new, RooArgSet(*mass, *pt));
 //			ds = new RooDataSet(Form("ds%d",_count),"",skimtree_new, RooArgSet(*mass, *pt));
       RooDataSet* ds_cut = new RooDataSet(Form("ds_cut%d",_count),"",ds, RooArgSet(*mass, *pt), "Bpt>5&&Bpt<50"); 
-			dsMC = new RooDataSet(Form("dsMC%d",_count),"",skimtreeMC_new,RooArgSet(*mass, *pt));
+
+ 
+    //  RooRealVar* w = (RooRealVar*) data->addColumn(wFunc) ;
+
+//      RooDataSet wdata(data->GetName(),data->GetTitle(),data,*data->get(),0,w->GetName()) ;
+
+			dsMC = new RooDataSet(Form("dsMC%d",_count),"",skimtreeMC_new,RooArgSet(*mass, *pt, *w));
 			//dsMC = new RooDataSet(Form("dsMC%d",_count),"",skimtreeMC_new,RooArgSet(*mass, *pt));
-      RooDataSet* dsMC_cut = new RooDataSet(Form("dsMC_cut%d",_count),"",dsMC, RooArgSet(*mass, *pt), "Bpt>5&&Bpt<50"); 
+      RooDataSet* dsMC_cut = new RooDataSet(Form("dsMC_cut%d",_count),"",dsMC, RooArgSet(*mass, *pt, *w), "Bpt>5&&Bpt<50", "Pthatweight"); 
       std::cout<<"Really created datasets"<<std::endl;
 			// create RooDataHist
 			h = new TH1D(Form("h%d",_count),"",nbinsmasshisto,minhisto,maxhisto);
@@ -268,7 +275,7 @@ void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TStrin
       dh = new RooDataHist(Form("dh%d",_count),"",*mass,Import(*h));
 			dhMC = new RooDataHist(Form("dhMC%d",_count),"",*mass,Import(*hMC));
 			std::cout<<"RooDataHist "<<std::endl;
-      h->SetAxisRange(0,h->GetMaximum()*1.4*1.2,"Y");
+      h->SetAxisRange(0,h->GetMaximum()*1.4,"Y");
 			outputw->import(*ds);
 			outputw->import(*dsMC);
 			outputw->import(*dh);
@@ -322,7 +329,8 @@ massframe->Draw();
 	    TLatex* tex;
 	    //tex = new TLatex(0.55,0.85,Form("%.0f < p_{T} < %.0f GeV/c",_ptBins[i],_ptBins[i+1]));
 		//if(varExp=="abs(By)") tex = new TLatex(0.55,0.85,Form("%.1f < y < %.1f",_ptBins[i],_ptBins[i+1]));
-	    tex = new TLatex(0.21,0.72,Form("%.0f < p_{T} < %.0f GeV/c",_ptBins[i],_ptBins[i+1]));
+	    tex = new TLatex(0.21,0.72,Form("5 < p_{T} < 50 GeV/c"));
+//	    tex = new TLatex(0.21,0.72,Form("%.0f < p_{T} < %.0f GeV/c",_ptBins[i],_ptBins[i+1]));
 		if(varExp=="abs(By)") tex = new TLatex(0.21,0.72,Form("%.1f < y < %.1f",_ptBins[i],_ptBins[i+1]));
 	    tex->SetNDC();
 	    tex->SetTextFont(42);
@@ -340,7 +348,7 @@ massframe->Draw();
 	    tex->SetLineWidth(2);
 	    tex->Draw();
 
-	    tex = new TLatex(0.21,0.60,"Cent. 0-100%");
+	    tex = new TLatex(0.21,0.60,"Cent. 0-90%");
 	    tex->SetNDC();
 	    tex->SetTextFont(42);
 	    tex->SetTextSize(0.045);
@@ -415,6 +423,8 @@ massframe->Draw();
 	hEff->SetTitle(";B_{s} p_{T} (GeV/c);Efficiency");
 	hEff->Sumw2();
 //	hEff->Divide(hPtGen);
+
+
 	TCanvas* cEff = new TCanvas("cEff","",600,600);
 	hEff->Draw();
 
