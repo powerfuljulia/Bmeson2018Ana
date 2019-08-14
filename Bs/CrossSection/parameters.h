@@ -5,10 +5,13 @@
 //double ptBins[nBins+1]={20,50};
 //const int nBins=3;
 //double ptBins[nBins+1] = {7,15,20,50};
-const int nBins=4;
-double ptBins[nBins+1] = {5,10,15,20,50};
 //const int nBins=1;
 //double ptBins[nBins+1] = {20,50};
+
+const int nBins_full=1;
+double ptBins_full[nBins_full+1] = {5,50};
+const int nBins=4;
+double ptBins[nBins+1] = {5,10,15,20,50};
 const int nBinsInc=1;
 double ptBinsInc[nBinsInc+1] = {7,50};
 const int nBins750=3;
