@@ -259,14 +259,14 @@ if(full==1) ptBins_check = ptBins_full;
 //			ds = new RooDataSet(Form("ds%d",_count),"",skimtree_new, RooArgSet(*mass, *pt));
       std::cout<<"pt bin = "<<ptBins_check[i]<<" "<<ptBins_check[i+1]<<std::endl;
   //    return;
-      RooDataSet* ds_cut = new RooDataSet(Form("ds_cut%d",_count),"",ds, RooArgSet(*mass, *pt), Form("Bpt>%d&&Bpt<%d",(int)ptBins_check[i],(int)ptBins_check[i+1])); 
+      RooDataSet* ds_cut = new RooDataSet(Form("ds_cut%d",_count),"",ds, RooArgSet(*mass, *pt), Form("Bpt>%d&&Bpt<%d&&Bmass>5.2",(int)ptBins_check[i],(int)ptBins_check[i+1])); 
   
     //  RooRealVar* w = (RooRealVar*) data->addColumn(wFunc) ;
 
 //      RooDataSet wdata(data->GetName(),data->GetTitle(),data,*data->get(),0,w->GetName()) ;
 
 			//dsMC = new RooDataSet(Form("dsMC%d",_count),"",skimtreeMC_new,RooArgSet(*mass, *pt));
-      RooDataSet* dsMC_cut = new RooDataSet(Form("dsMC_cut%d",_count),"",dsMC, RooArgSet(*mass, *pt, *w), Form("Bpt>%d&&Bpt<%d",(int)ptBins_check[i],(int)ptBins_check[i+1]), "Pthatweight"); 
+      RooDataSet* dsMC_cut = new RooDataSet(Form("dsMC_cut%d",_count),"",dsMC, RooArgSet(*mass, *pt, *w), Form("Bpt>%d&&Bpt<%d&&Bmass>5.2&&Bmass<5.6",(int)ptBins_check[i],(int)ptBins_check[i+1]), "Pthatweight"); 
       std::cout<<"Really created datasets"<<std::endl;
 			// create RooDataHist
 			h = new TH1D(Form("h%d",_count),"",nbinsmasshisto,minhisto,maxhisto);

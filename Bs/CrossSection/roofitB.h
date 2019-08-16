@@ -1,3 +1,4 @@
+\
 
 #include "uti.h"
 #include "parameters.h"
@@ -10,6 +11,7 @@
 #include "RooGenericPdf.h"
 #include "RooChebychev.h"
 #include "RooPolynomial.h"
+#include "RooExponential.h"
 #include "RooAddPdf.h"
 #include "RooExtendPdf.h"
 #include "RooPlot.h"
@@ -56,7 +58,8 @@ RooFitResult *fit(TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, Ro
 	h->SetMarkerStyle(20);
 	h->SetLineColor(1);
 	h->SetLineWidth(4);
-	RooPlot* frameMC = mass->frame(Title(""));
+//	RooPlot* frameMC = mass->frame(5.2, 5.5);
+	RooPlot* frameMC = mass->frame();
 	frameMC->SetTitle("");
 	//frameMC->SetXTitle("m_{B} (GeV/c^{2})");
 	frameMC->SetXTitle("m_{J/#psi(#mu#mu)#it{#phi}(KK)} (GeV/c^{2})");
@@ -64,7 +67,7 @@ RooFitResult *fit(TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, Ro
 	frameMC->GetXaxis()->CenterTitle();
 	frameMC->GetYaxis()->CenterTitle();
 	frameMC->GetXaxis()->SetTitleOffset(1.0);
-	frameMC->GetYaxis()->SetTitleOffset(1.8);
+	frameMC->GetYaxis()->SetTitleOffset(1.3);
 	frameMC->GetXaxis()->SetTitleSize(0.055);
 	frameMC->GetYaxis()->SetTitleSize(0.055);
 	frameMC->GetXaxis()->SetTitleFont(42);
@@ -76,6 +79,8 @@ RooFitResult *fit(TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, Ro
 	frameMC->SetStats(0);
 	frameMC->GetXaxis()->SetNdivisions(-50205);
 	RooPlot* frame = (RooPlot*)frameMC->Clone();
+  (frameMC->GetXaxis())->SetRangeUser(5.2,5.6);
+  (frame->GetXaxis())->SetRangeUser(5.2,6.);
 
 	cMC->cd();
 	RooRealVar meanMC(Form("meanMC%d",_count),"",BSUBS_MASS,5.,6.) ;
@@ -106,7 +111,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	modelMC->plotOn(frameMC,Name(Form("sigMC%d",_count)),Components(sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
 	modelMC->plotOn(frameMC,Name(Form("sigFMC%d",_count)),Components(sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
 	modelMC->plotOn(frameMC,Name(Form("modelMC%d",_count)),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
-	dsMC->plotOn(frameMC,Name(Form("dsMC%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
+	dsMC->plotOn(frameMC,Name(Form("dsMC%d",_count)),Binning(nbinsmasshisto*2),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
   double x_1 = 0.58;
   double x_2 = 0.95;
   double y_2 = 0.92;
@@ -120,11 +125,13 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 
   modelMC->paramOn(frameMC,Layout(x_1, x_2, y_1), Format("NEU",AutoPrecision(1)));
   frameMC->getAttText()->SetTextSize(0.02);
+	frameMC->SetMaximum(nsigMC.getVal()*1.2);
 
 //  modelMC->paramOn(frameMC, Layout());
 	frameMC->Draw();
   
   cMC->RedrawAxis();
+//  cMC->SetLogy();
   cMC->SaveAs("mc_afterfit_test.pdf");
 	c->cd();
   /*TPad *p1 = new TPad("p1","p1",0.,0.27,1.,1.);
@@ -162,12 +169,14 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	//RooRealVar a1(Form("a1%d",_count),"a1",0.1,0.,1.);
 	//RooRealVar a2(Form("a2%d",_count),"a2",0.1,0.,1.);
 	//RooChebychev bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));
-	RooRealVar a0(Form("a0%d",_count),"",1e3,0,1e6);
+  RooRealVar a0(Form("a0%d",_count),"",1e3,0,1e6);
 	RooRealVar a1(Form("a1%d",_count),"",1e0,-1e4,1e4);
-	RooRealVar a2(Form("a2%d",_count),"",1e0,-1e4,1e4);
+	/*RooRealVar a2(Form("a2%d",_count),"",1e0,-1e4,1e4);
 //	RooRealVar a3(Form("a3%d",_count),"",1e0,-1e4,1e4);
-	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));//2nd orderpoly
-  //	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
+	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));//2nd orderpoly*/
+/*	RooRealVar lambda(Form("lambda%d", _count), "lambda",-2., -5., 5.);
+  RooExponential bkg(Form("bkg%d",_count),"",*mass,lambda);//2nd orderpoly*/
+  RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
 	RooGenericPdf peakbg(Form("peakbg%d",_count),"",Form("(%s)",npfit.Data()),RooArgSet(*mass));
 	RooRealVar nsig(Form("nsig%d",_count),"",n_signal_initial,0.,ds->sumEntries());
 	RooRealVar nbkg(Form("nbkg%d",_count),"",n_combinatorial_initial,0.,ds->sumEntries());
@@ -176,8 +185,8 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	RooAddPdf* model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,sig),RooArgList(nbkg,nsig));
 	if(npfit != "1") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
 //	mean.setConstant();
-	sigma1.setConstant();
-	sigma2.setConstant();
+//	sigma1.setConstant();
+	//sigma2.setConstant();
 	sig1frac.setConstant();
 	RooFitResult* fitResult = model->fitTo(*ds,Save());
   RooAbsReal* nll = model->createNLL(*ds);
@@ -194,12 +203,14 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	//RooRealVar a1(Form("a1%d",_count),"a1",0.1,0.,1.);
 	//RooRealVar a2(Form("a2%d",_count),"a2",0.1,0.,1.);
 	//RooChebychev bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));
-	RooRealVar a0_new(Form("a0_new%d",_count),"",1e3,0,1e6);
+	//RooRealVar lambda_new(Form("lambda_new%d",_count), "lambda",-2., -5., 5.);
+// RooExponential bkg_new(Form("bkg%d_new",_count),"",*mass,lambda_new);//2nd orderpoly
+RooRealVar a0_new(Form("a0_new%d",_count),"",1e3,0,1e6);
 	RooRealVar a1_new(Form("a1_new%d",_count),"",1e0,-1e4,1e4);
-	RooRealVar a2_new(Form("a2_new%d",_count),"",1e0,-1e4,1e4);
+/*	RooRealVar a2_new(Form("a2_new%d",_count),"",1e0,-1e4,1e4);
 //	RooRealVar a3_new(Form("a3_new%d",_count),"",1e0,-1e4,1e4);
-	RooPolynomial bkg_new(Form("bkg_new%d",_count),"",*mass,RooArgSet(a0_new,a1_new,a2_new));//2nd orderpoly
-  //	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
+	RooPolynomial bkg_new(Form("bkg_new%d",_count),"",*mass,RooArgSet(a0_new,a1_new,a2_new));//2nd orderpoly*/
+  	RooPolynomial bkg_new(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
 	RooGenericPdf peakbg_new(Form("peakbg_new%d",_count),"",Form("(%s)",npfit.Data()),RooArgSet(*mass));
 	RooRealVar nbkg_new(Form("nbkg_new%d",_count),"",1,0,1e5);
 	RooRealVar npeakbg_new(Form("npeakbg_new%d",_count),"",1,0,1e5);
@@ -207,8 +218,8 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
   RooAddPdf* model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new,sig_new),RooArgList(nbkg,nsig_new));
  if(npfit != "1") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new,sig_new,peakbg_new),RooArgList(nbkg_new,nsig_new,npeakbg_new));
 //  mean.setConstant();
-  sigma1_new.setConstant();
-  sigma2_new.setConstant();
+  //sigma1_new.setConstant();
+  //sigma2_new.setConstant();
   sig1frac_new.setConstant();
   nsig_new.setVal(0.);
   nsig_new.setConstant();
@@ -259,7 +270,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
   pull_plot->GetYaxis()->SetLabelFont(42);
   pull_plot->GetYaxis()->SetLabelOffset(0.01);
   pull_plot->GetYaxis()->SetLabelSize(0.17);
-  pull_plot->GetYaxis()->SetTitleOffset(1.6);
+  pull_plot->GetYaxis()->SetTitleOffset(1.3);
   pull_plot->GetYaxis()->SetTitleSize(0.17);
   pull_plot->GetYaxis()->SetTitleFont(42);
   pull_plot->GetYaxis()->SetNdivisions(305);
@@ -325,7 +336,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 
 	TLegend *leg = new TLegend(0.62,0.62,0.89,0.75,NULL,"brNDC"); 
     if(drawOpt == 1) {
-		leg = new TLegend(0.565,0.7,0.89,0.89,NULL,"brNDC");
+		leg = new TLegend(0.65,0.7,0.89,0.89,NULL,"brNDC");
 	}
 	leg->SetBorderSize(0);
 	leg->SetTextSize(0.03);
