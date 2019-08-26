@@ -24,7 +24,7 @@ TTree* makeTTree(TTree* intree, TString treeTitle)
 
 //void roofitB(int usePbPb = 0, int fitOnSaved = 0, TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 1, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
 
-void roofitB(int full = 1, int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 1, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
+void roofitB(TString tree = "ntphi", int full = 1, int usePbPb = 0, int fitOnSaved = 0, TString inputdata = "", TString inputmc = "", TString _varExp = "", TString trgselection = "",  TString cut = "", TString cutmcgen = "", int isMC = 0, Double_t luminosity = 1., int doweight = 1, TString collsyst = "", TString outputfile = "", TString outplotf = "", TString npfit = "", int doDataCor = 0, Float_t centmin = 0., Float_t centmax = 100.)
 {
 	std::cout<<"DEBUG "<<std::endl;
 
@@ -91,14 +91,14 @@ void roofitB(int full = 1, int usePbPb = 0, int fitOnSaved = 0, TString inputdat
 	gStyle->SetTitleX(.0f);
 
 	TFile* inf = new TFile(inputdata.Data());
-  TTree* skimtree = (TTree*)inf->Get("ntphi");
+  TTree* skimtree = (TTree*)inf->Get(tree);
   TTree* skimtree_new =skimtree->CloneTree();
 //  inf->Close();
 	TFile* infMC = new TFile(inputmc.Data());
   std::cout<<"MC file: "<<inputmc.Data()<<std::endl;
 //  infMC->cd();
   std::cout<<"cd"<<std::endl;
-  TTree* skimtreeMC = (TTree*)infMC->Get("ntphi");
+  TTree* skimtreeMC = (TTree*)infMC->Get(tree);
   TFile* fout = new TFile("/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/test_trees/test_mc_new.root", "RECREATE");
   TTree* skimtreeMC_new =skimtreeMC->CloneTree();
 //  fout->cd();
@@ -190,7 +190,7 @@ void roofitB(int full = 1, int usePbPb = 0, int fitOnSaved = 0, TString inputdat
 	TH1D* hSigmaGaus2 = new TH1D("hSigmaGaus2","",_nBins,_ptBins); 
 	std::cout<<"Histograms"<<std::endl;
 	//RooWorkspace* w = new RooWorkspace("w");
-	RooRealVar* mass = new RooRealVar("Bmass","Bmass",5,6);
+	RooRealVar* mass = new RooRealVar("Bmass","Bmass",minhisto,maxhisto);
 	RooRealVar* pt = new RooRealVar("Bpt","Bpt",5,50);
   RooRealVar* w = new RooRealVar("Pthatweight","Pthatweight",0.,12.) ;
 	RooDataSet* ds = new RooDataSet();
@@ -241,7 +241,7 @@ if(full==1) ptBins_check = ptBins_full;
 		std::cout<<"I'm in the for"<<std::endl;
 		TCanvas* c= new TCanvas(Form("c%d",_count),"",600,600);
 		TCanvas* cMC= new TCanvas(Form("cMC%d",_count),"",600,600);
-		c->cd();
+//		c->cd();
 	//	if(fitOnSaved == 0){
       drawOpt = 1;
 			// tree with selecitons applied, create RooDataSet
@@ -259,14 +259,14 @@ if(full==1) ptBins_check = ptBins_full;
 //			ds = new RooDataSet(Form("ds%d",_count),"",skimtree_new, RooArgSet(*mass, *pt));
       std::cout<<"pt bin = "<<ptBins_check[i]<<" "<<ptBins_check[i+1]<<std::endl;
   //    return;
-      RooDataSet* ds_cut = new RooDataSet(Form("ds_cut%d",_count),"",ds, RooArgSet(*mass, *pt), Form("Bpt>%d&&Bpt<%d&&Bmass>5.2",(int)ptBins_check[i],(int)ptBins_check[i+1])); 
+      RooDataSet* ds_cut = new RooDataSet(Form("ds_cut%d",_count),"",ds, RooArgSet(*mass, *pt), Form("Bpt>%d&&Bpt<%d&&Bmass>%f&&Bmass<%f",(int)ptBins_check[i],(int)ptBins_check[i+1],minhisto, maxhisto)); 
   
     //  RooRealVar* w = (RooRealVar*) data->addColumn(wFunc) ;
 
 //      RooDataSet wdata(data->GetName(),data->GetTitle(),data,*data->get(),0,w->GetName()) ;
 
 			//dsMC = new RooDataSet(Form("dsMC%d",_count),"",skimtreeMC_new,RooArgSet(*mass, *pt));
-      RooDataSet* dsMC_cut = new RooDataSet(Form("dsMC_cut%d",_count),"",dsMC, RooArgSet(*mass, *pt, *w), Form("Bpt>%d&&Bpt<%d&&Bmass>5.2&&Bmass<5.6",(int)ptBins_check[i],(int)ptBins_check[i+1]), "Pthatweight"); 
+      RooDataSet* dsMC_cut = new RooDataSet(Form("dsMC_cut%d",_count),"",dsMC, RooArgSet(*mass, *pt, *w), Form("Bpt>%d&&Bpt<%d&&Bmass>%f&&Bmass<%f",(int)ptBins_check[i],(int)ptBins_check[i+1],minhisto, maxhisto), "Pthatweight"); 
       std::cout<<"Really created datasets"<<std::endl;
 			// create RooDataHist
 			h = new TH1D(Form("h%d",_count),"",nbinsmasshisto,minhisto,maxhisto);
@@ -302,13 +302,13 @@ if(full==1) ptBins_check = ptBins_full;
 
 RooPlot* massframe = mass->frame();
 ds->plotOn(massframe);
-massframe->Draw();
+//massframe->Draw();
 //c->SaveAs("dataset_test.pdf");
 
 ///return;
 
 		//RooFitResult* f = fit(c, cMC, ds, dsMC, dh, dhMC, mass, frame, _ptBins[i], _ptBins[i+1], isMC, isPbPb, centmin, centmax, npfit);
-    RooFitResult* f = fit(c, cMC, ds_cut, dsMC_cut, dh, dhMC, mass, frame, ptBins_check[i], ptBins_check[i+1], isMC, isPbPb, centmin, centmax, npfit);
+    RooFitResult* f = fit(tree, c, cMC, ds_cut, dsMC_cut, dh, dhMC, mass, frame, ptBins_check[i], ptBins_check[i+1], isMC, isPbPb, centmin, centmax, npfit);
 //  return;
 
 		//datahist = frame->getHist("ds");
@@ -338,7 +338,7 @@ massframe->Draw();
 	    TLatex* tex;
 	    //tex = new TLatex(0.55,0.85,Form("%.0f < p_{T} < %.0f GeV/c",_ptBins[i],_ptBins[i+1]));
 		//if(varExp=="abs(By)") tex = new TLatex(0.55,0.85,Form("%.1f < y < %.1f",_ptBins[i],_ptBins[i+1]));
-	    tex = new TLatex(0.21,0.72,Form("%d < p_{T} < %d GeV/c",(int)ptBins_check[i],(int)ptBins_check[i+1]));
+	    tex = new TLatex(0.21,0.75,Form("%d < p_{T} < %d GeV/c",(int)ptBins_check[i],(int)ptBins_check[i+1]));
 //	    tex = new TLatex(0.21,0.72,Form("%.0f < p_{T} < %.0f GeV/c",_ptBins[i],_ptBins[i+1]));
 		if(varExp=="abs(By)") tex = new TLatex(0.21,0.72,Form("%.1f < y < %.1f",_ptBins[i],_ptBins[i+1]));
 	    tex->SetNDC();
@@ -349,7 +349,7 @@ massframe->Draw();
 	
 	    //tex = new TLatex(0.75,0.80,"|y| < 2.4");
 		//if(varExp=="abs(By)") tex = new TLatex(0.75,0.80,"15 < p_{T} < 50 GeV.c");
-	    tex = new TLatex(0.21,0.66,"|y| < 2.4");
+	    tex = new TLatex(0.21,0.69,"|y| < 2.4");
 		if(varExp=="abs(By)") tex = new TLatex(0.21,0.66,"15 < p_{T} < 50 GeV.c");
 	    tex->SetNDC();
 	    tex->SetTextFont(42);
@@ -357,19 +357,19 @@ massframe->Draw();
 	    tex->SetLineWidth(2);
 	    tex->Draw();
 
-	    tex = new TLatex(0.21,0.60,"Cent. 0-90%");
+	    tex = new TLatex(0.21,0.62,"Cent. 0-90%");
 	    tex->SetNDC();
 	    tex->SetTextFont(42);
 	    tex->SetTextSize(0.045);
 	    tex->SetLineWidth(2);
 	    if(isPbPb) tex->Draw();
 
-        c->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.pdf",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,_postfix.Data(),(int)ptBins_check[i],(int)ptBins_check[i+1]));
-        c->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.png",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i],(int)ptBins_check[i+1]));
-        c->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.C",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i],(int)ptBins_check[i+1]));
-        cMC->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.pdf",outplotf.Data(),_prefix.Data(),"mc",_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i], (int)ptBins_check[i+1]));
-        cMC->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.png",outplotf.Data(),_prefix.Data(),"mc",_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i], (int)ptBins_check[i+1]));
-        cMC->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.C",outplotf.Data(),_prefix.Data(),"mc",_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i], (int)ptBins_check[i+1]));
+        c->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d_mass52_",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,_postfix.Data(),(int)ptBins_check[i],(int)ptBins_check[i+1])+tree+".pdf");
+       // c->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.png",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i],(int)ptBins_check[i+1]));
+       // c->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.C",outplotf.Data(),_prefix.Data(),_isMC.Data(),_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i],(int)ptBins_check[i+1]));
+        cMC->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d_mass52_",outplotf.Data(),_prefix.Data(),"mc",_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i], (int)ptBins_check[i+1])+tree+".pdf");
+       // cMC->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.png",outplotf.Data(),_prefix.Data(),"mc",_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i], (int)ptBins_check[i+1]));
+        //cMC->SaveAs(Form("%s%s/%s_%s_%d%s_%d%d.C",outplotf.Data(),_prefix.Data(),"mc",_isPbPb.Data(),_count,_postfix.Data(), (int)ptBins_check[i], (int)ptBins_check[i+1]));
 //        return;
 /*	    TH1* h = dh->createHistogram("Bmass");
 	    h->GetEntries();

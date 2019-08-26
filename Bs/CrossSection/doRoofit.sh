@@ -3,14 +3,21 @@
 #source clean.sh
 
 
-DOANALYSISPbPb_ROOFIT_BINNED=0
-DOANALYSISPbPb_ROOFIT_FULL=1
+DOANALYSISPbPb_ROOFIT_BINNED_BS=1
+DOANALYSISPbPb_ROOFIT_FULL_BS=1
+
+
+DOANALYSISPbPb_ROOFIT_FULL_BP=1
+DOANALYSISPbPb_ROOFIT_BINNED_BP=1
 
 CENTPbPbMIN=0
-CENTPbPbMAX=100
+CENTPbPbMAX=90
 
-INPUTMCPbPbCANDWISE="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntphi_PbPb_2018_corrected.root"
-INPUTDATAPbPbCANDWISE="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntphi_PbPb_2018_test_onlyevtscuts+mass.root"  
+INPUTMCPbPbCANDWISE_BS="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntphi_PbPb_2018_corrected.root"
+INPUTDATAPbPbCANDWISE_BS="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntphi_PbPb_2018_test_onlyevtscuts+mass.root"  
+
+INPUTMCPbPbCANDWISE_BP="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntKp_PbPb_2018_corrected_test.root"
+INPUTDATAPbPbCANDWISE_BP="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntKp_PbPb_2018_corrected_test.root"  
 
 
 LABELPbPb="PbPb"
@@ -42,19 +49,18 @@ echo "TRGPbPb="$TRGPbPb
 OUTPUTFILEPbPbSAVEHIST_ROOFIT="ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root"
 
 NPROOFIT_PbPb="1"
+NPROOFIT_PbPb_BP="701.019629*TMath::Erf((Bmass-5.140349)/-0.035471)+701.019629+16.946432*TMath::Gaus(Bmass,5.343914,0.040000)/(sqrt(2*3.14159)*0.040000)"
+
 #NPROOFIT_PbPb="1.299998*TMath::Gaus(Bmass,6.099828,-0.242801)/(sqrt(2*3.14159)*-0.242801)+8.186179*TMath::Erf((Bmass-5.000000)/-0.205218)+8.186179+1.263652*(0.426611*TMath::Gaus(Bmass,5.383307,0.249980)/(sqrt(2*3.14159)*0.249980)+(1-0.426611)*TMath::Gaus(Bmass,5.383307,0.037233)/(sqrt(2*3.14159)*0.037233))"
 
 
-
-
-
-if [ $DOANALYSISPbPb_ROOFIT_BINNED  -eq 1  ]; then
+if [ $DOANALYSISPbPb_ROOFIT_BINNED_BS  -eq 1  ]; then
 echo "IGOTHEREBABY"
 
 #root-b-q'roofitB.C++('1','1','0','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/Data_Bs_PbPb_TMVA_BDT_PbPb.root"','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/MC_Bs_PbPb_TMVA_BDT_PbPb.root"','"Bpt"','"(Bpt>0)"','"(hiBin<181)&&Btrk1Pt>0.9&&Btrk2Pt>0.9&&Bchi2cl>0.05&&BsvpvDistance/BsvpvDisErr>2&&Bpt>5&&abs(Btrk1Eta-0.0)<2.4&&abs(Btrk2Eta-0.0)<2.4&&(TMath::Abs(By)<2.4&&TMath::Abs(Bmumumass-3.096916)<0.15&&((abs(Bmu1eta)<1.2&&Bmu1pt>3.5)||(abs(Bmu1eta)>1.2&&abs(Bmu1eta)<2.1&&Bmu1pt>(5.77-1.8*abs(Bmu1eta)))||(abs(Bmu1eta)>2.1&&abs(Bmu1eta)<2.4&&Bmu1pt>1.8))&&((abs(Bmu2eta)<1.2&&Bmu2pt>3.5)||(abs(Bmu2eta)>1.2&&abs(Bmu2eta)<2.1&&Bmu2pt>(5.77-1.8*abs(Bmu2eta)))||(abs(Bmu2eta)>2.1&&abs(Bmu2eta)<2.4&&Bmu2pt>1.8))&&Bmu1TMOneStationTight&&Bmu2TMOneStationTight&&Bmu1InPixelLayer>0&&(Bmu1InPixelLayer+Bmu1InStripLayer)>5&&Bmu2InPixelLayer>0&&(Bmu2InPixelLayer+Bmu2InStripLayer)>5&&Bmu1dxyPV<0.3&&Bmu2dxyPV<0.3&&Bmu1dzPV<20&&Bmu2dzPV<20&&Bmu1isGlobalMuon&&Bmu2isGlobalMuon&&Btrk1highPurity&&Btrk2highPurity&&abs(Btrk1Eta)<2.4&&abs(Btrk2Eta)<2.4&&Btrk1Pt>1.&&Btrk2Pt>1.&&abs(Btktkmass-1.019455)<0.015)&&(abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter)&&(Btrk1PixelHit+Btrk1StripHit>10)&&(Btrk2PixelHit+Btrk2StripHit>10)&&(Btrk1PtErr/Btrk1Pt<0.1)&&(Btrk2PtErr/Btrk2Pt<0.1)&&Btrk1Chi2ndf/(Btrk1nStripLayer+Btrk1nPixelLayer)<0.18&&Btrk2Chi2ndf/(Btrk2nStripLayer+Btrk2nPixelLayer)<0.18&&((Bpt>5&&Bpt<10&&BDT_pt_5_10>0.20)||(Bpt>10&&Bpt<15&&BDT_pt_10_15>0.22)||(Bpt>15&&Bpt<20&&BDT_pt_15_20>0.22)||(Bpt>20&&Bpt<50&&BDT_pt_20_50>0.28))&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter"','"TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0"','0','1','1','"PbPb"','"ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root"','"plotFits/plotFits_roofit"','"1"','0','0','100')'
 
-echo "INPUTDATAPBPBCANDWISE=" $INPUTDATAPbPbCANDWISE	
-echo  "INPUTMCPbPbCANDWISE	=" $INPUTMCPbPbCANDWISE	
+echo "INPUTDATAPBPBCANDWISE_BS=" $INPUTDATAPbPbCANDWISE	
+echo  "INPUTMCPbPbCANDWISE_BS	=" $INPUTMCPbPbCANDWISE	
 echo "TRGPbPb			=" $TRGPbPb			
 echo "CUTPbPb			=" $CUTPbPb			
 echo "SELGENPbPb		=" $SELGENPbPb		
@@ -73,19 +79,19 @@ echo "CENTPbPbMAX=" $CENTPbPbMAX
 #'\"$TRGPbPb\"')'
 #,'\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/plotFits_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
 #exit2
-root -b  -q 'roofitB.C+('0','1','0','\"$INPUTDATAPbPbCANDWISE\"','\"$INPUTMCPbPbCANDWISE\"','\"Bpt\"','\"$TRGPbPb\"','\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/new_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
+root -b  -q 'roofitB.C+('\"ntphi\"','0','1','0','\"$INPUTDATAPbPbCANDWISE_BS\"','\"$INPUTMCPbPbCANDWISE_BS\"','\"Bpt\"','\"$TRGPbPb\"','\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/new_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
 
 rm roofitB_C.d roofitB_C_ACLiC_dict_rdict.pcm roofitB_C.so
 fi
 
 
-if [ $DOANALYSISPbPb_ROOFIT_FULL  -eq 1  ]; then
+if [ $DOANALYSISPbPb_ROOFIT_FULL_BS  -eq 1  ]; then
 echo "IGOTHEREBABY"
 
 #root-b-q'roofitB.C++('1','1','0','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/Data_Bs_PbPb_TMVA_BDT_PbPb.root"','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/MC_Bs_PbPb_TMVA_BDT_PbPb.root"','"Bpt"','"(Bpt>0)"','"(hiBin<181)&&Btrk1Pt>0.9&&Btrk2Pt>0.9&&Bchi2cl>0.05&&BsvpvDistance/BsvpvDisErr>2&&Bpt>5&&abs(Btrk1Eta-0.0)<2.4&&abs(Btrk2Eta-0.0)<2.4&&(TMath::Abs(By)<2.4&&TMath::Abs(Bmumumass-3.096916)<0.15&&((abs(Bmu1eta)<1.2&&Bmu1pt>3.5)||(abs(Bmu1eta)>1.2&&abs(Bmu1eta)<2.1&&Bmu1pt>(5.77-1.8*abs(Bmu1eta)))||(abs(Bmu1eta)>2.1&&abs(Bmu1eta)<2.4&&Bmu1pt>1.8))&&((abs(Bmu2eta)<1.2&&Bmu2pt>3.5)||(abs(Bmu2eta)>1.2&&abs(Bmu2eta)<2.1&&Bmu2pt>(5.77-1.8*abs(Bmu2eta)))||(abs(Bmu2eta)>2.1&&abs(Bmu2eta)<2.4&&Bmu2pt>1.8))&&Bmu1TMOneStationTight&&Bmu2TMOneStationTight&&Bmu1InPixelLayer>0&&(Bmu1InPixelLayer+Bmu1InStripLayer)>5&&Bmu2InPixelLayer>0&&(Bmu2InPixelLayer+Bmu2InStripLayer)>5&&Bmu1dxyPV<0.3&&Bmu2dxyPV<0.3&&Bmu1dzPV<20&&Bmu2dzPV<20&&Bmu1isGlobalMuon&&Bmu2isGlobalMuon&&Btrk1highPurity&&Btrk2highPurity&&abs(Btrk1Eta)<2.4&&abs(Btrk2Eta)<2.4&&Btrk1Pt>1.&&Btrk2Pt>1.&&abs(Btktkmass-1.019455)<0.015)&&(abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter)&&(Btrk1PixelHit+Btrk1StripHit>10)&&(Btrk2PixelHit+Btrk2StripHit>10)&&(Btrk1PtErr/Btrk1Pt<0.1)&&(Btrk2PtErr/Btrk2Pt<0.1)&&Btrk1Chi2ndf/(Btrk1nStripLayer+Btrk1nPixelLayer)<0.18&&Btrk2Chi2ndf/(Btrk2nStripLayer+Btrk2nPixelLayer)<0.18&&((Bpt>5&&Bpt<10&&BDT_pt_5_10>0.20)||(Bpt>10&&Bpt<15&&BDT_pt_10_15>0.22)||(Bpt>15&&Bpt<20&&BDT_pt_15_20>0.22)||(Bpt>20&&Bpt<50&&BDT_pt_20_50>0.28))&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter"','"TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0"','0','1','1','"PbPb"','"ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root"','"plotFits/plotFits_roofit"','"1"','0','0','100')'
 
-echo "INPUTDATAPBPBCANDWISE=" $INPUTDATAPbPbCANDWISE	
-echo  "INPUTMCPbPbCANDWISE	=" $INPUTMCPbPbCANDWISE	
+echo "INPUTDATAPBPBCANDWISE_BS=" $INPUTDATAPbPbCANDWISE	
+echo  "INPUTMCPbPbCANDWISE_BS	=" $INPUTMCPbPbCANDWISE	
 echo "TRGPbPb			=" $TRGPbPb			
 echo "CUTPbPb			=" $CUTPbPb			
 echo "SELGENPbPb		=" $SELGENPbPb		
@@ -104,8 +110,67 @@ echo "CENTPbPbMAX=" $CENTPbPbMAX
 #'\"$TRGPbPb\"')'
 #,'\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/plotFits_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
 #exit2
-root -b  -q 'roofitB.C+('1','1','0','\"$INPUTDATAPbPbCANDWISE\"','\"$INPUTMCPbPbCANDWISE\"','\"Bpt\"','\"$TRGPbPb\"','\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/new_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
+root -b  -q 'roofitB.C+('\"ntphi\"','1','1','0','\"$INPUTDATAPbPbCANDWISE_BS\"','\"$INPUTMCPbPbCANDWISE_BS\"','\"Bpt\"','\"$TRGPbPb\"','\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/new_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
 
 rm roofitB_C.d roofitB_C_ACLiC_dict_rdict.pcm roofitB_C.so
 fi
 
+if [ $DOANALYSISPbPb_ROOFIT_FULL_BP  -eq 1  ]; then
+echo "IGOTHEREBABY"
+
+#root-b-q'roofitB.C++('1','1','0','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/Data_Bs_PbPb_TMVA_BDT_PbPb.root"','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/MC_Bs_PbPb_TMVA_BDT_PbPb.root"','"Bpt"','"(Bpt>0)"','"(hiBin<181)&&Btrk1Pt>0.9&&Btrk2Pt>0.9&&Bchi2cl>0.05&&BsvpvDistance/BsvpvDisErr>2&&Bpt>5&&abs(Btrk1Eta-0.0)<2.4&&abs(Btrk2Eta-0.0)<2.4&&(TMath::Abs(By)<2.4&&TMath::Abs(Bmumumass-3.096916)<0.15&&((abs(Bmu1eta)<1.2&&Bmu1pt>3.5)||(abs(Bmu1eta)>1.2&&abs(Bmu1eta)<2.1&&Bmu1pt>(5.77-1.8*abs(Bmu1eta)))||(abs(Bmu1eta)>2.1&&abs(Bmu1eta)<2.4&&Bmu1pt>1.8))&&((abs(Bmu2eta)<1.2&&Bmu2pt>3.5)||(abs(Bmu2eta)>1.2&&abs(Bmu2eta)<2.1&&Bmu2pt>(5.77-1.8*abs(Bmu2eta)))||(abs(Bmu2eta)>2.1&&abs(Bmu2eta)<2.4&&Bmu2pt>1.8))&&Bmu1TMOneStationTight&&Bmu2TMOneStationTight&&Bmu1InPixelLayer>0&&(Bmu1InPixelLayer+Bmu1InStripLayer)>5&&Bmu2InPixelLayer>0&&(Bmu2InPixelLayer+Bmu2InStripLayer)>5&&Bmu1dxyPV<0.3&&Bmu2dxyPV<0.3&&Bmu1dzPV<20&&Bmu2dzPV<20&&Bmu1isGlobalMuon&&Bmu2isGlobalMuon&&Btrk1highPurity&&Btrk2highPurity&&abs(Btrk1Eta)<2.4&&abs(Btrk2Eta)<2.4&&Btrk1Pt>1.&&Btrk2Pt>1.&&abs(Btktkmass-1.019455)<0.015)&&(abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter)&&(Btrk1PixelHit+Btrk1StripHit>10)&&(Btrk2PixelHit+Btrk2StripHit>10)&&(Btrk1PtErr/Btrk1Pt<0.1)&&(Btrk2PtErr/Btrk2Pt<0.1)&&Btrk1Chi2ndf/(Btrk1nStripLayer+Btrk1nPixelLayer)<0.18&&Btrk2Chi2ndf/(Btrk2nStripLayer+Btrk2nPixelLayer)<0.18&&((Bpt>5&&Bpt<10&&BDT_pt_5_10>0.20)||(Bpt>10&&Bpt<15&&BDT_pt_10_15>0.22)||(Bpt>15&&Bpt<20&&BDT_pt_15_20>0.22)||(Bpt>20&&Bpt<50&&BDT_pt_20_50>0.28))&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter"','"TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0"','0','1','1','"PbPb"','"ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root"','"plotFits/plotFits_roofit"','"1"','0','0','100')'
+
+echo "INPUTDATAPBPBCANDWISE_BP=" $INPUTDATAPbPbCANDWISE	
+echo  "INPUTMCPbPbCANDWISE_BP	=" $INPUTMCPbPbCANDWISE	
+echo "TRGPbPb			=" $TRGPbPb			
+echo "CUTPbPb			=" $CUTPbPb			
+echo "SELGENPbPb		=" $SELGENPbPb		
+echo "ISMCPbPb			=" $ISMCPbPb			
+echo "ISDOWEIGHTPbPb		=" $ISDOWEIGHTPbPb		
+echo "LABELPbPb		=" $LABELPbPb		
+echo "OUTPUTFILEPbPbSAVEHIST_ROOFIT=" $OUTPUTFILEPbPbSAVEHIST_ROOFIT
+echo "NPROOFIT_PbPb_BP		=" $NPROOFIT_PbPb		
+echo "CENTPbPbMIN		=" $CENTPbPbMIN		
+echo "CENTPbPbMAX=" $CENTPbPbMAX
+
+
+
+#exit
+#root-b-q'roofitB.C('1','0','\"$INPUTDATAPbPbCANDWISE\"','\"$INPUTMCPbPbCANDWISE\"','\"$TRGPbPb\"')'
+#'\"$TRGPbPb\"')'
+#,'\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/plotFits_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
+#exit2
+root -b  -q 'roofitB.C+('\"ntKp\"','1','1','0','\"$INPUTDATAPbPbCANDWISE_BP\"','\"$INPUTMCPbPbCANDWISE_BP\"','\"Bpt\"','\"$TRGPbPb\"','\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/new_roofit\"','\"$NPROOFIT_PbPb_BP\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
+
+rm roofitB_C.d roofitB_C_ACLiC_dict_rdict.pcm roofitB_C.so
+fi
+
+if [ $DOANALYSISPbPb_ROOFIT_BINNED_BP  -eq 1  ]; then
+echo "IGOTHEREBABY"
+
+#root-b-q'roofitB.C++('1','1','0','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/Data_Bs_PbPb_TMVA_BDT_PbPb.root"','"/eos/cms/store/group/phys_heavyions/zshi/ForJulia/OfficialBDTSamples/MC_Bs_PbPb_TMVA_BDT_PbPb.root"','"Bpt"','"(Bpt>0)"','"(hiBin<181)&&Btrk1Pt>0.9&&Btrk2Pt>0.9&&Bchi2cl>0.05&&BsvpvDistance/BsvpvDisErr>2&&Bpt>5&&abs(Btrk1Eta-0.0)<2.4&&abs(Btrk2Eta-0.0)<2.4&&(TMath::Abs(By)<2.4&&TMath::Abs(Bmumumass-3.096916)<0.15&&((abs(Bmu1eta)<1.2&&Bmu1pt>3.5)||(abs(Bmu1eta)>1.2&&abs(Bmu1eta)<2.1&&Bmu1pt>(5.77-1.8*abs(Bmu1eta)))||(abs(Bmu1eta)>2.1&&abs(Bmu1eta)<2.4&&Bmu1pt>1.8))&&((abs(Bmu2eta)<1.2&&Bmu2pt>3.5)||(abs(Bmu2eta)>1.2&&abs(Bmu2eta)<2.1&&Bmu2pt>(5.77-1.8*abs(Bmu2eta)))||(abs(Bmu2eta)>2.1&&abs(Bmu2eta)<2.4&&Bmu2pt>1.8))&&Bmu1TMOneStationTight&&Bmu2TMOneStationTight&&Bmu1InPixelLayer>0&&(Bmu1InPixelLayer+Bmu1InStripLayer)>5&&Bmu2InPixelLayer>0&&(Bmu2InPixelLayer+Bmu2InStripLayer)>5&&Bmu1dxyPV<0.3&&Bmu2dxyPV<0.3&&Bmu1dzPV<20&&Bmu2dzPV<20&&Bmu1isGlobalMuon&&Bmu2isGlobalMuon&&Btrk1highPurity&&Btrk2highPurity&&abs(Btrk1Eta)<2.4&&abs(Btrk2Eta)<2.4&&Btrk1Pt>1.&&Btrk2Pt>1.&&abs(Btktkmass-1.019455)<0.015)&&(abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter)&&(Btrk1PixelHit+Btrk1StripHit>10)&&(Btrk2PixelHit+Btrk2StripHit>10)&&(Btrk1PtErr/Btrk1Pt<0.1)&&(Btrk2PtErr/Btrk2Pt<0.1)&&Btrk1Chi2ndf/(Btrk1nStripLayer+Btrk1nPixelLayer)<0.18&&Btrk2Chi2ndf/(Btrk2nStripLayer+Btrk2nPixelLayer)<0.18&&((Bpt>5&&Bpt<10&&BDT_pt_5_10>0.20)||(Bpt>10&&Bpt<15&&BDT_pt_10_15>0.22)||(Bpt>15&&Bpt<20&&BDT_pt_15_20>0.22)||(Bpt>20&&Bpt<50&&BDT_pt_20_50>0.28))&&abs(PVz)<15&&pclusterCompatibilityFilter&&pprimaryVertexFilter"','"TMath::Abs(Gy)<2.4&&TMath::Abs(GpdgId)==531&&GisSignal>0"','0','1','1','"PbPb"','"ROOTfiles/hPtSpectrumSaveHistBplusPbPb_roofit.root"','"plotFits/plotFits_roofit"','"1"','0','0','100')'
+
+echo "INPUTDATAPBPBCANDWISE_BS=" $INPUTDATAPbPbCANDWISE	
+echo  "INPUTMCPbPbCANDWISE_BS	=" $INPUTMCPbPbCANDWISE	
+echo "TRGPbPb			=" $TRGPbPb			
+echo "CUTPbPb			=" $CUTPbPb			
+echo "SELGENPbPb		=" $SELGENPbPb		
+echo "ISMCPbPb			=" $ISMCPbPb			
+echo "ISDOWEIGHTPbPb		=" $ISDOWEIGHTPbPb		
+echo "LABELPbPb		=" $LABELPbPb		
+echo "OUTPUTFILEPbPbSAVEHIST_ROOFIT=" $OUTPUTFILEPbPbSAVEHIST_ROOFIT
+echo "NPROOFIT_PbPb		=" $NPROOFIT_PbPb		
+echo "CENTPbPbMIN		=" $CENTPbPbMIN		
+echo "CENTPbPbMAX=" $CENTPbPbMAX
+
+
+
+#exit
+#root-b-q'roofitB.C('1','0','\"$INPUTDATAPbPbCANDWISE\"','\"$INPUTMCPbPbCANDWISE\"','\"$TRGPbPb\"')'
+#'\"$TRGPbPb\"')'
+#,'\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/plotFits_roofit\"','\"$NPROOFIT_PbPb\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
+#exit2
+root -b  -q 'roofitB.C+('\"ntKp\"','0','1','0','\"$INPUTDATAPbPbCANDWISE_BP\"','\"$INPUTMCPbPbCANDWISE_BP\"','\"Bpt\"','\"$TRGPbPb\"','\"$CUTPbPb\"','\"$SELGENPbPb\"','$ISMCPbPb','1','$ISDOWEIGHTPbPb','\"$LABELPbPb\"','\"$OUTPUTFILEPbPbSAVEHIST_ROOFIT\"','\"plotFits/new_roofit\"','\"$NPROOFIT_PbPb_BP\"','0','$CENTPbPbMIN','$CENTPbPbMAX')'
+
+rm roofitB_C.d roofitB_C_ACLiC_dict_rdict.pcm roofitB_C.so
+fi
