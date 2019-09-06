@@ -8,10 +8,17 @@
 //const int nBins=1;
 //double ptBins[nBins+1] = {20,50};
 
+const int nBinshi=2;
+double Binshi[nBinshi+1] = {0.*2,30.*2,90.*2};
 const int nBins_full=1;
 double ptBins_full[nBins_full+1] = {5,50};
+double hiBins_full[nBins_full+1] = {0,90.*2};
 const int nBins=4;
 double ptBins[nBins+1] = {5,10,15,20,50};
+//const int nBins=1;
+//double ptBins[nBins+1] = {5,10};
+const int nBins_bp=7;
+double ptBins_bp[nBins_bp+1] = {5,7,10,15,20,30,50,100};
 const int nBinsInc=1;
 double ptBinsInc[nBinsInc+1] = {7,50};
 const int nBins750=3;

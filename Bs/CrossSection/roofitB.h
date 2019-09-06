@@ -18,6 +18,12 @@
 #include "RooFitResult.h"
 #include "RooChi2Var.h"
 #include "RooHist.h"
+#include "RooProdPdf.h"
+#include "RooAddition.h"
+#include "RooProduct.h"
+#include <RooBifurGauss.h>
+
+
 using namespace RooFit;
 using namespace std;
 
@@ -49,7 +55,8 @@ Int_t _count=0;
 RooWorkspace* inputw = new RooWorkspace();
 RooWorkspace* outputw = new RooWorkspace("w");
 
-RooFitResult *fit(TString tree, TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, RooDataHist* dh, RooDataHist* dhMC, RooRealVar* mass, RooPlot* &outframe, Double_t ptmin, Double_t ptmax, int isMC, bool isPbPb, Float_t centmin, Float_t centmax, TString npfit)
+
+RooFitResult *fit(TString variation, TString pdf,TString tree, TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, RooDataHist* dh, RooDataHist* dhMC, RooRealVar* mass, RooPlot* &outframe, Double_t ptmin, Double_t ptmax, int isMC, bool isPbPb, Float_t centmin, Float_t centmax, TString npfit)
 {
 	cout<<"total data: "<<ds->numEntries()<<endl;
 	TH1* h = dh->createHistogram("Bmass");
@@ -92,35 +99,71 @@ RooFitResult *fit(TString tree, TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDat
   if(tree=="ntphi") init_mean = BSUBS_MASS;
   if(tree=="ntKp") init_mean = BP_MASS;
 
-	RooRealVar meanMC(Form("meanMC%d",_count),"",init_mean,5.,6.) ;
-	RooRealVar sigma1MC(Form("sigma1MC%d",_count),"",0.02,0.01,0.1) ;
-	RooRealVar sigma2MC(Form("sigma2MC%d",_count),"",0.06,0.01,0.1) ;
-	RooGaussian sig1MC(Form("sig1MC%d",_count),"",*mass,meanMC,sigma1MC);  
-	RooGaussian sig2MC(Form("sig2MC%d",_count),"",*mass,meanMC,sigma2MC);  
-	RooRealVar sig1fracMC(Form("sig1fracMC%d",_count),"",0.5,0.,1.);
-	RooAddPdf sigMC(Form("sigMC%d",_count),"",RooArgList(sig1MC,sig2MC),sig1fracMC);
-	RooRealVar a0MC(Form("a0MC%d",_count),"",0,0,1e6);
+	RooRealVar meanMC(Form("meanMC%d_%s",_count,pdf.Data()),"",init_mean,5.,6.) ;
+	RooRealVar sigma1MC(Form("sigma1MC%d_%s",_count,pdf.Data()),"",0.02,0.01,0.1) ;
+	RooRealVar sigma2MC(Form("sigma2MC%d_%s",_count, pdf.Data()),"",0.06,0.01,0.1) ;
+	RooRealVar sigma3MC(Form("sigma3MC%d_%s",_count, pdf.Data()),"",0.06,0.01,0.1) ;
+	RooGaussian sig1MC(Form("sig1MC%d_%s",_count,pdf.Data()),"",*mass,meanMC,sigma1MC);  
+	RooGaussian sig2MC(Form("sig2MC%d_%s",_count, pdf.Data()),"",*mass,meanMC,sigma2MC);  
+	RooGaussian sig3MC(Form("sig3MC%d_%s",_count, pdf.Data()),"",*mass,meanMC,sigma3MC);  
+	RooRealVar sig1fracMC(Form("sig1fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
+	RooRealVar sig2fracMC(Form("sig2fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
+	RooRealVar sig3fracMC(Form("sig3fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
+  
+  RooAddPdf* sigMC;
+  
+  if((variation=="" && pdf=="") || variation== "background"|| (variation=="signal" && pdf=="1gauss")) sigMC = new RooAddPdf(Form("sigMC%d_%s",_count,pdf.Data()),"",RooArgList(sig1MC,sig2MC),sig1fracMC);
+	if(variation=="signal" && pdf=="3gauss") sigMC = new RooAddPdf(Form("sigMC%d_%s",_count, pdf.Data()), "", RooArgList(sig1MC, sig2MC, sig3MC), RooArgList(sig1fracMC, sig2fracMC, sig3fracMC));
+
+  RooRealVar a0MC(Form("a0MC%d",_count),"",0,0,1e6);
 	RooRealVar a1MC(Form("a1MC%d",_count),"",0,-1e4,1e4);
 	RooRealVar a2MC(Form("a2MC%d",_count),"",0,-1e4,1e4);
 	//RooPolynomial bkgMC(Form("bkgMC%d",_count),"",*mass,RooArgSet(a0MC,a1MC,a2MC));//2nd order poly
-	RooPolynomial bkgMC(Form("bkgMC%d",_count),"",*mass,RooArgSet(a0MC,a1MC));//linear
-	RooRealVar nsigMC(Form("nsigMC%d",_count),"",1,0,1e8);
+	RooPolynomial bkgMC(Form("bkgMC%d_%s",_count, pdf.Data()),"",*mass,RooArgSet(a0MC,a1MC));//linear
+	RooRealVar nsigMC(Form("nsigMC%d_%s",_count, pdf.Data()),"",1,0,1e8);
 	RooRealVar nbkgMC(Form("nbkgMC%d",_count),"",0,0,1e5);
-	RooAddPdf* modelMC = new RooAddPdf(Form("modelMC%d",_count),"",RooArgList(sigMC),RooArgList(nsigMC));
+	RooAddPdf* modelMC;
+  if(variation=="signal" && pdf=="1gauss") modelMC = new RooAddPdf(Form("modelMC%d_%s",_count, pdf.Data()),"",RooArgList(sig1MC),RooArgList(nsigMC));
+  if((variation=="signal"&& pdf=="3gauss")||(variation==""&& pdf=="")||variation=="background") modelMC = new RooAddPdf(Form("modelMC%d_%s",_count, pdf.Data()),"",RooArgList(*sigMC),RooArgList(nsigMC));
 	//RooAddPdf* modelMC = new RooAddPdf(Form("modelMC%d",_count),"",RooArgList(bkgMC,sigMC),RooArgList(nbkgMC,nsigMC));
+
+  std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
 	RooFitResult* fitResultMC = modelMC->fitTo(*dsMC,Save());
+  std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
+
+
 
 std::cout<<"mean_MC= "<<meanMC.getVal()<<std::endl;
 std::cout<<"sigma1_MC= "<<sigma1MC.getVal()<<std::endl;
 std::cout<<"sigma2_MC= "<<sigma2MC.getVal()<<std::endl;
-std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
+std::cout<<"fraction1_MC= "<<sig1fracMC.getVal()<<std::endl;
+std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
 
-	dsMC->plotOn(frameMC,Name(Form("dsMC%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
-	modelMC->plotOn(frameMC,Name(Form("bkgMC%d",_count)),Components(bkgMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
-	modelMC->plotOn(frameMC,Name(Form("sigMC%d",_count)),Components(sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
-	modelMC->plotOn(frameMC,Name(Form("sigFMC%d",_count)),Components(sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
-	modelMC->plotOn(frameMC,Name(Form("modelMC%d",_count)),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
+	dsMC->plotOn(frameMC,Name(Form("dsMC_cut%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
+	std::cout<<"Chegou 1"<<std::endl;
+  modelMC->plotOn(frameMC,Name(Form("bkgMC%d",_count)),Components(bkgMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
+	std::cout<<"Chegou 1"<<std::endl;
+  if(pdf!="1gauss"){
+    modelMC->plotOn(frameMC,Name(Form("sigMC%d_%s",_count, pdf.Data())),Components(*sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+	std::cout<<"Chegou 1"<<std::endl;
+	  modelMC->plotOn(frameMC,Name(Form("sigFMC%d_%s",_count, pdf.Data())),Components(*sigMC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+	std::cout<<"Chegou 1"<<std::endl;
+	}
+  else{
+	std::cout<<"Chegou 1"<<std::endl;
+    modelMC->plotOn(frameMC,Name(Form("sigMC%d_%s",_count, pdf.Data())),Components(sig1MC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+	std::cout<<"Chegou 1"<<std::endl;
+	  modelMC->plotOn(frameMC,Name(Form("sigFMC%d_%s",_count, pdf.Data())),Components(sig1MC),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+	}
+	std::cout<<"Chegou 1"<<std::endl;
+  
+  modelMC->plotOn(frameMC,Name(Form("modelMC%d_%s",_count, pdf.Data())),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
 	//dsMC->plotOn(frameMC,Name(Form("dsMC%d",_count)),Binning(nbinsmasshisto*2),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
+	std::cout<<"Chegou 1"<<std::endl;
   double x_1 = 0.58;
   double x_2 = 0.95;
   double y_2 = 0.92;
@@ -162,6 +205,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
   p2->SetTicks(1,1); 
 //  p2->SetBottomMargin(0.2);
   p2->Draw();
+
 	
   double mass_peak = 0;
   if(tree=="ntphi") mass_peak = BSUBS_MASS;
@@ -176,117 +220,120 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	RooRealVar mean(Form("mean%d",_count),"",meanMC.getVal(),5.,6.) ;
 	RooRealVar sigma1(Form("sigma1%d",_count),"",sigma1MC.getVal(),0.01,0.1) ;
 	RooRealVar sigma2(Form("sigma2%d",_count),"",sigma2MC.getVal(),0.01,0.1) ;
+	RooRealVar sigma3(Form("sigma3%d",_count),"",sigma3MC.getVal(),0.01,0.1) ;
   RooGaussian sig1(Form("sig1%d",_count),"",*mass,mean,sigma1);  
   RooGaussian sig2(Form("sig2%d",_count),"",*mass,mean,sigma2);  
+	RooGaussian sig3(Form("sig3%d",_count),"",*mass,mean,sigma3);  
+  
+
+
+
 	RooRealVar c1(Form("c1%d",_count),"",1.,0.,5.) ;
+
+
 	//RooRealVar c2(Form("c2%d",_count),"",1.,0.,5.) ;
   RooGenericPdf sig1_gen(Form("sig1_gen%d",_count),"", Form("exp(-0.5*(((Bmass-mean%d)*(Bmass-mean%d))/((c1%d*sigma1%d)*(c1%d*sigma1%d))))",_count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean, sigma1, c1));
   RooGenericPdf sig2_gen(Form("sig2_gen%d",_count),"", Form("exp(-0.5*(((Bmass-mean%d)*(Bmass-mean%d))/((c1%d*sigma2%d)*(c1%d*sigma2%d))))", _count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean, sigma2, c1));
 //  RooGenericPdf sig1(Form("sig1%d",_count),"", Form("(1/(c1%d*sigma1%d*sqrt(2*pi)))*exp(-0.5*(((Bmass-mean%d)*(Bmass-mean%d))/((c1%d*sigma1%d)*(c1%d*sigma1%d))))",_count, _count, _count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean, sigma1, c1));
  // RooGenericPdf sig2(Form("sig2%d",_count),"", Form("(1/(c1%d*sigma2%d*sqrt(2*pi)))*exp(-0.5*(((Bmass-mean%d)*(Bmass-mean%d))/((c1%d*sigma2%d)*(c1%d*sigma2%d))))", _count, _count, _count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean, sigma2, c1));
 	RooRealVar sig1frac(Form("sig1frac%d",_count),"",sig1fracMC.getVal(),0.,1.);
+	RooRealVar sig2frac(Form("sig2frac%d",_count),"",sig2fracMC.getVal(),0.,1.);
 	RooAddPdf* sig;
   
-  if(tree=="ntphi") sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1_gen,sig2_gen),sig1frac);
-  if(tree=="ntKp") sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1,sig2),sig1frac);
+//  if(((variation=="" && pdf=="") || variation=="background") && tree=="ntKp") sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1_gen,sig2_gen),sig1frac);
+  if((variation=="" && pdf=="") || variation== "background"|| (variation=="signal" && pdf=="1gauss")) sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1,sig2),sig1frac);
+	if(variation=="signal" && pdf=="3gauss") sig = new RooAddPdf(Form("sig%d",_count), "", RooArgList(sig1, sig2, sig3), RooArgList(sig1frac, sig2frac));
 	//RooRealVar a0(Form("a0%d",_count),"a0",0.1,0.,1.);
 	//RooRealVar a1(Form("a1%d",_count),"a1",0.1,0.,1.);
 	//RooRealVar a2(Form("a2%d",_count),"a2",0.1,0.,1.);
 	//RooChebychev bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));
-  //RooRealVar a0(Form("a0%d",_count),"",0.,-0.01,0.01);
-//	RooRealVar a1(Form("a1%d",_count),"",0.,-10.,10.);
-//	RooRealVar a2(Form("a2%d",_count),"",1e0,-1e4,1e4);
+    RooRealVar a0(Form("a0%d",_count),"",0.,-1e4,1e4);
+  	RooRealVar a1(Form("a1%d",_count),"",0.,-1e4,1e4);
+  	RooRealVar a2(Form("a2%d",_count),"",1e0,-1e4,1e4);
 //	RooRealVar a3(Form("a3%d",_count),"",1e0,-1e4,1e4);
-//	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//2nd orderpoly
-//	RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));//2nd orderpoly
-	RooRealVar lambda(Form("lambda%d", _count), "lambda",-2., -5., 5.);
-  RooExponential bkg(Form("bkg%d",_count),"",*mass,lambda);//2nd orderpoly
+   	RooPolynomial bkg_1st(Form("bkg%d",_count),"",*mass,RooArgSet(a0));//2nd orderpoly
+   	RooPolynomial bkg_2nd(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//2nd orderpoly
+    RooPolynomial bkg_3rd(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));//2nd orderpoly
+  	RooRealVar lambda(Form("lambda%d", _count), "lambda",-2., -5., 0.);
+    RooExponential bkg(Form("bkg%d",_count),"",*mass,lambda);//2nd orderpoly
  // RooPolynomial bkg(Form("bkg%d",_count),"",*mass,a0);//linear
 //  RooPolynomial bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
 	RooGenericPdf peakbg(Form("peakbg%d",_count),"",Form("(%s)",npfit.Data()),RooArgSet(*mass));
 	RooRealVar nsig(Form("nsig%d",_count),"",n_signal_initial,0.,ds->sumEntries());
 	RooRealVar nbkg(Form("nbkg%d",_count),"",n_combinatorial_initial,0.,ds->sumEntries());
+//	RooRealVar nbkg(Form("nbkg%d",_count),"",n_combinatorial_initial,0.,200);
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
+  std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
   std::cout<<"sumEntries: "<<ds->sumEntries()<<std::endl;
 	RooRealVar npeakbg(Form("npeakbg%d",_count),"",1,0,1e5);
-	RooAddPdf* model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,*sig),RooArgList(nbkg,nsig));
-	if(npfit != "1") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
+	RooAddPdf* model;
+  if(variation=="" && pdf=="") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg),RooArgList(nsig,nbkg));
+  if(npfit != "1" && variation=="" && pdf=="") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
+  if(variation=="background" && pdf=="1st") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg_1st),RooArgList(nsig,nbkg));
+  std::cout<<"is it here??"<<std::cout;
+  if(npfit != "1" && variation=="background" && pdf=="1st") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg_1st,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
+  if(variation=="background" && pdf=="2nd") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg_2nd),RooArgList(nsig,nbkg));
+  if(npfit != "1" && variation=="background" && pdf=="2nd") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg_2nd,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
+  if(variation=="background" && pdf=="3rd") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg_3rd),RooArgList(nsig,nbkg));
+  if(npfit != "1" && variation=="background" && pdf=="3rd") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg_3rd,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
+ 
+  if(variation=="signal" && pdf=="1gauss") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(sig1,bkg),RooArgList(nsig,nbkg));
+  if(npfit != "1" && variation=="signal" && pdf=="1gauss") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,sig1,peakbg),RooArgList(nbkg,nsig,npeakbg));
+  if((variation=="signal"&& pdf=="3gauss")||(variation==""&&pdf=="")) model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig, bkg),RooArgList(nsig, nbkg));
+  if(npfit!= "1" && ((variation=="signal"&&pdf=="3gauss")||(variation==""&&pdf==""))) model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig, bkg, peakbg),RooArgList(nsig, nbkg, npeakbg));
+
+  
 //	mean.setConstant();
 	sigma1.setConstant();
-	sigma2.setConstant();
-	sig1frac.setConstant();
-//  a0.setVal(0.);
- // a0.setConstant();
-	RooFitResult* fitResult = model->fitTo(*ds,Save());
+	if(pdf!="1gauss"){
+    sigma2.setConstant();
+    sig1frac.setConstant();
+  }
+  if(variation=="signal" && pdf=="3gauss"){
+    sigma3.setConstant();
+    sig2frac.setConstant();  
+  }
+  RooFitResult* fitResult = model->fitTo(*ds,Save(), Minos() , Extended(kTRUE));
   RooAbsReal* nll = model->createNLL(*ds);
   double log_likelihood= nll->getVal();
 
-	RooRealVar mean_new(Form("mean_new%d",_count),"",meanMC.getVal(),5.,6.) ;
-	RooRealVar sigma1_new(Form("sigma1_new%d",_count),"",sigma1MC.getVal(),0.01,0.1) ;
-	RooRealVar sigma2_new(Form("sigma2_new%d",_count),"",sigma2MC.getVal(),0.01,0.1) ;
-	RooRealVar c1_new(Form("c1_new%d",_count),"",1.,0.,5.) ;
-	RooRealVar c2_new(Form("c2_new%d",_count),"",1.,0.,5.) ;
-  RooGenericPdf sig1_gen_new(Form("sig1_gen_new%d",_count),"", Form("exp(-0.5*(((Bmass-mean_new%d)*(Bmass-mean_new%d))/((c1_new%d*sigma1_new%d)*(c1_new%d*sigma1_new%d))))",_count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean_new, sigma1_new, c1_new));
-  RooGenericPdf sig2_gen_new(Form("sig2_gen_new%d",_count),"", Form("exp(-0.5*(((Bmass-mean_new%d)*(Bmass-mean_new%d))/((c1_new%d*sigma2_new%d)*(c1_new%d*sigma2_new%d))))", _count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean_new, sigma2_new,c1_new));
-	RooGaussian sig1_new(Form("sig1_new%d",_count),"",*mass,mean_new,sigma1_new);  
-	RooGaussian sig2_new(Form("sig2_new%d",_count),"",*mass,mean_new,sigma2_new);  
-	RooRealVar sig1frac_new(Form("sig1frac_new%d",_count),"",sig1fracMC.getVal(),0.,1.);
-
-	RooAddPdf* sig_new;
-
-  if(tree=="ntphi") sig_new = new RooAddPdf(Form("sig_new%d",_count),"",RooArgList(sig1_gen_new,sig2_gen_new),sig1frac);
-  if(tree=="ntKp") sig_new = new RooAddPdf(Form("sig_new%d",_count),"",RooArgList(sig1_new,sig2_new),sig1frac);
-
-	//RooRealVar a0(Form("a0%d",_count),"a0",0.1,0.,1.);
-	//RooRealVar a1(Form("a1%d",_count),"a1",0.1,0.,1.);
-	//RooRealVar a2(Form("a2%d",_count),"a2",0.1,0.,1.);
-	//RooChebychev bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));
-  RooRealVar lambda_new(Form("lambda_new%d",_count), "lambda",-2., -5., 5.);
-  RooExponential bkg_new(Form("bkg%d_new",_count),"",*mass,lambda_new);//2nd orderpoly
-//RooRealVar a0_new(Form("a0_new%d",_count),"",0.,-0.01,0.01);
-	//RooRealVar a1_new(Form("a1_new%d",_count),"",0.,-10.,10.);
-	//RooRealVar a2_new(Form("a2_new%d",_count),"",1e0,-1e4,1e4);
-//	RooRealVar a3_new(Form("a3_new%d",_count),"",1e0,-1e4,1e4);
-	//RooPolynomial bkg_new(Form("bkg_new%d",_count),"",*mass,a0_new);//2nd orderpoly
-//	RooPolynomial bkg_new(Form("bkg_new%d",_count),"",*mass,RooArgSet(a0_new, a1_new));//2nd orderpoly
-//	RooPolynomial bkg_new(Form("bkg_new%d",_count),"",*mass,RooArgSet(a0_new,a1_new,a2_new));//2nd orderpoly
-//  RooPolynomial bkg_new(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
-	RooGenericPdf peakbg_new(Form("peakbg_new%d",_count),"",Form("(%s)",npfit.Data()),RooArgSet(*mass));
-	RooRealVar nbkg_new(Form("nbkg_new%d",_count),"",1,0,1e5);
-	RooRealVar npeakbg_new(Form("npeakbg_new%d",_count),"",1,0,1e5);
-  RooRealVar nsig_new(Form("nsignew%d",_count),"",0,0,1e8);
-  RooAddPdf* model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new,*sig_new),RooArgList(nbkg,nsig_new));
- if(npfit != "1") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new,*sig_new,peakbg_new),RooArgList(nbkg_new,nsig_new,npeakbg_new));
-//  mean.setConstant();
-  sigma1_new.setConstant();
-  sigma2_new.setConstant();
-  sig1frac_new.setConstant();
-  nsig_new.setVal(0.);
-  nsig_new.setConstant();
-	model_nosig->fitTo(*ds,Save());
-  RooAbsReal* nll_nosig = model_nosig->createNLL(*ds);
-  double log_likelihood_nosig= nll_nosig->getVal();
-  double real_significance = sqrt(2*(-log_likelihood+log_likelihood_nosig));
-  std::cout<<"REAL SIGNIFICANCE= "<<real_significance<<std::endl;
-  std::cout<<"***********************************************************************"<<std::endl;
-	//RooFitResult* fitResult = model->fitTo(*ds,Save(),Minos());
-	//ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
-
-  ds->plotOn(frame,Name(Form("ds_cut%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),MarkerColor(1),LineColor(1),LineWidth(4),LineColor(1));//draw an transparent hist
-  std::cout<<"GETS hERE?"<<std::endl;
+ //  a0.setVal(0.);
+ // a0.setConstant();
+  ds->plotOn(frame,Name(Form("ds_cut%d",_count)),Binning(nbinsmasshisto),MarkerSize(1),MarkerStyle(20),MarkerColor(1),LineColor(1),LineWidth(4),LineColor(1));//draw an transparent hist
+  //std::cout<<"GETS hERE?"<<std::endl;
 
 	if(npfit != "1") model->plotOn(frame,Name(Form("peakbg%d",_count)),Components(peakbg),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3005),FillColor(kGreen+4),LineStyle(1),LineColor(kGreen+4),LineWidth(4));
 	if(npfit != "1") model->plotOn(frame,Name(Form("peakbgF%d",_count)),Components(peakbg),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3005),FillColor(kGreen+4),LineStyle(1),LineColor(kGreen+4),LineWidth(4));
 	model->plotOn(frame,Name(Form("bkg%d",_count)),Components(bkg),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineStyle(7),LineColor(4),LineWidth(4));
   std::cout<<"GETS hERE?"<<std::endl;
-	model->plotOn(frame,Name(Form("sig%d",_count)),Components(*sig),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
-  std::cout<<"GETS hERE?"<<std::endl;
-	model->plotOn(frame,Name(Form("sigF%d",_count)),Components(*sig),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
-  std::cout<<"GETS hERE?"<<std::endl;
+	if(pdf!="1gauss"){
+    model->plotOn(frame,Name(Form("sig%d",_count)),Components(*sig),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+    std::cout<<"GETS hERE not 1gauss?"<<std::endl;
+	  model->plotOn(frame,Name(Form("sigF%d",_count)),Components(*sig),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+    std::cout<<"GETS hERE not 1gauss?"<<std::endl;
+  }
+	else{
+    model->plotOn(frame,Name(Form("sig%d",_count)),Components(sig1),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+    std::cout<<"GETS hERE else?"<<std::endl;
+	  model->plotOn(frame,Name(Form("sigF%d",_count)),Components(sig1),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("F"),FillStyle(3002),FillColor(kOrange-3),LineStyle(7),LineColor(kOrange-3),LineWidth(4));
+    std::cout<<"GETS hERE else?"<<std::endl;
+  }
 	model->plotOn(frame,Name(Form("model%d",_count)),Normalization(1.0,RooAbsReal::RelativeExpected),Precision(1e-6),DrawOption("L"),LineColor(2),LineWidth(4));
+
   std::cout<<"GETS hERE?"<<std::endl;
 	//ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
 	if(tree=="ntphi")frame->SetMaximum(nsig.getVal()*1.2);
-  if(tree=="ntKp")frame->SetMaximum(nsig.getVal()*1.1);
+  if(tree=="ntKp")frame->SetMaximum(nsig.getVal()*0.9);
 //	frame->SetMaximum((h->GetBinContent(h->GetMaximumBin())+h->GetBinError(h->GetMaximumBin()))*1.8);
   model->paramOn(frame,Layout(0.65, x_2, y_1-0.06), Format("NEU",AutoPrecision(3)));
   frame->getAttText()->SetTextSize(0.02);
@@ -321,7 +368,9 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
   (frame->GetXaxis())->SetRangeUser(minhisto,maxhisto);
   frame->GetXaxis()->SetNdivisions(-50205);	
 	frame->Draw();
+  
   RooHist* pull_hist = frame->pullHist(Form("ds_cut%d",_count),Form("model%d",_count));
+//  RooHist* pull_hist = frame->pullHist("Data","Fit");
   
   RooPlot* pull_plot = mass->frame();
   (pull_plot->GetXaxis())->SetRangeUser(minhisto,maxhisto);
@@ -365,7 +414,8 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 //  c->SaveAs("dataset_afterfit_test.pdf");
 //	h->Draw("same e");
  // c->RedrawAxis();
-
+  std::cout<<"pull done"<<std::endl;
+/*
 	mass->setRange("signal",5.2,5.6);
 	RooAbsReal* sigIntegral = sig->createIntegral(*mass,NormSet(*mass),Range("signal"));
 	double sigIntegralErr = sigIntegral->getPropagatedError(*fitResult);
@@ -381,7 +431,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	//cout<<"nbkg: "<<model->getParameters(*mass)->getRealValue("nbkg")<<endl;
 	cout<<"nbkg error: "<<nbkg.getError()<<endl;
 	cout<<"bkg integral: "<<bkgIntegral->getVal()<<endl;
-	cout<<"bkg integral error: "<<bkgIntegralErr<<endl;
+	cout<<"bkg integral error: "<<bkgIntegralErr<<endl;*/
 	//cout<<"#expected events: "<<model->expectedEvents(RooArgSet(*mass))<<endl;
 	//cout<<"model integral: "<<model->getNormIntegral(RooArgSet(*mass))->getVal()<<endl;
 	//fitResult->Print("v");
@@ -408,10 +458,11 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
         fh->SetBinError(i+1, sqrt(fitArr[i]));
     }
 	 cout<<"frame->chiSquare: "<<frame->chiSquare(Form("model%d",_count),Form("ds_cut%d",_count), fitResult->floatParsFinal().getSize())<<endl;
-	//cout<<fitResult->floatParsFinal().getSize()<<endl;
-	//cout<<"chi2: "<<frame->chiSquare(Form("model%d",_count),Form("ds%d",_count),fitResult->floatParsFinal().getSize())<<endl;
+	 cout<<"pars= "<<fitResult->floatParsFinal().getSize()<<endl;
+	 cout<<"chi2: "<<frame->chiSquare(Form("model%d",_count),Form("ds%d",_count))<<endl;
 	//RooChi2Var chi2_lowstat("chi2_lowstat","chi2",*model,*dh);
 	//cout<<chi2_lowstat.getVal()<<endl;
+    
     double chiRoo = frame->chiSquare(Form("model%d",_count),Form("ds_cut%d",_count), fitResult->floatParsFinal().getSize());
     double chi2Std = 0;
     double chi2Neyman = 0;
@@ -445,7 +496,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	texcms->SetTextFont(62);
 	texcms->SetTextSize(0.04);
 	texcms->SetLineWidth(2);
-    TLatex* texpre = new TLatex(0.28,0.88,"Preliminary");
+    TLatex* texpre = new TLatex(0.30,0.88,"Preliminary");
     texpre->SetNDC();
     texpre->SetTextAlign(13);
     texpre->SetTextFont(52);
@@ -489,7 +540,7 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
     texChi->SetTextSize(0.03);
     texChi->SetTextFont(42);
 
-	double width = 0.05;
+/*	double width = 0.05;
 	double BmassH = BSUBS_MASS + width;
 	double BmassL = BSUBS_MASS - width;
 	mass->setRange("signal",BmassL,BmassH);
@@ -500,6 +551,79 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	Double_t bkgd = nbkg.getVal();
 	bkgd = bkgd*bkgIntegral->getVal();
 	Double_t SB = yield/bkgd;
+	int nDigit_yield = 3;
+	yield = roundToNdigit(yield);
+	nDigit_yield = sigDigitAfterDecimal(yield);
+	int nDigit_yieldErr = 3;
+	yieldErr = roundToNdigit(yieldErr, int(log10(yieldErr))+1+nDigit_yield);
+	nDigit_yieldErr = sigDigitAfterDecimal(yieldErr, int(log10(yieldErr))+1+nDigit_yield);
+    TLatex* texYield = new TLatex(0.58,posit-0.06,Form("Yield = %.*f#pm%.*f", nDigit_yield, yield, nDigit_yieldErr, yieldErr));
+    texYield->SetNDC();
+    texYield->SetTextFont(42);
+    texYield->SetTextSize(0.04);
+    texYield->SetLineWidth(2);*/
+
+
+/*  RooRealVar mean_new(Form("mean_new%d",_count),"",meanMC.getVal(),5.,6.) ;
+	RooRealVar sigma1_new(Form("sigma1_new%d",_count),"",sigma1MC.getVal(),0.01,0.1) ;
+	RooRealVar sigma2_new(Form("sigma2_new%d",_count),"",sigma2MC.getVal(),0.01,0.1) ;
+	RooRealVar c1_new(Form("c1_new%d",_count),"",1.,0.,5.) ;
+	RooRealVar c2_new(Form("c2_new%d",_count),"",1.,0.,5.) ;
+  RooGenericPdf sig1_gen_new(Form("sig1_gen_new%d",_count),"", Form("exp(-0.5*(((Bmass-mean_new%d)*(Bmass-mean_new%d))/((c1_new%d*sigma1_new%d)*(c1_new%d*sigma1_new%d))))",_count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean_new, sigma1_new, c1_new));
+  RooGenericPdf sig2_gen_new(Form("sig2_gen_new%d",_count),"", Form("exp(-0.5*(((Bmass-mean_new%d)*(Bmass-mean_new%d))/((c1_new%d*sigma2_new%d)*(c1_new%d*sigma2_new%d))))", _count, _count, _count, _count, _count, _count), RooArgSet(*mass, mean_new, sigma2_new,c1_new));
+	RooGaussian sig1_new(Form("sig1_new%d",_count),"",*mass,mean_new,sigma1_new);  
+	RooGaussian sig2_new(Form("sig2_new%d",_count),"",*mass,mean_new,sigma2_new);  
+	RooRealVar sig1frac_new(Form("sig1frac_new%d",_count),"",sig1fracMC.getVal(),0.,1.);
+
+	RooAddPdf* sig_new;
+
+//  if(tree=="ntKp") sig_new = new RooAddPdf(Form("sig_new%d",_count),"",RooArgList(sig1_gen_new,sig2_gen_new),sig1frac);
+  if((variation=="" && pdf=="") || variation=="background") sig_new = new RooAddPdf(Form("sig_new%d",_count),"",RooArgList(sig1_new,sig2_new),sig1frac);
+
+	//RooRealVar a0(Form("a0%d",_count),"a0",0.1,0.,1.);
+	//RooRealVar a1(Form("a1%d",_count),"a1",0.1,0.,1.);
+	//RooRealVar a2(Form("a2%d",_count),"a2",0.1,0.,1.);
+	//RooChebychev bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));
+  RooRealVar lambda_new(Form("lambda_new%d",_count), "lambda",1., -5., 5.);
+  RooExponential bkg_new(Form("bkg%d_new",_count),"",*mass,lambda_new);//2nd orderpoly
+  RooRealVar a0_new(Form("a0_new%d",_count),"",0.,-1e4, 1e4);
+	RooRealVar a1_new(Form("a1_new%d",_count),"",0.,-1e4,1e4);
+	RooRealVar a2_new(Form("a2_new%d",_count),"",1e0,-1e4,1e4);
+//	RooRealVar a3_new(Form("a3_new%d",_count),"",1e0,-1e4,1e4);
+	RooPolynomial bkg_new_1st(Form("bkg_new%d",_count),"",*mass,a0_new);//2nd orderpoly
+  RooPolynomial bkg_new_2nd(Form("bkg_new%d",_count),"",*mass,RooArgSet(a0_new, a1_new));//2nd orderpoly
+  RooPolynomial bkg_new_3rd(Form("bkg_new%d",_count),"",*mass,RooArgSet(a0_new,a1_new,a2_new));//2nd orderpoly
+//  RooPolynomial bkg_new(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1));//linear
+	RooGenericPdf peakbg_new(Form("peakbg_new%d",_count),"",Form("(%s)",npfit.Data()),RooArgSet(*mass));
+	RooRealVar nbkg_new(Form("nbkg_new%d",_count),"",1,0,1e5);
+	RooRealVar npeakbg_new(Form("npeakbg_new%d",_count),"",1,0,1e5);
+  RooRealVar nsig_new(Form("nsignew%d",_count),"",0,0,1e8);
+  RooAddPdf* model_nosig;
+  if(variation=="" && pdf=="") model_nosig  = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new,*sig_new),RooArgList(nbkg_new,nsig_new));
+  if(npfit != "1" && variation=="" && pdf=="") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new,*sig_new,peakbg_new),RooArgList(nbkg_new,nsig_new,npeakbg_new));
+  if(variation=="background" && pdf=="1st") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(*sig_new,bkg_new_1st),RooArgList(nsig_new,nbkg_new));
+  std::cout<<"is it here??"<<std::cout;
+  if(npfit != "1" && variation=="background" && pdf=="1st") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new_1st,*sig_new,peakbg_new),RooArgList(nbkg_new,nsig_new,npeakbg_new));
+  if(variation=="background" && pdf=="2nd") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(*sig_new,bkg_new_2nd),RooArgList(nsig_new,nbkg_new));
+  if(npfit != "1" && variation=="background" && pdf=="2nd") model_nosig = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg_new_2nd,*sig_new,peakbg_new),RooArgList(nbkg_new,nsig_new,npeakbg_new));
+  if(variation=="background" && pdf=="3rd") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(*sig_new,bkg_new_3rd),RooArgList(nsig_new,nbkg_new));
+  if(npfit != "1" && variation=="background" && pdf=="3rd") model_nosig = new RooAddPdf(Form("modelnosig%d",_count),"",RooArgList(bkg_new_3rd,*sig_new,peakbg_new),RooArgList(nbkg_new,nsig_new,npeakbg_new));
+//  mean.setConstant();
+  sigma1_new.setConstant();
+  sigma2_new.setConstant();
+  sig1frac_new.setConstant();*/
+
+  nsig.setVal(0.);
+  nsig.setConstant();
+	RooFitResult* fitResult_nosig = model->fitTo(*ds,Save());
+  RooAbsReal* nll_nosig = model->createNLL(*ds);
+  double log_likelihood_nosig= nll_nosig->getVal();
+  double real_significance = sqrt(2*(-log_likelihood+log_likelihood_nosig));
+  std::cout<<"REAL SIGNIFICANCE= "<<real_significance<<std::endl;
+  std::cout<<"***********************************************************************"<<std::endl;
+	//RooFitResult* fitResult = model->fitTo(*ds,Save(),Minos());
+	//ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
+
 	Double_t Significance =  real_significance;
 //	Double_t Significance =  yield/TMath::Sqrt(bkgd+yield);
 	int nDigit_Significance = 3;
@@ -512,17 +636,6 @@ std::cout<<"fraction_MC= "<<sig1fracMC.getVal()<<std::endl;
 	texSig->SetTextSize(0.03);
 	texSig->SetLineWidth(2);
 
-	int nDigit_yield = 3;
-	yield = roundToNdigit(yield);
-	nDigit_yield = sigDigitAfterDecimal(yield);
-	int nDigit_yieldErr = 3;
-	yieldErr = roundToNdigit(yieldErr, int(log10(yieldErr))+1+nDigit_yield);
-	nDigit_yieldErr = sigDigitAfterDecimal(yieldErr, int(log10(yieldErr))+1+nDigit_yield);
-    TLatex* texYield = new TLatex(0.58,posit-0.06,Form("Yield = %.*f#pm%.*f", nDigit_yield, yield, nDigit_yieldErr, yieldErr));
-    texYield->SetNDC();
-    texYield->SetTextFont(42);
-    texYield->SetTextSize(0.04);
-    texYield->SetLineWidth(2);
 
 	cMC->cd();
 	leg->Draw("same");
