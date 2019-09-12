@@ -6,26 +6,26 @@
 DOANALYSISPbPb_ROOFIT_BINNED_PT_BS=0
 DOANALYSISPbPb_ROOFIT_BINNED_CENT_BS=0
 DOANALYSISPbPb_ROOFIT_BINNED_Y_BS=0
-DOANALYSISPbPb_ROOFIT_FULL_BS=1
+DOANALYSISPbPb_ROOFIT_FULL_BS=0
 
 
-DOANALYSISPbPb_ROOFIT_FULL_BP=1
+DOANALYSISPbPb_ROOFIT_FULL_BP=0
 DOANALYSISPbPb_ROOFIT_BINNED_PT_BP=1
-DOANALYSISPbPb_ROOFIT_BINNED_Y_BP=1
-DOANALYSISPbPb_ROOFIT_BINNED_CENT_BP=1
+DOANALYSISPbPb_ROOFIT_BINNED_Y_BP=0
+DOANALYSISPbPb_ROOFIT_BINNED_CENT_BP=0
 
 CENTPbPbMIN=0
 CENTPbPbMAX=90
 
 #INPUTMCPbPbCANDWISE_BS="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntphi_PbPb_2018_corrected_test_new.root"
 #INPUTDATAPbPbCANDWISE_BS="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntphi_PbPb_2018_corrected_test_new.root"  
-INPUTMCPbPbCANDWISE_BS="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntphi_PbPb_2018_new_train_BDT.root"
-INPUTDATAPbPbCANDWISE_BS="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntphi_PbPb_2018_new_train_BDT.root"  
+INPUTMCPbPbCANDWISE_BS="./flat_trees/selected_mc_ntphi_PbPb_2018_new_train_BDT.root"
+INPUTDATAPbPbCANDWISE_BS="./flat_trees/selected_data_ntphi_PbPb_2018_new_train_BDT.root"  
 
 #INPUTMCPbPbCANDWISE_BP="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_mc_ntKp_PbPb_2018_corrected_BDT.root"
 #INPUTDATAPbPbCANDWISE_BP="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/cut_trees/selected_data_ntKp_PbPb_2018_new_train_BDT.root"  
-INPUTMCPbPbCANDWISE_BP="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/flat_trees/selected_mc_ntKp_PbPb_2018_new_train_BDT.root"
-INPUTDATAPbPbCANDWISE_BP="/afs/cern.ch/work/j/jusilva/CMSSW_7_5_8_patch5/src/UserCode/Bmeson2018Ana/Bs/CrossSection/flat_trees/selected_data_ntKp_PbPb_2018_new_train_BDT.root"  
+INPUTMCPbPbCANDWISE_BP="./flat_trees/selected_mc_ntKp_PbPb_2018_new_train_BDT.root"
+INPUTDATAPbPbCANDWISE_BP="./flat_trees/selected_data_ntKp_PbPb_2018_new_train_BDT.root"  
 
 
 LABELPbPb="PbPb"

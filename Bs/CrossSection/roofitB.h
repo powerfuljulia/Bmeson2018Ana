@@ -22,6 +22,9 @@
 #include "RooAddition.h"
 #include "RooProduct.h"
 #include <RooBifurGauss.h>
+#include <fstream>
+#include <string>
+#include <iomanip>
 
 
 using namespace RooFit;
@@ -35,7 +38,6 @@ bool drawSup = 0;
 void clean0 (TH1D* h);
 int    drawOpt=0;
 double _ErrCor=1;
-
 double setparam0=100.;
 double setparam2=0.02;
 double setparam3=0.06;
@@ -54,6 +56,7 @@ Float_t hiBinMin,hiBinMax,centMin,centMax;
 Int_t _count=0;
 RooWorkspace* inputw = new RooWorkspace();
 RooWorkspace* outputw = new RooWorkspace("w");
+
 
 
 RooFitResult *fit(TString variation, TString pdf,TString tree, TCanvas* c, TCanvas* cMC, RooDataSet* ds, RooDataSet* dsMC, RooDataHist* dh, RooDataHist* dhMC, RooRealVar* mass, RooPlot* &outframe, Double_t ptmin, Double_t ptmax, int isMC, bool isPbPb, Float_t centmin, Float_t centmax, TString npfit)
@@ -106,14 +109,14 @@ RooFitResult *fit(TString variation, TString pdf,TString tree, TCanvas* c, TCanv
 	RooGaussian sig1MC(Form("sig1MC%d_%s",_count,pdf.Data()),"",*mass,meanMC,sigma1MC);  
 	RooGaussian sig2MC(Form("sig2MC%d_%s",_count, pdf.Data()),"",*mass,meanMC,sigma2MC);  
 	RooGaussian sig3MC(Form("sig3MC%d_%s",_count, pdf.Data()),"",*mass,meanMC,sigma3MC);  
-	RooRealVar sig1fracMC(Form("sig1fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
-	RooRealVar sig2fracMC(Form("sig2fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
-	RooRealVar sig3fracMC(Form("sig3fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
+	RooRealVar sig1fracMC(Form("sig1fracMC%d_%s",_count, pdf.Data()),"",0.1166,0.,1.);
+	RooRealVar sig2fracMC(Form("sig2fracMC%d_%s",_count, pdf.Data()),"",0.3149,0.,1.);
+	//RooRealVar sig3fracMC(Form("sig3fracMC%d_%s",_count, pdf.Data()),"",0.5,0.,1.);
   
   RooAddPdf* sigMC;
   
-  if((variation=="" && pdf=="") || variation== "background"|| (variation=="signal" && pdf=="1gauss")) sigMC = new RooAddPdf(Form("sigMC%d_%s",_count,pdf.Data()),"",RooArgList(sig1MC,sig2MC),sig1fracMC);
-	if(variation=="signal" && pdf=="3gauss") sigMC = new RooAddPdf(Form("sigMC%d_%s",_count, pdf.Data()), "", RooArgList(sig1MC, sig2MC, sig3MC), RooArgList(sig1fracMC, sig2fracMC, sig3fracMC));
+  if((variation=="" && pdf=="") || variation== "background"|| (variation=="signal" &&(pdf=="fixed" || pdf=="scal" || pdf=="merr" || pdf == "perr"|| pdf=="scal+" || pdf== "scal-"))) sigMC = new RooAddPdf(Form("sigMC%d_%s",_count,pdf.Data()),"",RooArgList(sig1MC,sig2MC),sig1fracMC);
+	if(variation=="signal" && pdf=="3gauss") sigMC = new RooAddPdf(Form("sigMC%d_%s",_count, pdf.Data()), "", RooArgList(sig1MC, sig2MC, sig3MC), RooArgList(sig1fracMC, sig2fracMC));
 
   RooRealVar a0MC(Form("a0MC%d",_count),"",0,0,1e6);
 	RooRealVar a1MC(Form("a1MC%d",_count),"",0,-1e4,1e4);
@@ -124,7 +127,7 @@ RooFitResult *fit(TString variation, TString pdf,TString tree, TCanvas* c, TCanv
 	RooRealVar nbkgMC(Form("nbkgMC%d",_count),"",0,0,1e5);
 	RooAddPdf* modelMC;
   if(variation=="signal" && pdf=="1gauss") modelMC = new RooAddPdf(Form("modelMC%d_%s",_count, pdf.Data()),"",RooArgList(sig1MC),RooArgList(nsigMC));
-  if((variation=="signal"&& pdf=="3gauss")||(variation==""&& pdf=="")||variation=="background") modelMC = new RooAddPdf(Form("modelMC%d_%s",_count, pdf.Data()),"",RooArgList(*sigMC),RooArgList(nsigMC));
+  if((variation=="signal"&& (pdf=="3gauss" || pdf=="fixed" || pdf=="scal" || pdf=="merr" || pdf == "perr" || pdf=="scal+" || pdf=="scal-"))||(variation==""&& pdf=="")||variation=="background") modelMC = new RooAddPdf(Form("modelMC%d_%s",_count, pdf.Data()),"",RooArgList(*sigMC),RooArgList(nsigMC));
 	//RooAddPdf* modelMC = new RooAddPdf(Form("modelMC%d",_count),"",RooArgList(bkgMC,sigMC),RooArgList(nbkgMC,nsigMC));
 
   std::cout<<"sumEntries: "<<dsMC->sumEntries()<<std::endl;
@@ -228,7 +231,8 @@ std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
 
 
 
-	RooRealVar c1(Form("c1%d",_count),"",1.,0.,5.) ;
+	RooRealVar c1(Form("c1%d",_count),"",1.,0.,5.);
+
 
 
 	//RooRealVar c2(Form("c2%d",_count),"",1.,0.,5.) ;
@@ -240,15 +244,15 @@ std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
 	RooRealVar sig2frac(Form("sig2frac%d",_count),"",sig2fracMC.getVal(),0.,1.);
 	RooAddPdf* sig;
   
-//  if(((variation=="" && pdf=="") || variation=="background") && tree=="ntKp") sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1_gen,sig2_gen),sig1frac);
-  if((variation=="" && pdf=="") || variation== "background"|| (variation=="signal" && pdf=="1gauss")) sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1,sig2),sig1frac);
+  if(variation=="signal" && (pdf=="scal"|| pdf==""|| pdf=="scal-"|| pdf=="scal+")) sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1_gen,sig2_gen),sig1frac);
+  if((variation=="" && pdf=="") || variation== "background"|| (variation=="signal" && (pdf=="1gauss"|| pdf=="fixed" || pdf=="merr" || pdf == "perr"))) sig = new RooAddPdf(Form("sig%d",_count),"",RooArgList(sig1,sig2),sig1frac);
 	if(variation=="signal" && pdf=="3gauss") sig = new RooAddPdf(Form("sig%d",_count), "", RooArgList(sig1, sig2, sig3), RooArgList(sig1frac, sig2frac));
 	//RooRealVar a0(Form("a0%d",_count),"a0",0.1,0.,1.);
 	//RooRealVar a1(Form("a1%d",_count),"a1",0.1,0.,1.);
 	//RooRealVar a2(Form("a2%d",_count),"a2",0.1,0.,1.);
 	//RooChebychev bkg(Form("bkg%d",_count),"",*mass,RooArgSet(a0,a1,a2));
-    RooRealVar a0(Form("a0%d",_count),"",0.,-1e4,1e4);
-  	RooRealVar a1(Form("a1%d",_count),"",0.,-1e4,1e4);
+    RooRealVar a0(Form("a0%d",_count),"",0.1,-1e4,1e4);
+  	RooRealVar a1(Form("a1%d",_count),"",0.1,-1e4,1e4);
   	RooRealVar a2(Form("a2%d",_count),"",1e0,-1e4,1e4);
 //	RooRealVar a3(Form("a3%d",_count),"",1e0,-1e4,1e4);
    	RooPolynomial bkg_1st(Form("bkg%d",_count),"",*mass,RooArgSet(a0));//2nd orderpoly
@@ -280,7 +284,7 @@ std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
   if(variation=="" && pdf=="") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg),RooArgList(nsig,nbkg));
   if(npfit != "1" && variation=="" && pdf=="") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
   if(variation=="background" && pdf=="1st") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg_1st),RooArgList(nsig,nbkg));
-  std::cout<<"is it here??"<<std::cout;
+
   if(npfit != "1" && variation=="background" && pdf=="1st") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg_1st,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
   if(variation=="background" && pdf=="2nd") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig,bkg_2nd),RooArgList(nsig,nbkg));
   if(npfit != "1" && variation=="background" && pdf=="2nd") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg_2nd,*sig,peakbg),RooArgList(nbkg,nsig,npeakbg));
@@ -289,8 +293,8 @@ std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
  
   if(variation=="signal" && pdf=="1gauss") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(sig1,bkg),RooArgList(nsig,nbkg));
   if(npfit != "1" && variation=="signal" && pdf=="1gauss") model = new RooAddPdf(Form("model%d",_count),"",RooArgList(bkg,sig1,peakbg),RooArgList(nbkg,nsig,npeakbg));
-  if((variation=="signal"&& pdf=="3gauss")||(variation==""&&pdf=="")) model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig, bkg),RooArgList(nsig, nbkg));
-  if(npfit!= "1" && ((variation=="signal"&&pdf=="3gauss")||(variation==""&&pdf==""))) model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig, bkg, peakbg),RooArgList(nsig, nbkg, npeakbg));
+  if((variation=="signal"&& (pdf=="3gauss"|| pdf=="fixed" || pdf=="scal" || pdf=="merr" || pdf == "perr" || pdf=="scal+" || pdf=="scal-"))||(variation==""&&pdf=="")) model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig, bkg),RooArgList(nsig, nbkg));
+  if(npfit!= "1" && ((variation=="signal"&&(pdf=="3gauss"|| pdf=="fixed" || pdf=="scal" || pdf=="merr" || pdf == "perr" || pdf=="scal+" || pdf=="scal+"))||(variation==""&&pdf==""))) model = new RooAddPdf(Form("model%d",_count),"",RooArgList(*sig, bkg, peakbg),RooArgList(nsig, nbkg, npeakbg));
 
   
 //	mean.setConstant();
@@ -303,7 +307,34 @@ std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
     sigma3.setConstant();
     sig2frac.setConstant();  
   }
-  RooFitResult* fitResult = model->fitTo(*ds,Save(), Minos() , Extended(kTRUE));
+  if(variation=="signal" && pdf=="fixed") mean.setConstant();
+  if(variation=="signal" && pdf=="perr") {
+    sigma1.setVal(sigma1MC.getVal()+sigma1MC.getError());
+    sigma2.setVal(sigma2MC.getVal()+sigma2MC.getError());
+  }
+  if(variation=="signal" && pdf=="merr") {
+    sigma1.setVal(sigma1MC.getVal()-sigma1MC.getError());
+    sigma2.setVal(sigma2MC.getVal()-sigma2MC.getError());
+  }
+ 
+
+  if(variation=="signal" && pdf=="scal+") {
+    c1.setConstant();
+    c1.setVal(1.1);
+    //c1.setVal(c1.getVal()+c1.getError());
+    //fitResult = model->fitTo(*ds,Save(), Minos() , Extended(kTRUE));
+
+  }
+  if(variation=="signal" && pdf=="scal-") {
+    c1.setConstant();
+    c1.setVal(0.9);
+    //c1.setVal(c1.getVal()- c1.getError());
+   // fitResult = model->fitTo(*ds,Save(), Minos() , Extended(kTRUE));
+
+  }
+
+ RooFitResult* fitResult = model->fitTo(*ds,Save(), Minos() , Extended(kTRUE));
+
   RooAbsReal* nll = model->createNLL(*ds);
   double log_likelihood= nll->getVal();
 
@@ -621,6 +652,12 @@ std::cout<<"fraction2_MC= "<<sig2fracMC.getVal()<<std::endl;
   double real_significance = sqrt(2*(-log_likelihood+log_likelihood_nosig));
   std::cout<<"REAL SIGNIFICANCE= "<<real_significance<<std::endl;
   std::cout<<"***********************************************************************"<<std::endl;
+
+  
+  std::cout<<"sigma1_MC error hi= "<<sigma1MC.getAsymErrorHi()<<std::endl;
+  std::cout<<"sigma1_MC error = "<<sigma1MC.getError()<<std::endl;
+  std::cout<<"sigma2_MC error hi= "<<sigma2MC.getAsymErrorHi()<<std::endl;
+  std::cout<<"sigma2_MC error = "<<sigma2MC.getError()<<std::endl;
 	//RooFitResult* fitResult = model->fitTo(*ds,Save(),Minos());
 	//ds->plotOn(frame,Name(Form("ds%d",_count)),Binning(nbinsmasshisto),MarkerSize(1.55),MarkerStyle(20),LineColor(1),LineWidth(4));
 
@@ -677,3 +714,92 @@ double ErrorOnSigma(double width, double errwidth, double smear, double errsmear
     double erroronsigma=TMath::Sqrt(squarederroronsigma);
     return erroronsigma;
 }
+
+
+void latex_table(std::string filename, int n_col, int n_lin, std::vector<std::string> col_name, std::vector<std::string> labels, 
+     std::vector<std::vector<double> > numbers, std::string caption)
+{
+  std::ofstream file_check;
+  std::ofstream file;
+
+  //Begin Document                                                                                                                               
+
+  file.open(filename + ".tex");
+  file_check.open(filename + "_check.tex");
+
+  file_check << "\\documentclass{article}" << std::endl;
+  //file << "\\usepackage[utf8]{inputenc}" << std::endl;     
+  file_check << "\\usepackage{rotating}" << std::endl;                                                                                   
+  file_check << "\\usepackage{cancel}" << std::endl;
+  file_check << "\\usepackage{geometry}" << std::endl;
+  file_check << "\\usepackage{booktabs}" << std::endl;
+  file_check << "\\geometry{a4paper, total={170mm,257mm}, left=20mm, top=20mm,}" << std::endl;
+
+  file_check << "\\title{Bs/B+}" << std::endl;
+  file_check << "\\author{Julia Silva}" << std::endl;
+  file_check << "\\date{September 2019}" << std::endl;
+  file_check << "\\begin{document}" << std::endl;
+  file_check << "\\maketitle" << std::endl;
+
+  // Create table                                                                                                                                
+  //file_check << "\\begin{table}[!h]" << std::endl;
+  //file_check << "\\centering" << std::endl;                                                                                                         
+  //setup table size                                                                                                                             
+  std::string col="c";
+  //std::setprecision(3);
+
+  for(int i=1; i<n_col; i++)
+    col+="|c";
+
+  file_check << "\\begin{sidewaystable}"<< std::endl;
+  file_check << "\\begin{tabular}{"+col+"}" << std::endl;
+  file_check << "\\toprule" << std::endl;
+  file << "\\begin{tabular}{"+col+"}" << std::endl;
+  file << "\\toprule" << std::endl;
+
+  for(int c=0; c<n_col-1; c++){
+    file << col_name[c] << " & ";
+    file_check << col_name[c] << " & ";
+  }
+
+  file << col_name[n_col-1] << " \\\\ \\midrule" << std::endl;
+  file_check << col_name[n_col-1] << " \\\\ \\midrule" << std::endl;
+
+
+  for(int i=1; i<n_lin; i++)
+    {
+      file << labels[i-1] << " & ";
+      file_check << labels[i-1] << " & ";
+
+      for(int c=1; c<n_col-1; c++){
+        file << std::setprecision(3)<< numbers[c-1][i-1]<< " \\% & ";
+        file_check << std::setprecision(3) << numbers[c-1][i-1]<< " \\% & ";
+
+      }
+
+      file << std::setprecision(3)<< numbers[n_col-2][i-1]<< " \\% \\\\" << std::endl;
+      file_check << std::setprecision(3)<< numbers[n_col-2][i-1]<< " \\% \\\\" << std::endl;
+    }
+
+  file << "\\bottomrule" << std::endl;
+  file_check << "\\bottomrule" << std::endl;
+
+  //End Table                                                                                                                                    
+  file << "\\end{tabular}" << std::endl;
+  file_check << "\\end{tabular}" << std::endl;
+  file_check << "\\caption{"+caption+"}" << std::endl;
+  file_check << "\\end{sidewaystable}"<< std::endl;
+
+  //file_check << "\\end{table}" << std::endl;
+  //End document                                                                                                                                 
+
+  file_check << "\\end{document}" << std::endl;
+
+  file.close();
+  file_check.close();
+
+  system(("pdflatex " + filename + "_check.tex").c_str());
+  system(("open " + filename + "_check.pdf").c_str());
+}
+
+
